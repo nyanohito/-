@@ -659,6 +659,27 @@ textarea:focus{outline:none;border-color:var(--teal)}
         <button class="btn bt" style="white-space:nowrap;padding:8px 12px" onclick="saveFBUrl()">保存</button>
       </div>
       <button class="btn bb bfw" style="margin-bottom:10px;font-size:12px" onclick="testFBConnection()">🔗 接続テストを実行</button>
+      <!-- 423 fix guide — shown automatically when 423 is detected -->
+      <div id="fb-423-fix" style="display:none;background:rgba(239,35,60,.07);border:1px solid rgba(239,35,60,.25);border-radius:8px;padding:12px;margin-bottom:10px;font-size:12px;line-height:2;color:#fca5a5">
+        <strong style="color:var(--red)">⚠️ HTTP 423 = Firebaseのルールがロックされています</strong><br>
+        <strong style="color:white">以下の手順で1分で解決します</strong><br>
+        <span style="color:var(--text2)">
+        ① <span style="color:var(--blue)">console.firebase.google.com</span> を開く<br>
+        ② 該当プロジェクト → 左メニュー「Realtime Database」<br>
+        ③ 上部タブ「<strong style="color:white">ルール</strong>」をクリック<br>
+        ④ 内容を以下に書き換えて「<strong style="color:white">公開</strong>」を押す
+        </span>
+        <div style="background:var(--bg);border:1px solid var(--bdr);border-radius:5px;padding:9px;margin-top:6px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--teal);line-height:1.8">
+{<br>
+&nbsp;&nbsp;"rules": {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;".read": true,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;".write": true<br>
+&nbsp;&nbsp;}<br>
+}
+        </div>
+        <button class="btn br bfw" style="margin-top:8px;font-size:12px" onclick="copyRules()">📋 ルールをコピー</button>
+        <div style="font-size:10px;color:var(--text3);margin-top:6px">※90日で期限切れになりますが、同じ操作で延長できます</div>
+      </div>
       <div id="fb-connected-box" style="display:none;background:rgba(6,214,160,.08);border:1px solid rgba(6,214,160,.2);border-radius:6px;padding:9px 12px;font-size:12px;color:var(--teal);margin-bottom:10px">
         ✓ Firebase接続済み。自動同期が有効です。<br>
         <button class="btn bt" style="margin-top:7px;font-size:11px" onclick="cloudLoad()">今すぐ手動で同期</button>
@@ -677,11 +698,13 @@ textarea:focus{outline:none;border-color:var(--teal)}
         　→「テストモードで開始」→「有効にする」<br>
         <strong style="color:var(--gold)">③ URLをコピーして貼り付け</strong><br>
         　データベース画面上部のURLをコピー<br>
-        　→ シンガポール選択時のURL形式:<br>
-        　<span style="color:var(--teal);font-size:10px">https://nyano-XXXXX-default-rtdb.asia-southeast1.firebaseio.com</span><br>
+        　→ シンガポール選択時のURL形式 (`.app`で終わる):<br>
+        　<span style="color:var(--teal);font-size:10px">https://プロジェクトID-default-rtdb.asia-southeast1.firebasedatabase.app</span><br>
+        　→ アメリカ選択時のURL形式 (`.com`で終わる):<br>
+        　<span style="color:var(--text2);font-size:10px">https://プロジェクトID-default-rtdb.firebaseio.com</span><br>
         　→ 上の入力欄に貼り付けて「保存」→「接続テスト」で確認<br>
         <strong style="color:var(--teal)">完成！PCとスマホ両方で同じURLを設定すれば自動同期</strong><br>
-        <span style="font-size:10px;color:var(--orange)">※テストモードは90日で期限切れ。延長方法: Firebaseコンソール → Realtime Database → ルール → 以下に変更:<br>{"rules":{".read":true,".write":true}}</span>
+        <span style="font-size:10px;color:var(--orange)">※テストモードは90日で期限切れ。「接続テスト」で423エラーが出たら画面の手順通りにRulesを変更してください</span>
       </div>
     </div>
 
@@ -2047,8 +2070,15 @@ function saveFBUrl(){
   const inp=document.getElementById('fb-url-in'); if(!inp) return;
   const url=inp.value.trim().replace(/\/+$/,''); // strip trailing slashes
   if(!url){ setFBUrl(''); updateSyncBar('none'); showToast('❌','URL削除','クラウド同期をOFFにしました'); renderSyncTab(); return; }
-  if(!url.startsWith('https://')||!url.includes('firebaseio.com')){
-    showToast('❌','URL形式エラー','https://で始まりfirebaseio.comを含む形式で入力してください'); return;
+  // Accept both domains:
+  //   US:          https://xxx-default-rtdb.firebaseio.com
+  //   Singapore:   https://xxx-default-rtdb.asia-southeast1.firebasedatabase.app
+  const isValidFirebase = url.startsWith('https://') &&
+    (url.includes('firebaseio.com') || url.includes('firebasedatabase.app'));
+  if(!isValidFirebase){
+    showToast('❌','URL形式エラー',
+      'https://で始まるFirebase URLを入力してください (.com または .app で終わる形式)');
+    return;
   }
   if(location.protocol==='file:'){
     showToast('⚠️','file://では動きません','GitHub PagesのURLで開いてから設定してください'); return;
@@ -2070,21 +2100,33 @@ async function testFBConnection(){
     if(res.ok){
       updateSyncBar('ok');
       showToast('✅','接続成功！','Firebase同期が正常に動作しています');
+      const fb=document.getElementById('fb-423-fix'); if(fb) fb.style.display='none';
     }else{
       const txt=await res.text().catch(()=>String(res.status));
       updateSyncBar('error',`HTTP ${res.status}`);
-      if(res.status===401||res.status===403){
-        showToast('❌',`HTTP ${res.status} 権限エラー`,'FirebaseのRulesで読み書きが許可されているか確認してください');
+      if(res.status===423){
+        showToast('❌','HTTP 423 — Rulesがロック中','下に修正手順が表示されました');
+        const fb=document.getElementById('fb-423-fix'); if(fb) fb.style.display='block';
+      }else if(res.status===401||res.status===403){
+        showToast('❌',`HTTP ${res.status} — 権限エラー`,'FirebaseのRulesで読み書きが拒否されています。下の423修正手順と同じ方法で解決できます');
+        const fb=document.getElementById('fb-423-fix'); if(fb) fb.style.display='block';
       }else if(res.status===404){
-        showToast('❌','HTTP 404 データベース未作成','Firebaseコンソールで「Realtime Database」→「データベースを作成」を実行してください');
+        showToast('❌','HTTP 404 — データベース未作成','Firebaseコンソール → Realtime Database → 「データベースを作成」を実行してください');
       }else{
-        showToast('❌',`HTTP ${res.status}`,txt.slice(0,60));
+        showToast('❌',`HTTP ${res.status}`,txt.slice(0,80));
       }
     }
   }catch(e){
     updateSyncBar('error',e.message);
-    showToast('❌','接続失敗',e.message.slice(0,60));
+    showToast('❌','接続失敗 — ネットワークエラー',e.message.slice(0,80));
   }
+}
+
+function copyRules(){
+  const rules='{\n  "rules": {\n    ".read": true,\n    ".write": true\n  }\n}';
+  navigator.clipboard.writeText(rules)
+    .then(()=>showToast('📋','コピーしました！','Firebaseの「ルール」タブに貼り付けて「公開」を押してください'))
+    .catch(()=>showToast('⚠️','コピー失敗','手動でコピーしてください'));
 }
 
 function renderSyncTab(){
