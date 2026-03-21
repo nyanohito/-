@@ -274,6 +274,47 @@ textarea:focus{outline:none;border-color:var(--teal)}
 .psych-body{font-size:11px;color:var(--text2);line-height:1.7}
 .gh-box{background:var(--bg3);border:1px solid rgba(240,180,41,.25);border-radius:8px;padding:12px;font-size:12px;line-height:1.9;color:var(--text2)}
 @media(max-width:380px){.nb{font-size:8px}.nb .ni{font-size:15px}}
+
+/* ── GATE ── */
+.gate-row{margin-bottom:14px}
+.gate-lbl{font-size:11px;font-weight:700;color:var(--text2);margin-bottom:7px;display:block;letter-spacing:.3px}
+.gate-dist-wrap{display:flex;gap:5px;flex-wrap:wrap}
+.gdist{padding:8px 10px;border-radius:6px;border:1px solid var(--bdr);background:none;color:var(--text2);font-size:11px;font-family:'Share Tech Mono',monospace;cursor:pointer;transition:all .15s;text-align:center;line-height:1.4;min-width:44px}
+.gdist.sel{background:rgba(76,201,240,.12);border-color:var(--blue);color:var(--blue)}
+.gate-body-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bdr);cursor:pointer;user-select:none}
+.gate-body-row:last-child{border-bottom:none}
+.gchkbox{width:24px;height:24px;border-radius:50%;border:2px solid var(--bdr);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .22s}
+.gchkbox.on{background:var(--teal);border-color:var(--teal);color:white}
+.purpose-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.pc{font-size:10px;padding:4px 9px;border-radius:10px;border:1px solid var(--bdr);background:none;color:var(--text3);cursor:pointer;font-family:'Zen Kaku Gothic New',sans-serif;transition:all .15s}
+.pc:active{transform:scale(.94)}
+/* ── EVAL ── */
+.ev-item{display:flex;align-items:center;gap:7px;padding:9px 0;border-bottom:1px solid var(--bdr)}
+.ev-item:last-child{border-bottom:none}
+.ev-cat{font-size:9px;font-family:'Share Tech Mono',monospace;padding:2px 6px;border-radius:8px;white-space:nowrap;flex-shrink:0;font-weight:700}
+.evc-body{background:rgba(6,214,160,.1);color:var(--teal)}
+.evc-res{background:rgba(76,201,240,.1);color:var(--blue)}
+.evc-tech{background:rgba(249,115,22,.1);color:var(--orange)}
+.evc-act{background:rgba(168,85,247,.1);color:var(--purple)}
+.ev-q{flex:1;font-size:12px;line-height:1.4}
+.ev-ok{background:rgba(6,214,160,.13)!important;border-color:var(--teal)!important;color:var(--teal)!important}
+.ev-ng{background:rgba(239,35,60,.1)!important;border-color:var(--red)!important;color:var(--red)!important}
+/* ── VIDEO ── */
+.vid-card{background:var(--bg3);border:1px solid var(--bdr);border-radius:9px;padding:11px;margin-bottom:10px}
+/* ── COUNTDOWN ── */
+#cd-ov{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.97);flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
+#cd-ov.show{display:flex}
+#cd-num{font-family:'Share Tech Mono',monospace;font-size:110px;font-weight:900;color:var(--teal);line-height:1}
+#cd-num.pop{animation:cdpop .5s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes cdpop{0%{transform:scale(.4);opacity:0}100%{transform:scale(1);opacity:1}}
+#cd-adlib{font-size:21px;font-weight:900;color:var(--purple);margin-bottom:28px;line-height:1.5;max-width:320px;word-break:break-all}
+/* ── HOME STATS ── */
+.home-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.hs-box{background:var(--bg2);border:1px solid var(--bdr);border-radius:10px;padding:13px 10px;text-align:center}
+.hs-val{font-family:'Share Tech Mono',monospace;font-size:34px;font-weight:900;line-height:1}
+.hs-lbl{font-size:10px;color:var(--text2);margin-top:4px}
+/* ── MENTAL ── */
+.mental-card{background:linear-gradient(135deg,rgba(168,85,247,.07),rgba(6,214,160,.04));border:1px solid rgba(168,85,247,.18);border-radius:10px;padding:13px 14px;margin-bottom:12px;position:relative}
 </style>
 </head>
 <body>
@@ -308,6 +349,22 @@ textarea:focus{outline:none;border-color:var(--teal)}
   <div id="late-bar" style="display:none;background:rgba(239,35,60,.08);border:1px solid rgba(239,35,60,.2);border-radius:8px;padding:9px 13px;margin-bottom:12px;font-size:12px;color:#fca5a5;line-height:1.6">
     ⚠️ 深夜です。TikTok・Xの代わりにこれを開いた、正しい選択。<br>
     <span style="font-size:10px;color:var(--text2)">2分だけウォームアップしよう。</span>
+  </div>
+  <!-- Stats grid -->
+  <div class="home-stats">
+    <div class="hs-box">
+      <div class="hs-val" style="color:var(--gold)" id="home-streak">0</div>
+      <div class="hs-lbl">🔥 連続練習日数</div>
+    </div>
+    <div class="hs-box">
+      <div class="hs-val" style="color:var(--teal)" id="home-active">0</div>
+      <div class="hs-lbl">📅 総活動日数</div>
+    </div>
+  </div>
+  <!-- Mental care card -->
+  <div class="mental-card">
+    <div style="font-size:10px;font-family:'Share Tech Mono',monospace;color:var(--purple);letter-spacing:2px;margin-bottom:6px">💙 NYANO より</div>
+    <div id="mental-msg" style="font-size:13px;line-height:1.75;color:var(--text2)">読み込み中...</div>
   </div>
   <!-- Resin -->
   <div id="resin-box">
@@ -378,9 +435,10 @@ textarea:focus{outline:none;border-color:var(--teal)}
 <!-- ===== PRACTICE ===== -->
 <div class="screen" id="s-practice">
   <div class="tab-bar" id="prac-tabs">
-    <button class="tab-btn active" onclick="switchTab('prac','wu',this)">🔥 ウォームアップ</button>
-    <button class="tab-btn" onclick="switchTab('prac','voice',this)">🎙️ 声優練習</button>
-    <button class="tab-btn" onclick="switchTab('prac','rec',this)">🎤 録音</button>
+    <button class="tab-btn active" onclick="switchTab('prac','wu',this)" style="font-size:11px">🔥 WU</button>
+    <button class="tab-btn" onclick="switchTab('prac','voice',this)" style="font-size:11px">🎙️ 練習</button>
+    <button class="tab-btn" onclick="switchTab('prac','rec',this)" style="font-size:11px">🎤 録音</button>
+    <button class="tab-btn" onclick="switchTab('prac','vid',this)" style="font-size:11px">📺 動画</button>
   </div>
 
   <!-- WARMUP -->
@@ -424,21 +482,123 @@ textarea:focus{outline:none;border-color:var(--teal)}
     </div>
   </div>
 
-  <!-- RECORDING (always open) -->
+  <!-- RECORDING -->
   <div class="tab-pane" id="tp-prac-rec">
-    <div class="card ca-red">
-      <div class="sec">🎤 録音</div>
-      <div class="rec-wrap">
-        <div class="rec-big" id="rec-btn" onclick="toggleRec()">🎙️</div>
-        <div class="rec-timer" id="rec-timer">00:00</div>
-        <div class="rec-status" id="rec-status">タップして録音開始</div>
+
+    <!-- PRE-RECORDING GATE -->
+    <div class="card ca-purple" id="gate-section">
+      <div class="sec">🎯 録音前ゲート <span id="gate-status-text" style="color:var(--gold)">0/5完了</span></div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px">全項目を入力して初めて録音できます。これがプロの準備。</div>
+
+      <!-- 目的 -->
+      <div class="gate-row">
+        <span class="gate-lbl">🎯 このセリフで相手をどうしたい？（目的）</span>
+        <input type="text" id="gate-purpose" placeholder="例: 信じさせたい / 傷つけたい / 許してほしい" oninput="updateGateStatus()" style="font-size:12px">
+        <div class="purpose-chips">
+          <button class="pc" onclick="setGatePurpose('信じさせたい')">信じさせたい</button>
+          <button class="pc" onclick="setGatePurpose('傷つけたい')">傷つけたい</button>
+          <button class="pc" onclick="setGatePurpose('許してほしい')">許してほしい</button>
+          <button class="pc" onclick="setGatePurpose('注目させたい')">注目させたい</button>
+          <button class="pc" onclick="setGatePurpose('愛を伝えたい')">愛を伝えたい</button>
+          <button class="pc" onclick="setGatePurpose('追い詰めたい')">追い詰めたい</button>
+        </div>
       </div>
-      <input type="text" id="rec-label" placeholder="練習内容のメモ (任意)" style="font-size:12px">
+
+      <!-- 距離感 -->
+      <div class="gate-row">
+        <span class="gate-lbl">📏 相手との距離感は？</span>
+        <div class="gate-dist-wrap">
+          <button class="gdist" data-d="0.5m" onclick="selectDist(this)">0.5m<br><span style="font-size:8px">囁き</span></button>
+          <button class="gdist" data-d="1m" onclick="selectDist(this)">1m<br><span style="font-size:8px">会話</span></button>
+          <button class="gdist" data-d="3m" onclick="selectDist(this)">3m<br><span style="font-size:8px">対峙</span></button>
+          <button class="gdist" data-d="5m" onclick="selectDist(this)">5m<br><span style="font-size:8px">叫び</span></button>
+          <button class="gdist" data-d="10m" onclick="selectDist(this)">10m<br><span style="font-size:8px">絶叫</span></button>
+        </div>
+      </div>
+
+      <!-- 身体スイッチ -->
+      <div class="gate-row">
+        <span class="gate-lbl">🎙️ 身体のスイッチ（全部ONで録音可）</span>
+        <div onclick="toggleGateBody('sp')" class="gate-body-row">
+          <div class="gchkbox" id="gchk-sp"></div>
+          <div><div style="font-size:12px;font-weight:700">軟口蓋</div><div style="font-size:10px;color:var(--text2)">上口蓋を上げて鼻腔の通り道を作る</div></div>
+        </div>
+        <div onclick="toggleGateBody('td')" class="gate-body-row">
+          <div class="gchkbox" id="gchk-td"></div>
+          <div><div style="font-size:12px;font-weight:700">丹田</div><div style="font-size:10px;color:var(--text2)">おへその下に力を入れ息の支えを作る</div></div>
+        </div>
+        <div onclick="toggleGateBody('ns')" class="gate-body-row">
+          <div class="gchkbox" id="gchk-ns"></div>
+          <div><div style="font-size:12px;font-weight:700">鼻腔共鳴</div><div style="font-size:10px;color:var(--text2)">目頭あたりに響きを感じているか</div></div>
+        </div>
+      </div>
+
+      <!-- 心アドリブ -->
+      <div class="gate-row">
+        <span class="gate-lbl">💭 心アドリブ — 1音目の起爆剤となる心の声</span>
+        <input type="text" id="gate-adlib" placeholder="例:「お前だけは信じたかった」「頼む、行かないでくれ」" oninput="updateGateStatus()" style="font-size:12px">
+        <div style="font-size:10px;color:var(--text3);margin-top:4px">カウントダウン中に画面中央に表示されます</div>
+      </div>
+
+      <button class="btn bp bfw bbig" id="gate-rec-btn" disabled style="opacity:.4;margin-top:4px" onclick="startGatedRecording()">🔴 録音開始（3秒カウントダウン）</button>
     </div>
+
+    <!-- RECORDING ACTIVE PANEL -->
+    <div id="rec-active-panel" style="display:none">
+      <div class="card ca-red">
+        <div class="sec">🔴 録音中</div>
+        <div style="text-align:center;padding:12px 0">
+          <div class="rec-big on" id="rec-stop-btn" onclick="stopRecording()">⏹</div>
+          <div class="rec-timer" id="rec-timer">00:00</div>
+          <div class="rec-status" id="rec-status">録音中... タップで停止</div>
+          <div style="font-size:13px;color:var(--purple);font-weight:700;margin-top:8px;line-height:1.5" id="rec-adlib-disp"></div>
+        </div>
+        <input type="text" id="rec-label" placeholder="練習内容のメモ (任意)" style="font-size:12px;margin-top:4px">
+      </div>
+    </div>
+
+    <!-- POST-RECORDING EVALUATION PANEL -->
+    <div id="post-eval-panel" style="display:none">
+      <div class="card ca-blue">
+        <div class="sec">📊 プロ基準 自己評価 <span id="eval-score-disp" style="color:var(--gold)">0/9</span></div>
+        <div style="font-size:11px;color:var(--text2);margin-bottom:10px">正直に評価することが唯一の上達法。松岡禎丞さんもこのプロセスを積み重ねた。</div>
+        <div id="eval-list"></div>
+        <div style="margin-top:12px">
+          <input type="text" id="eval-notes" placeholder="気づいたこと・次回の改善点" style="font-size:12px;margin-bottom:8px">
+          <button class="btn bt bfw" onclick="saveEval()">✓ 評価を保存して完了 (+30XP)</button>
+          <button class="btn bgr bfw" style="margin-top:6px;font-size:11px" onclick="skipEval()">スキップ（評価なしで完了）</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIBRARY -->
     <div class="card">
       <div class="sec">📚 録音ライブラリ <span style="font-size:9px;color:var(--text3)">(名前タップで変更)</span></div>
       <div id="rec-list"><div style="text-align:center;padding:18px;color:var(--text3);font-size:13px">まだ録音がありません</div></div>
     </div>
+  </div>
+
+  <!-- VIDEO LIBRARY TAB -->
+  <div class="tab-pane" id="tp-prac-vid">
+    <div class="card ca-gold">
+      <div class="sec">📺 参考動画を追加</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:10px">YouTubeのURLを保存してアプリ内で再生できます</div>
+      <input type="text" id="vid-title" placeholder="タイトル（例: 松岡禎丞 感情爆発シーン）" style="font-size:12px;margin-bottom:7px">
+      <input type="text" id="vid-url" placeholder="https://www.youtube.com/watch?v=..." style="font-size:12px;margin-bottom:7px">
+      <div style="display:flex;gap:7px;margin-bottom:8px;align-items:center">
+        <select id="vid-cat" style="flex:1;background:var(--bg3);border:1px solid var(--bdr);color:var(--text);padding:8px 10px;border-radius:6px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:12px">
+          <option value="演技参考">演技参考</option>
+          <option value="発声技術">発声技術</option>
+          <option value="感情表現">感情表現</option>
+          <option value="台本読み">台本読み</option>
+          <option value="解説">解説・講義</option>
+          <option value="総合">総合</option>
+        </select>
+      </div>
+      <input type="text" id="vid-notes" placeholder="メモ・どんな場面で参考にするか（任意）" style="font-size:12px;margin-bottom:9px">
+      <button class="btn bg bfw" onclick="addVideo()">＋ 動画を保存する</button>
+    </div>
+    <div id="vid-list"><div style="text-align:center;padding:18px;color:var(--text3);font-size:13px">まだ動画がありません</div></div>
   </div>
 </div>
 
@@ -742,6 +902,13 @@ textarea:focus{outline:none;border-color:var(--teal)}
 
 </div><!-- /app -->
 
+<!-- COUNTDOWN OVERLAY -->
+<div id="cd-ov">
+  <div id="cd-adlib">「心アドリブ」</div>
+  <div id="cd-num" class="pop">3</div>
+  <div style="font-size:13px;color:var(--text2);margin-top:20px">この感情のまま1音目へ！</div>
+</div>
+
 <!-- 10連 Modal -->
 <div id="m10"><div id="m10-ov"></div>
 <div id="m10-in">
@@ -944,7 +1111,12 @@ const LOGIN_REWARDS = [
   {day:7,icon:'👑',name:'SSR確定ガチャ',   gacha_ssr:1},
 ];
 
-const LV_TITLES = [[1,'迷える冒険者'],[3,'芽吹く声'],[5,'語りの見習い'],[8,'夢を持つ者'],[10,'一途な修行者'],[15,'声の探求者'],[20,'実力派の卵'],[30,'孤独な求道者'],[50,'魂の声楽家'],[75,'伝説の語り部'],[100,'100万人の声']];
+const LV_TITLES = [
+  [1,'演技未経験'],[3,'発声練習生'],[5,'養成所入所レベル'],[8,'養成所中級'],
+  [10,'養成所上級'],[15,'事務所プレ研修生'],[20,'事務所研修生'],[25,'事務所預かり'],
+  [30,'準所属候補'],[40,'準所属声優'],[50,'正所属新人'],[60,'活躍中声優'],
+  [75,'人気声優'],[90,'トップ声優'],[100,'松岡禎丞レベル👑']
+];
 function lvTitle(l){let t='迷える冒険者';for(const[k,v] of LV_TITLES){if(l>=k)t=v;}return t;}
 function xpNeeded(l){return l*150;}
 
@@ -969,6 +1141,16 @@ const ACHS = [
   {id:'va30',   icon:'🎭',name:'声の修行者',   desc:'声優練習30回',       c:s=>s.st.vaSess>=30},
   {id:'sub1k',  icon:'📊',name:'千人の夢',     desc:'登録者1000人突破',   c:s=>s.p.subs>=1000},
   {id:'yt4',    icon:'📺',name:'YT本格始動',   desc:'4本投稿',            c:s=>s.st.ytPosts>=4},
+  {id:'gate10', icon:'🎯',name:'ゲート10回',  desc:'録音前ゲート10回完了', c:s=>(s.st.gateCount||0)>=10},
+  {id:'gate100',icon:'🎭',name:'メソッド俳優',desc:'録音前ゲート100回完了',c:s=>(s.st.gateCount||0)>=100},
+  {id:'eval10', icon:'📊',name:'客観の目',    desc:'自己評価10回完了',      c:s=>(s.st.evalCount||0)>=10},
+  {id:'active30',icon:'📅',name:'30日間活動', desc:'30日間アプリを起動',   c:s=>(s.p.totalActiveDays||0)>=30},
+  {id:'active100',icon:'🗓️',name:'百日修行', desc:'100日間アプリを起動',  c:s=>(s.p.totalActiveDays||0)>=100},
+  {id:'video1', icon:'📺',name:'参考動画保存',desc:'参考動画を初めて保存', c:s=>(s.st.videoCount||0)>=1},
+  {id:'urou30', icon:'📜',name:'外郎売の達人',desc:'声優練習30回完了',      c:s=>s.st.vaSess>=30},
+  {id:'str14',  icon:'🌙',name:'二週間の戦士',desc:'14日連続クリア',       c:s=>s.p.streak>=14},
+  {id:'lv40',   icon:'🔥',name:'準所属レベル',desc:'レベル40に到達',       c:s=>s.p.level>=40},
+  {id:'lv100',  icon:'👑',name:'松岡禎丞の域',desc:'レベル100に到達',      c:s=>s.p.level>=100},
 ];
 
 // ═══════════════════════════════════════════════
@@ -1036,9 +1218,10 @@ async function idbRename(id, newLabel){
 // ═══════════════════════════════════════════════
 let S = {
   p:{level:1,xp:0,totalXP:0,cry:0,resin:0,streak:0,lastDate:null,subs:680,
-     title:'迷える冒険者',shield:0,declines:0,xpBuff:1,loginDay:0,lastLogin:null},
-  st:{ytSess:0,vaSess:0,totalMin:0,fullDays:0,gachaPulls:0,ssrCount:0,bossKills:0,dcDays:0,wuDays:0,recCount:0,ytPosts:0},
-  ach:{}, gacha:[],
+     title:'演技未経験',shield:0,declines:0,xpBuff:1,loginDay:0,lastLogin:null,
+     totalActiveDays:0,activityDates:[]},
+  st:{ytSess:0,vaSess:0,totalMin:0,fullDays:0,gachaPulls:0,ssrCount:0,bossKills:0,dcDays:0,wuDays:0,recCount:0,ytPosts:0,gateCount:0,evalCount:0,videoCount:0},
+  ach:{}, gacha:[], videoRefs:[], evalHistory:[],
   boss:{idx:0,hp:1000,maxHp:1000,weekStart:null,killed:false},
   pity:0,
   days:{},
@@ -1356,11 +1539,94 @@ function goToRec(btnEl){
 // ═══════════════════════════════════════════════
 // RECORDING
 // ═══════════════════════════════════════════════
+// GATE STATE (not persisted — resets per recording)
+// ═══════════════════════════════════════════════
+let gate={purpose:'',distance:'',sp:false,td:false,ns:false,adlib:''};
+let gateOK=false;
+
+function setGatePurpose(txt){
+  const el=document.getElementById('gate-purpose'); if(el) el.value=txt;
+  updateGateStatus();
+}
+function selectDist(btnEl){
+  document.querySelectorAll('.gdist').forEach(b=>b.classList.remove('sel'));
+  btnEl.classList.add('sel');
+  gate.distance=btnEl.dataset.d;
+  updateGateStatus();
+}
+function toggleGateBody(key){
+  gate[key]=!gate[key];
+  const el=document.getElementById('gchk-'+key);
+  if(el){el.classList.toggle('on',gate[key]); el.textContent=gate[key]?'✓':'';}
+  updateGateStatus();
+}
+function updateGateStatus(){
+  const p=document.getElementById('gate-purpose');
+  const a=document.getElementById('gate-adlib');
+  if(p) gate.purpose=p.value.trim();
+  if(a) gate.adlib=a.value.trim();
+  gateOK=gate.purpose.length>=2&&gate.distance&&gate.sp&&gate.td&&gate.ns&&gate.adlib.length>=3;
+  const btn=document.getElementById('gate-rec-btn');
+  if(btn){btn.disabled=!gateOK; btn.style.opacity=gateOK?'1':'0.4';}
+  const st=document.getElementById('gate-status-text');
+  if(st){
+    const done=[gate.purpose.length>=2,gate.distance,gate.sp,gate.td,gate.ns,gate.adlib.length>=3].filter(Boolean).length;
+    st.textContent=`${done}/6完了`;
+    st.style.color=gateOK?'var(--teal)':'var(--gold)';
+  }
+}
+function resetGate(){
+  gate={purpose:'',distance:'',sp:false,td:false,ns:false,adlib:''};
+  gateOK=false;
+  const p=document.getElementById('gate-purpose'); if(p) p.value='';
+  const a=document.getElementById('gate-adlib'); if(a) a.value='';
+  document.querySelectorAll('.gdist').forEach(b=>b.classList.remove('sel'));
+  ['sp','td','ns'].forEach(k=>{const el=document.getElementById('gchk-'+k);if(el){el.classList.remove('on');el.textContent='';}});
+  updateGateStatus();
+}
+
+function startGatedRecording(){
+  if(!gateOK){showToast('⚠️','ゲート未完了','全6項目を入力してください');return;}
+  const ov=document.getElementById('cd-ov');
+  const numEl=document.getElementById('cd-num');
+  const adEl=document.getElementById('cd-adlib');
+  adEl.textContent='「'+gate.adlib+'」';
+  ov.classList.add('show');
+  let count=3;
+  numEl.classList.remove('pop'); void numEl.offsetWidth; numEl.classList.add('pop');
+  numEl.textContent=count;
+  playTone(523,'sine',.15,0,.1);
+  const iv=setInterval(()=>{
+    count--;
+    if(count>0){
+      numEl.classList.remove('pop'); void numEl.offsetWidth; numEl.classList.add('pop');
+      numEl.textContent=count;
+      playTone(523+count*80,'sine',.12,0,.1);
+    }else{
+      clearInterval(iv);
+      ov.classList.remove('show');
+      document.getElementById('gate-section').style.display='none';
+      document.getElementById('rec-active-panel').style.display='block';
+      const ad=document.getElementById('rec-adlib-disp'); if(ad) ad.textContent='「'+gate.adlib+'」';
+      playTone(880,'sine',.2,0,.15);
+      startRec();
+      S.st.gateCount=(S.st.gateCount||0)+1; save(); checkAchs();
+    }
+  },1000);
+}
+function stopRecording(){
+  stopRec();
+  document.getElementById('rec-active-panel').style.display='none';
+  document.getElementById('gate-section').style.display='block';
+  evalScores=new Array(EVAL_ITEMS.length).fill(null);
+  renderEvalPanel();
+  document.getElementById('post-eval-panel').style.display='block';
+  window.scrollTo({top:document.getElementById('post-eval-panel').offsetTop-60,behavior:'smooth'});
+}
+
+// ── RECORDING CORE ──
 let mediaRec=null, recChunks=[], isRecording=false, recSecs=0, recInt=null;
 
-async function toggleRec(){
-  if(isRecording) await stopRec(); else await startRec();
-}
 async function startRec(){
   try{
     const stream=await navigator.mediaDevices.getUserMedia({audio:true});
@@ -1377,8 +1643,6 @@ async function startRec(){
       showToast('🎤','録音保存完了！',`「${label}」を保存しました`);
     };
     mediaRec.start(); isRecording=true;
-    document.getElementById('rec-btn').classList.add('on');
-    document.getElementById('rec-btn').textContent='⏹';
     document.getElementById('rec-status').textContent='録音中...';
     recInt=setInterval(()=>{
       recSecs++;
@@ -1386,19 +1650,216 @@ async function startRec(){
       document.getElementById('rec-timer').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
     },1000);
   }catch(e){
-    alert('マイクのアクセスが必要です。ブラウザの設定で許可してください。');
+    // If mic fails, go back to gate
+    document.getElementById('rec-active-panel').style.display='none';
+    document.getElementById('gate-section').style.display='block';
+    showToast('❌','マイクエラー','マイクのアクセスを許可してください');
   }
 }
 async function stopRec(){
   if(mediaRec&&isRecording){
     mediaRec.stop(); isRecording=false;
     clearInterval(recInt);
-    document.getElementById('rec-btn').classList.remove('on');
-    document.getElementById('rec-btn').textContent='🎙️';
-    document.getElementById('rec-status').textContent='タップして録音開始';
     document.getElementById('rec-timer').textContent='00:00';
   }
 }
+// ═══════════════════════════════════════════════
+// SELF EVALUATION SYSTEM
+// ═══════════════════════════════════════════════
+const EVAL_ITEMS = [
+  {cat:'身体',cls:'evc-body',q:'丹田の支えはあったか？'},
+  {cat:'身体',cls:'evc-body',q:'軟口蓋は上がっていたか？'},
+  {cat:'共鳴',cls:'evc-res', q:'鼻腔共鳴は途切れなかったか？'},
+  {cat:'共鳴',cls:'evc-res', q:'喉に落ちていなかったか？'},
+  {cat:'技術',cls:'evc-tech',q:'母音の無声化は適切だったか？'},
+  {cat:'技術',cls:'evc-tech',q:'鼻濁音（文中ガ行）は完璧だったか？'},
+  {cat:'演技',cls:'evc-act', q:'目的（相手をどうしたいか）は達成されたか？'},
+  {cat:'演技',cls:'evc-act', q:'距離感は選んだ距離に合っていたか？'},
+  {cat:'演技',cls:'evc-act', q:'心アドリブが1音目に乗っていたか？'},
+];
+let evalScores = new Array(EVAL_ITEMS.length).fill(null);
+
+function renderEvalPanel(){
+  const list=document.getElementById('eval-list'); if(!list) return;
+  list.innerHTML=EVAL_ITEMS.map((item,i)=>{
+    const sc=evalScores[i];
+    const okCls=sc===true?'ev-ok':'bgr';
+    const ngCls=sc===false?'ev-ng':'bgr';
+    return`<div class="ev-item">
+      <span class="ev-cat ${item.cls}">${item.cat}</span>
+      <span class="ev-q">${item.q}</span>
+      <div style="display:flex;gap:4px">
+        <button class="btn ${okCls}" style="padding:5px 9px;font-size:11px" data-ei="${i}" data-sc="1" onclick="setEvalScore(this)">OK</button>
+        <button class="btn ${ngCls}" style="padding:5px 9px;font-size:11px" data-ei="${i}" data-sc="0" onclick="setEvalScore(this)">NG</button>
+      </div>
+    </div>`;
+  }).join('');
+  updateEvalDisp();
+}
+function setEvalScore(btnEl){
+  const i=parseInt(btnEl.dataset.ei), sc=btnEl.dataset.sc==='1';
+  evalScores[i]=sc; renderEvalPanel();
+}
+function updateEvalDisp(){
+  const ok=evalScores.filter(s=>s===true).length;
+  const rated=evalScores.filter(s=>s!==null).length;
+  const el=document.getElementById('eval-score-disp');
+  if(el) el.textContent=`${ok}/${rated}点`;
+}
+function saveEval(){
+  const notes=document.getElementById('eval-notes').value.trim();
+  const ok=evalScores.filter(s=>s===true).length;
+  const rated=evalScores.filter(s=>s!==null).length;
+  const record={ts:Date.now(),purpose:gate.purpose,distance:gate.distance,adlib:gate.adlib,scores:[...evalScores],ok,rated,notes};
+  if(!S.evalHistory) S.evalHistory=[];
+  S.evalHistory.unshift(record);
+  if(S.evalHistory.length>50) S.evalHistory=S.evalHistory.slice(0,50);
+  S.st.evalCount=(S.st.evalCount||0)+1;
+  gainXP(30); gainCry(15); save(); checkAchs();
+  document.getElementById('post-eval-panel').style.display='none';
+  document.getElementById('eval-notes').value='';
+  resetGate();
+  showToast('📊','自己評価保存！',`${ok}/${rated}点 +30XP +15クリスタル`);
+  if(rated>=6){
+    const pct=ok/rated;
+    if(pct>=0.88) setTimeout(()=>showToast('🔥','素晴らしい評価！','9割近くをクリア。この調子で積み重ねよう！'),3200);
+    else if(pct<0.44) setTimeout(()=>showToast('💙','NYANOより','低いスコアでも、気づけること自体が成長の証。次に何を改善するか分かった。'),3200);
+  }
+}
+function skipEval(){
+  document.getElementById('post-eval-panel').style.display='none';
+  if(document.getElementById('eval-notes')) document.getElementById('eval-notes').value='';
+  resetGate();
+}
+
+// ═══════════════════════════════════════════════
+// VIDEO LIBRARY
+// ═══════════════════════════════════════════════
+function getYTId(url){
+  const m=url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&?\s]{11})/);
+  return m?m[1]:null;
+}
+function addVideo(){
+  const title=document.getElementById('vid-title').value.trim();
+  const url=document.getElementById('vid-url').value.trim();
+  const cat=document.getElementById('vid-cat').value;
+  const notes=document.getElementById('vid-notes').value.trim();
+  if(!title||!url){showToast('❌','入力不足','タイトルとURLを入力してください');return;}
+  if(!url.startsWith('http')){showToast('❌','URL形式エラー','https://で始まるURLを入力してください');return;}
+  if(!S.videoRefs) S.videoRefs=[];
+  S.videoRefs.unshift({id:Date.now(),title,url,cat,notes,date:new Date().toISOString()});
+  if(S.videoRefs.length>50) S.videoRefs=S.videoRefs.slice(0,50);
+  S.st.videoCount=(S.st.videoCount||0)+1;
+  document.getElementById('vid-title').value='';
+  document.getElementById('vid-url').value='';
+  document.getElementById('vid-notes').value='';
+  save(); checkAchs(); renderVideoLib();
+  showToast('📺','動画を保存しました！',title.slice(0,30));
+}
+function renderVideoLib(){
+  const list=document.getElementById('vid-list'); if(!list) return;
+  if(!S.videoRefs||S.videoRefs.length===0){
+    list.innerHTML='<div style="text-align:center;padding:18px;color:var(--text3);font-size:13px">まだ動画がありません</div>'; return;
+  }
+  const catColors={演技参考:'cA',発声技術:'cP',感情表現:'cE',台本読み:'cS',解説:'cC',総合:'cC'};
+  list.innerHTML=S.videoRefs.map(v=>{
+    const ytId=getYTId(v.url);
+    const thumb=ytId?`<img src="https://img.youtube.com/vi/${ytId}/mqdefault.jpg" style="width:100%;border-radius:7px;display:block;margin-bottom:8px;aspect-ratio:16/9;object-fit:cover" loading="lazy" onerror="this.style.display='none'">`:'';
+    const safeTitle=v.title.replace(/</g,'&lt;');
+    const safeNotes=(v.notes||'').replace(/</g,'&lt;');
+    const d=new Date(v.date);
+    const ds=`${d.getMonth()+1}/${d.getDate()}`;
+    return`<div class="vid-card">
+      ${thumb}
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+        <span class="cat-pill ${catColors[v.cat]||'cC'}" style="font-size:9px">${v.cat}</span>
+        <span style="font-size:10px;color:var(--text3);font-family:'Share Tech Mono',monospace">${ds}</span>
+      </div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:4px">${safeTitle}</div>
+      ${safeNotes?`<div style="font-size:11px;color:var(--text2);margin-bottom:8px;line-height:1.5">${safeNotes}</div>`:''}
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <a href="${v.url}" target="_blank" class="btn bt" style="padding:6px 10px;font-size:11px;text-decoration:none;flex:1;text-align:center;display:inline-flex;align-items:center;justify-content:center">🔗 開く</a>
+        ${ytId?`<button class="btn bb" style="padding:6px 10px;font-size:11px" data-vid="${v.id}" onclick="embedVid(this)">📺 埋め込み</button>`:''}
+        <button class="btn br" style="padding:6px 10px;font-size:11px" data-vid="${v.id}" onclick="deleteVid(this)">🗑️</button>
+      </div>
+      <div id="embed-${v.id}" style="display:none;margin-top:8px"></div>
+    </div>`;
+  }).join('');
+}
+function embedVid(btnEl){
+  const id=parseInt(btnEl.dataset.vid);
+  const vid=S.videoRefs.find(v=>v.id===id); if(!vid) return;
+  const ytId=getYTId(vid.url); if(!ytId) return;
+  const c=document.getElementById('embed-'+id); if(!c) return;
+  if(c.style.display==='block'){c.style.display='none';c.innerHTML='';return;}
+  c.innerHTML=`<iframe width="100%" height="195" src="https://www.youtube.com/embed/${ytId}?autoplay=1" frameborder="0" allowfullscreen allow="autoplay" style="border-radius:7px"></iframe>`;
+  c.style.display='block';
+}
+function deleteVid(btnEl){
+  const id=parseInt(btnEl.dataset.vid);
+  if(!confirm('この動画を削除しますか？')) return;
+  S.videoRefs=S.videoRefs.filter(v=>v.id!==id); save(); renderVideoLib();
+}
+
+// ═══════════════════════════════════════════════
+// ACTIVITY TRACKING
+// ═══════════════════════════════════════════════
+function trackActivity(){
+  const today=todayKey();
+  if(!S.p.activityDates) S.p.activityDates=[];
+  if(!S.p.activityDates.includes(today)){
+    S.p.activityDates.push(today);
+    if(S.p.activityDates.length>400) S.p.activityDates=S.p.activityDates.slice(-400);
+    S.p.totalActiveDays=S.p.activityDates.length;
+    save();
+  }
+}
+
+// ═══════════════════════════════════════════════
+// MENTAL CARE MESSAGES
+// ═══════════════════════════════════════════════
+const MENTAL_POOL = {
+  new:[
+    'おかえり！今日も声帯を動かそう。ウォームアップ5分から始めよう。',
+    '夢への一歩、今日も踏み出せる。まずハミングを1分やってみよう。',
+    '声優の道は続けた者が勝つ。今日もここに来たことが証明だ。',
+  ],
+  good:[
+    '練習を続けている。確実に昨日より声が変わっている。',
+    'この積み重ねが、いつか本物のオーディションで実を結ぶ。',
+    '声帯は筋肉。毎日少しずつ、確実に強くなっている。',
+    '松岡禎丞さんも、デビュー前はただの普通の青年だった。続けることが才能。',
+  ],
+  slump:[
+    '練習できない日があっても、声優への夢は消えない。今日、また始めれば0日目だ。',
+    '辛い時は1分だけ。ハミングするだけでいい。それだけで今日は合格だ。',
+    'ここに戻ってきたということは、まだ諦めていないということ。それで十分。',
+  ],
+  streak_high:[
+    `${0}日連続練習中！この調子で行こう。積み重ねは裏切らない。`,
+    '連続記録が伸びている。このリズムを体が覚えている。',
+    '7日以上続けた人のほとんどは30日続ける。あなたはもうその仲間だ。',
+  ]
+};
+function getMentalMsg(){
+  const days=S.p.totalActiveDays||0;
+  const streak=S.p.streak||0;
+  const td=getTD();
+  let pool;
+  if(streak>=7) pool=MENTAL_POOL.streak_high;
+  else if(streak===0&&days>5) pool=MENTAL_POOL.slump;
+  else if(days>=3&&(td.yt.done||td.va.done)) pool=MENTAL_POOL.good;
+  else pool=MENTAL_POOL.new;
+  let msg=pool[new Date().getDate()%pool.length];
+  if(streak>=7) msg=msg.replace(String(0),String(streak));
+  return msg;
+}
+function renderMentalMsg(){
+  const el=document.getElementById('mental-msg'); if(el) el.textContent=getMentalMsg();
+  const hs=document.getElementById('home-streak'); if(hs) hs.textContent=S.p.streak||0;
+  const ha=document.getElementById('home-active'); if(ha) ha.textContent=S.p.totalActiveDays||0;
+}
+
 async function renderRecLib(){
   const list=document.getElementById('rec-list'); if(!list) return;
   const recs=await idbGetAll();
@@ -1823,9 +2284,11 @@ function renderAchs(){
   const tb=document.getElementById('stats-tbl'); if(!tb) return;
   const rows=[
     ['YouTube練習',S.st.ytSess+'回'],['声優練習',S.st.vaSess+'回'],['総練習時間',S.st.totalMin+'分'],
-    ['WU完了日数',S.st.wuDays+'日'],['デイリー全完了',S.st.dcDays+'日'],['連続記録',S.p.streak+'日'],
+    ['WU完了日数',S.st.wuDays+'日'],['デイリー全完了',S.st.dcDays+'日'],['連続練習日数',S.p.streak+'日'],['総活動日数',(S.p.totalActiveDays||0)+'日'],
     ['ボス討伐',S.st.bossKills+'体'],['ガチャ総数',S.st.gachaPulls+'回'],
-    ['録音回数',S.st.recCount+'回'],['YT投稿数',S.st.ytPosts+'本'],
+    ['録音回数',S.st.recCount+'回'],['自己評価回数',(S.st.evalCount||0)+'回'],
+    ['ゲート回数',(S.st.gateCount||0)+'回'],['参考動画数',(S.st.videoCount||0)+'本'],
+    ['YT投稿数',S.st.ytPosts+'本'],
     ['登録者数',S.p.subs.toLocaleString()+'人'],['誘いを断った',S.p.declines+'回'],
   ];
   tb.innerHTML=rows.map(([l,v])=>`<div class="sr"><span>${l}</span><span class="sv">${v}</span></div>`).join('');
@@ -2189,7 +2652,7 @@ function goScreen(name, btnEl){
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
   const s=document.getElementById('s-'+name); if(s) s.classList.add('active');
   if(btnEl) btnEl.classList.add('active');
-  if(name==='practice'){ renderWarmup(); renderVPC(); renderRecLib(); }
+  if(name==='practice'){ renderWarmup(); renderVPC(); renderRecLib(); renderVideoLib(); }
   if(name==='daily'){ renderDCs(); renderLoginCal(); renderYTGrid(); }
   if(name==='gacha'){ renderBoss(); renderGHist(); }
   if(name==='set'){ renderAchs(); initNotifUI(); }
@@ -2205,7 +2668,7 @@ function switchTab(group, tab, btnEl){
   }else{
     const tabsEl=document.getElementById(group+'-tabs');
     if(tabsEl){
-      const tabOrder={wu:0,voice:1,rec:2,ach:0,notif:1,sync:2};
+      const tabOrder={wu:0,voice:1,rec:2,vid:3,ach:0,notif:1,sync:2};
       const idx=tabOrder[tab];
       const btns=tabsEl.querySelectorAll('.tab-btn');
       if(idx!==undefined && btns[idx]) btns[idx].classList.add('active');
@@ -2216,7 +2679,8 @@ function switchTab(group, tab, btnEl){
     pane.classList.add('active');
     if(tab==='wu') renderWarmup();
     if(tab==='voice') renderVPC();
-    if(tab==='rec') renderRecLib();
+    if(tab==='rec'){ renderRecLib(); updateGateStatus(); }
+    if(tab==='vid') renderVideoLib();
     if(tab==='ach') renderAchs();
     if(tab==='notif') initNotifUI();
   }
@@ -2228,9 +2692,10 @@ function switchTab(group, tab, btnEl){
 function renderAll(){
   renderHdr(); renderResin(); renderSubs();
   const d=document.getElementById('dcnt'); if(d) d.textContent=S.p.declines;
-  const h=document.getElementById('dhrs'); if(h) h.textContent=(S.p.declines*2)+'時間';
+  const dh=document.getElementById('dhrs'); if(dh) dh.textContent=(S.p.declines*2)+'時間';
   renderBoss(); renderGHist(); renderDCs(); renderLoginCal(); renderYTGrid();
   renderAchs(); renderWarmup(); renderVPC(); renderAffirm();
+  renderMentalMsg(); renderVideoLib();
 }
 
 // ═══════════════════════════════════════════════
@@ -2271,6 +2736,9 @@ async function init(){
   setInterval(()=>{ renderBoss(); checkNight(); }, 60000);
   updateResetTimer();
   if(S.bgm) setTimeout(startBGM, 1500);
+  // Activity tracking
+  trackActivity();
+  renderMentalMsg();
   // Cloud sync init
   renderSyncTab();
   if(getFBUrl()){ cloudLoad(); startCloudPoll(); }
