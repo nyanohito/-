@@ -1,6 +1,6 @@
 // NYANO VOICE QUEST - Service Worker v6
 const CACHE = 'nyano-v6';
-const FILES = ['./nyano_v6.html', './manifest.json', './icon-192.png', './icon-512.png'];
+const FILES = ['./nyano_v5.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
   self.skipWaiting();
@@ -9,16 +9,18 @@ self.addEventListener('install', e => {
   );
 });
 
-// Activate: delete ALL old caches (v5, v4, etc.)
+// Delete ALL old caches on activate
 self.addEventListener('activate', e => {
   e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    ).then(() => clients.claim())
+    caches.keys()
+      .then(keys => Promise.all(
+        keys.filter(k => k !== CACHE).map(k => caches.delete(k))
+      ))
+      .then(() => clients.claim())
   );
 });
 
-// Network-first for HTML (always fresh), cache-first for assets
+// Network-first for HTML, cache-first for assets
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
   const isHTML = e.request.destination === 'document' || url.pathname.endsWith('.html');
@@ -57,7 +59,7 @@ function scheduleAll(notifs) {
   if (notifs.morning) {
     timers.push(setTimeout(() => {
       self.registration.showNotification('NYANO VOICE QUEST 🎙️', {
-        body: 'おはよう！ウォームアップで声帯を起こそう。今日も一歩前へ。',
+        body: 'プロとしてマイク前に立つ時間。ウォームアップから始めよ。',
         icon: './icon-192.png', badge: './icon-192.png',
         tag: 'morning', requireInteraction: false, data: { url: './' }
       });
@@ -67,7 +69,7 @@ function scheduleAll(notifs) {
   if (notifs.after) {
     timers.push(setTimeout(() => {
       self.registration.showNotification('NYANO VOICE QUEST ⚔️', {
-        body: 'バイトお疲れ！声優練習30分やろう。デイリー依頼も確認！',
+        body: 'バイトお疲れ。今夜も声優として30分立つ。',
         icon: './icon-192.png', badge: './icon-192.png',
         tag: 'after', requireInteraction: false, data: { url: './' }
       });
@@ -77,10 +79,13 @@ function scheduleAll(notifs) {
   if (notifs.night) {
     timers.push(setTimeout(() => {
       self.registration.showNotification('NYANO VOICE QUEST 🌙', {
-        body: 'まだ練習できてない？2分だけでいい。ストリークを守ろう。',
+        body: '2分でいい。プロは「疲れているから」とは言わない。',
         icon: './icon-192.png', badge: './icon-192.png',
         tag: 'night', requireInteraction: true,
-        actions: [{ action: 'open', title: '練習する' }, { action: 'dismiss', title: '明日やる' }],
+        actions: [
+          { action: 'open', title: 'マイク前に立つ' },
+          { action: 'dismiss', title: '明日やる' }
+        ],
         data: { url: './' }
       });
       scheduleAll(notifs);
