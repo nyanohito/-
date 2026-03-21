@@ -1,6 +1,6 @@
-// NYANO VOICE QUEST - Service Worker v5
-const CACHE = 'nyano-v5';
-const FILES = ['./nyano_v5.html', './manifest.json', './icon-192.png', './icon-512.png'];
+// NYANO VOICE QUEST - Service Worker v6
+const CACHE = 'nyano-v6';
+const FILES = ['./nyano_v6.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
   self.skipWaiting();
@@ -9,15 +9,11 @@ self.addEventListener('install', e => {
   );
 });
 
+// Activate: delete ALL old caches (v5, v4, etc.)
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(
-        keys.filter(k => k !== CACHE).map(k => {
-          console.log('[SW] Deleting old cache:', k);
-          return caches.delete(k);
-        })
-      )
+      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
     ).then(() => clients.claim())
   );
 });
