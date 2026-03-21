@@ -2,7 +2,7 @@
   "name": "NYANO VOICE QUEST",
   "short_name": "NYANO VQ",
   "description": "声優×YouTuber を目指すRPG風習慣アプリ",
-  "start_url": "./nyano_v6.html",
+  "start_url": "./nyano_v5.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
