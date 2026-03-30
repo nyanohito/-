@@ -273,6 +273,14 @@ textarea:focus{outline:none;border-color:var(--teal)}
 .psych-title{font-size:12px;font-weight:700;color:var(--purple);margin-bottom:5px}
 .psych-body{font-size:11px;color:var(--text2);line-height:1.7}
 .gh-box{background:var(--bg3);border:1px solid rgba(240,180,41,.25);border-radius:8px;padding:12px;font-size:12px;line-height:1.9;color:var(--text2)}
+.uiro-section{background:var(--bg3);border:1px solid var(--bdr);border-radius:9px;padding:12px;margin-bottom:12px}
+.uiro-sec-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:9px}
+.uiro-text{font-size:14px;line-height:2.0;color:var(--text);background:var(--bg2);border-radius:6px;padding:12px;border-left:3px solid var(--gold);font-family:'Zen Kaku Gothic New',sans-serif;white-space:pre-wrap}
+.uiro-main-text{font-size:15px;line-height:2.8;ruby-position:over}
+.ng-chip{font-size:10px;padding:4px 8px;border-radius:10px;border:1px solid var(--bdr);background:none;color:var(--text3);cursor:pointer;font-family:'Zen Kaku Gothic New',sans-serif;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.ng-chip.ng-selected{background:rgba(239,35,60,.12);border-color:var(--red);color:var(--red)}
+ruby { line-height: inherit; ruby-align: center; }
+ruby rt { font-size: 0.55em; color: #f0b429; font-weight: 700; font-family: 'Zen Kaku Gothic New', sans-serif; }
 @media(max-width:380px){.nb{font-size:8px}.nb .ni{font-size:15px}}
 
 /* ── GATE ── */
@@ -286,8 +294,8 @@ textarea:focus{outline:none;border-color:var(--teal)}
 .gchkbox{width:24px;height:24px;border-radius:50%;border:2px solid var(--bdr);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .22s}
 .gchkbox.on{background:var(--teal);border-color:var(--teal);color:white}
 .purpose-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
-.pc{font-size:10px;padding:4px 9px;border-radius:10px;border:1px solid var(--bdr);background:none;color:var(--text3);cursor:pointer;font-family:'Zen Kaku Gothic New',sans-serif;transition:all .15s}
-.pc:active{transform:scale(.94)}
+.gate-chip{font-size:10px;padding:4px 9px;border-radius:10px;border:1px solid var(--bdr);background:none;color:var(--text3);cursor:pointer;font-family:'Zen Kaku Gothic New',sans-serif;transition:all .15s}
+.gate-chip:active{transform:scale(.94)}
 /* ── EVAL ── */
 .ev-item{display:flex;align-items:center;gap:7px;padding:9px 0;border-bottom:1px solid var(--bdr)}
 .ev-item:last-child{border-bottom:none}
@@ -315,6 +323,7 @@ textarea:focus{outline:none;border-color:var(--teal)}
 .hs-lbl{font-size:10px;color:var(--text2);margin-top:4px}
 /* ── MENTAL ── */
 .mental-card{background:linear-gradient(135deg,rgba(168,85,247,.07),rgba(6,214,160,.04));border:1px solid rgba(168,85,247,.18);border-radius:10px;padding:13px 14px;margin-bottom:12px;position:relative}
+
 </style>
 </head>
 <body>
@@ -448,6 +457,7 @@ textarea:focus{outline:none;border-color:var(--teal)}
     <button class="tab-btn" onclick="switchTab('prac','voice',this)" style="font-size:11px">🎙️ 練習</button>
     <button class="tab-btn" onclick="switchTab('prac','rec',this)" style="font-size:11px">🎤 録音</button>
     <button class="tab-btn" onclick="switchTab('prac','vid',this)" style="font-size:11px">📺 動画</button>
+    <button class="tab-btn" onclick="switchTab('prac','uiro',this)" style="font-size:10px">📜 外郎売</button>
   </div>
 
   <!-- WARMUP -->
@@ -462,6 +472,39 @@ textarea:focus{outline:none;border-color:var(--teal)}
       <div id="wu-list"></div>
       <div id="wu-done-msg" style="display:none;text-align:center;padding:10px;font-size:14px;font-weight:700;color:var(--teal)">✓ ウォームアップ完了！声優練習が解放されました！</div>
     </div>
+    <!-- Voice Condition Tracker -->
+    <div class="card" style="border-color:rgba(168,85,247,.3);background:rgba(168,85,247,.04)">
+      <div class="sec" style="color:var(--purple)">📊 本日の音域＆コンディション記録</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;line-height:1.6">毎日記録して声帯の状態を科学的に管理する。睡眠・水分との相関をNyanoが分析。</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div>
+          <div style="font-size:11px;color:var(--text2);margin-bottom:5px">🔊 低音（胸部共鳴）の調子</div>
+          <input type="range" id="vc-low" min="1" max="5" value="3" style="width:100%;accent-color:var(--teal)">
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3)"><span>最悪</span><span>最高</span></div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text2);margin-bottom:5px">🎵 高音（鼻腔・頭部共鳴）の調子</div>
+          <input type="range" id="vc-high" min="1" max="5" value="3" style="width:100%;accent-color:var(--purple)">
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3)"><span>最悪</span><span>最高</span></div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text2);margin-bottom:5px">💧 水分摂取量</div>
+          <input type="range" id="vc-hydration" min="1" max="5" value="3" style="width:100%;accent-color:var(--blue)">
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3)"><span>少ない</span><span>十分</span></div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text2);margin-bottom:5px">😴 昨晩の睡眠時間</div>
+          <input type="range" id="vc-sleep" min="4" max="10" value="7" step="1" style="width:100%;accent-color:var(--gold)">
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3)"><span>4時間</span><span>10時間</span></div>
+        </div>
+      </div>
+      <button class="btn bp bfw" onclick="saveVoiceCondition()">📊 記録してNyanoに分析させる</button>
+      <div id="vc-analysis" style="display:none;margin-top:10px;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2);border-radius:7px;padding:9px 11px;font-size:12px;color:var(--text2);line-height:1.7"></div>
+    </div>
+
+    <!-- Articulation weakness warning (populated by renderArticulationWarning) -->
+    <div id="articulation-warning" style="display:none;background:rgba(239,35,60,.07);border:1px solid rgba(239,35,60,.25);border-radius:8px;padding:11px 13px;margin-bottom:12px;font-size:12px;color:var(--text2);line-height:1.8"></div>
+
     <div class="infobox">💡 <strong>プロが必ずやる理由:</strong> 声帯は筋肉。ウォームアップなしで高負荷練習をすると声帯ポリープのリスクがあります。青二塾・マウスプロモーション付属でも必ず最初に行う工程です。</div>
   </div>
 
@@ -496,7 +539,7 @@ textarea:focus{outline:none;border-color:var(--teal)}
 
     <!-- PRE-RECORDING GATE -->
     <div class="card ca-purple" id="gate-section">
-      <div class="sec">🎯 録音前ゲート <span id="gate-status-text" style="color:var(--gold)">0/5完了</span></div>
+      <div class="sec">🎯 録音前ゲート <span id="gate-status-text" style="color:var(--gold)">0/6完了</span></div>
       <div style="font-size:11px;color:var(--text2);margin-bottom:12px">全項目を入力して初めて録音できます。これがプロの準備。</div>
 
       <!-- 目的 -->
@@ -504,12 +547,12 @@ textarea:focus{outline:none;border-color:var(--teal)}
         <span class="gate-lbl">🎯 このセリフで相手をどうしたい？（目的）</span>
         <input type="text" id="gate-purpose" placeholder="例: 信じさせたい / 傷つけたい / 許してほしい" oninput="updateGateStatus()" style="font-size:12px">
         <div class="purpose-chips">
-          <button class="pc" onclick="setGatePurpose('信じさせたい')">信じさせたい</button>
-          <button class="pc" onclick="setGatePurpose('傷つけたい')">傷つけたい</button>
-          <button class="pc" onclick="setGatePurpose('許してほしい')">許してほしい</button>
-          <button class="pc" onclick="setGatePurpose('注目させたい')">注目させたい</button>
-          <button class="pc" onclick="setGatePurpose('愛を伝えたい')">愛を伝えたい</button>
-          <button class="pc" onclick="setGatePurpose('追い詰めたい')">追い詰めたい</button>
+          <button class="gate-chip" onclick="setGatePurpose('信じさせたい')">信じさせたい</button>
+          <button class="gate-chip" onclick="setGatePurpose('傷つけたい')">傷つけたい</button>
+          <button class="gate-chip" onclick="setGatePurpose('許してほしい')">許してほしい</button>
+          <button class="gate-chip" onclick="setGatePurpose('注目させたい')">注目させたい</button>
+          <button class="gate-chip" onclick="setGatePurpose('愛を伝えたい')">愛を伝えたい</button>
+          <button class="gate-chip" onclick="setGatePurpose('追い詰めたい')">追い詰めたい</button>
         </div>
       </div>
 
@@ -608,6 +651,319 @@ textarea:focus{outline:none;border-color:var(--teal)}
       <button class="btn bg bfw" onclick="addVideo()">＋ 動画を保存する</button>
     </div>
     <div id="vid-list"><div style="text-align:center;padding:18px;color:var(--text3);font-size:13px">まだ動画がありません</div></div>
+  </div>
+  <!-- 外郎売 PRACTICE TAB -->
+  <div class="tab-pane" id="tp-prac-uiro">
+    <div class="card" style="background:linear-gradient(135deg,rgba(240,180,41,.06),rgba(168,85,247,.04));border-color:rgba(240,180,41,.25)">
+      <div class="sec" style="color:var(--gold)">📜 外郎売 全文練習</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.7">
+        声優養成所の必修課題。<strong style="color:white">毎日1段落以上</strong>を録音して聴き返すこと。<br>
+        段落ごとに感情を変えて演じる。口の開きを鏡で確認しながら行う。
+      </div>
+
+      <!-- Controls -->
+      <div style="display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap">
+        <button class="btn bg" style="flex:1;font-size:11px" onclick="uiroAutoScroll()">⬇️ 自動スクロール</button>
+        <button class="btn bp" style="flex:1;font-size:11px" onclick="uiroShowAll()">📖 全文表示</button>
+        <select id="uiro-emotion-sel" style="flex:1;background:var(--bg3);border:1px solid var(--bdr);color:var(--text);padding:7px 8px;border-radius:6px;font-size:11px;font-family:'Zen Kaku Gothic New',sans-serif">
+          <option value="">感情を選ぶ</option>
+          <option value="喜び">😄 喜び</option>
+          <option value="威厳">👑 威厳</option>
+          <option value="絶望">😭 絶望</option>
+          <option value="怒り">😤 怒り</option>
+          <option value="松岡禎丞レベル">🔥 松岡禎丞レベル</option>
+        </select>
+      </div>
+
+      <!-- Section selector -->
+      <div style="display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap">
+        <button class="btn bgr" style="font-size:10px;padding:5px 8px" onclick="showUiroSection('all')">全段落</button>
+        <button class="btn bgr" style="font-size:10px;padding:5px 8px" onclick="showUiroSection('s1')">段落一</button>
+        <button class="btn bgr" style="font-size:10px;padding:5px 8px" onclick="showUiroSection('s2')">段落二</button>
+        <button class="btn bgr" style="font-size:10px;padding:5px 8px" onclick="showUiroSection('s3')">段落三</button>
+        <button class="btn bgr" style="font-size:10px;padding:5px 8px" onclick="showUiroSection('s4')">段落四</button>
+        <button class="btn bgr" style="font-size:10px;padding:5px 8px" onclick="showUiroSection('s5')">段落五</button>
+      </div>
+
+      <!-- BPM Metronome -->
+      <div style="background:rgba(6,214,160,.06);border:1px solid rgba(6,214,160,.25);border-radius:9px;padding:13px 14px;margin-bottom:12px">
+        <div style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--teal);letter-spacing:2px;margin-bottom:9px">🎵 BPM メトロノーム</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <div style="flex:1">
+            <input type="range" id="bpm-slider" min="60" max="180" value="100" step="5"
+              style="width:100%;accent-color:var(--teal)"
+              oninput="document.getElementById('bpm-val').textContent=this.value">
+            <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3);margin-top:2px"><span>60</span><span>180 BPM</span></div>
+          </div>
+          <div style="text-align:center;min-width:52px">
+            <div id="bpm-val" style="font-family:'Share Tech Mono',monospace;font-size:22px;font-weight:900;color:var(--teal);line-height:1">100</div>
+            <div style="font-size:9px;color:var(--text3)">BPM</div>
+          </div>
+        </div>
+        <!-- Beat indicator -->
+        <div style="display:flex;justify-content:center;margin-bottom:10px">
+          <div id="bpm-dot" style="width:44px;height:44px;border-radius:50%;background:rgba(6,214,160,.15);border:2px solid rgba(6,214,160,.3);transition:all 0.04s;display:flex;align-items:center;justify-content:center;font-size:20px">🎵</div>
+        </div>
+        <div style="display:flex;gap:7px">
+          <button class="btn bt bfw" id="bpm-start-btn" onclick="toggleMetronome()">▶ 開始</button>
+          <div style="display:flex;align-items:center;gap:6px">
+            <input type="checkbox" id="bpm-sound" checked style="width:14px;height:14px;accent-color:var(--teal)">
+            <label for="bpm-sound" style="font-size:11px;color:var(--text2)">音あり</label>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text3);margin-top:7px;line-height:1.6">BPMに合わせて外郎売を読む。1ミリもリズムを崩さない尺合わせ訓練。</div>
+      </div>
+
+      <div id="uiro-sections">
+        
+        <div class="uiro-section" id="uiro-s1">
+          <div class="uiro-sec-header">
+            <div>
+              <div style="font-size:13px;font-weight:900;color:var(--gold)">段落一（冒頭・薬の紹介）</div>
+              <div style="font-size:10px;color:var(--purple);margin-top:2px">演技指定: 誇り高く・喜びと説得</div>
+            </div>
+            <button class="btn bt" style="font-size:10px;padding:5px 9px;white-space:nowrap" data-sid="s1" onclick="startUiroRec(this)">🎤 録音</button>
+          </div>
+          <div class="uiro-text uiro-main-text" id="uiro-text-s1">
+            <ruby>拙者<rt>せっしゃ</rt></ruby><ruby>親方<rt>おやかた</rt></ruby>と<ruby>申<rt>もう</rt></ruby>すは、お<ruby>立合<rt>たちあい</rt></ruby>の<ruby>中<rt>うち</rt></ruby>に<ruby>御存知<rt>ごぞんじ</rt></ruby>のお<ruby>方<rt>かた</rt></ruby>もござりましょうが、お<ruby>江戸<rt>えど</rt></ruby>を<ruby>発<rt>た</rt></ruby>って<ruby>二十里上方<rt>にじゅうりかみがた</rt></ruby>、<ruby>相州小田原一色町<rt>そうしゅうおだわらいっしきまち</rt></ruby>をお<ruby>過<rt>す</rt></ruby>ぎなされて、<ruby>青物町<rt>あおものちょう</rt></ruby>を<ruby>登<rt>のぼ</rt></ruby>りへおいでなさるれば、<ruby>欄干橋虎屋藤右衛門<rt>らんかんばしとらやとうえもん</rt></ruby>、<ruby>只今<rt>ただいま</rt></ruby>は<ruby>剃髪致<rt>ていはついた</rt></ruby>して、<ruby>円斎<rt>えんさい</rt></ruby>と<ruby>名乗<rt>なの</rt></ruby>りまする。<br><br><ruby>元朝<rt>がんちょう</rt></ruby>より<ruby>大晦日<rt>おおみそか</rt></ruby>まで、<ruby>御手<rt>おて</rt></ruby>に<ruby>入<rt>い</rt></ruby>れまする<ruby>此<rt>こ</rt></ruby>の<ruby>薬<rt>くすり</rt></ruby>は、<ruby>昔<rt>むかし</rt></ruby>ちんの<ruby>国<rt>くに</rt></ruby>の<ruby>唐人<rt>とうじん</rt></ruby>、<ruby>外郎<rt>ういろう</rt></ruby>という<ruby>人<rt>ひと</rt></ruby>、わが<ruby>朝<rt>ちょう</rt></ruby>へ<ruby>来<rt>きた</rt></ruby>り、<ruby>帝<rt>みかど</rt></ruby>へ<ruby>参代<rt>さんだい</rt></ruby>の<ruby>折<rt>おり</rt></ruby>から、<ruby>此<rt>こ</rt></ruby>の<ruby>薬<rt>くすり</rt></ruby>を<ruby>深<rt>ふか</rt></ruby>く<ruby>籠<rt>こ</rt></ruby>め<ruby>置<rt>お</rt></ruby>き、<ruby>用<rt>もち</rt></ruby>ゆる<ruby>時<rt>とき</rt></ruby>は<ruby>一粒<rt>ひとつぶ</rt></ruby>ずつ、<ruby>冠<rt>かんむり</rt></ruby>の<ruby>隙間<rt>すきま</rt></ruby>より<ruby>取<rt>と</rt></ruby>り<ruby>出<rt>だ</rt></ruby>す。<br><br><ruby>依<rt>よ</rt></ruby>って<ruby>其<rt>そ</rt></ruby>の<ruby>名<rt>な</rt></ruby>を<ruby>帝<rt>みかど</rt></ruby>より、「<ruby>透頂香<rt>とうちんこう</rt></ruby>」と<ruby>賜<rt>たまわ</rt></ruby>る。<ruby>即<rt>すなわ</rt></ruby>ち<ruby>文字<rt>もじ</rt></ruby>には、<ruby>頂<rt>いただ</rt></ruby>き、<ruby>透<rt>す</rt></ruby>く、<ruby>香<rt>にお</rt></ruby>いと<ruby>書<rt>か</rt></ruby>いて、とうちんこうと<ruby>申<rt>もう</rt></ruby>す。<br><br><ruby>只今<rt>ただいま</rt></ruby>は<ruby>此<rt>こ</rt></ruby>の<ruby>薬<rt>くすり</rt></ruby>、<ruby>殊<rt>こと</rt></ruby>の<ruby>外世上<rt>ほかせじょう</rt></ruby>に<ruby>弘<rt>ひろ</rt></ruby>まり、<ruby>方々<rt>ほうぼう</rt></ruby>に<ruby>似看板<rt>にせかんばん</rt></ruby>を<ruby>出<rt>だ</rt></ruby>し、イヤ、<ruby>小田原<rt>おだわら</rt></ruby>の、<ruby>灰俵<rt>はいだわら</rt></ruby>の、さん<ruby>俵<rt>だわら</rt></ruby>の、<ruby>炭俵<rt>すみだわら</rt></ruby>のと<ruby>色々<rt>いろいろ</rt></ruby>に<ruby>申<rt>もう</rt></ruby>せども、<ruby>平仮名<rt>ひらがな</rt></ruby>をもって「ういろう」と<ruby>記<rt>しる</rt></ruby>せしは<ruby>親方円斎<rt>おやかたえんさい</rt></ruby>ばかり。<br><br>もしやお<ruby>立合<rt>たちあい</rt></ruby>の<ruby>内<rt>うち</rt></ruby>に、<ruby>熱海<rt>あたみ</rt></ruby>か<ruby>塔<rt>とう</rt></ruby>の<ruby>沢<rt>さわ</rt></ruby>へ<ruby>湯治<rt>とうじ</rt></ruby>にお<ruby>出<rt>い</rt></ruby>でなさるるか、<ruby>又<rt>また</rt></ruby>は<ruby>伊勢参宮<rt>いせさんぐう</rt></ruby>の<ruby>折<rt>おり</rt></ruby>からは、<ruby>必<rt>かなら</rt></ruby>ず<ruby>門違<rt>かどちが</rt></ruby>いなされまするな。<br><br>お<ruby>登<rt>のぼ</rt></ruby>りならば<ruby>右<rt>みぎ</rt></ruby>の<ruby>方<rt>かた</rt></ruby>、お<ruby>下<rt>くだ</rt></ruby>りなれば<ruby>左側<rt>ひだりがわ</rt></ruby>、<ruby>八方<rt>はっぽう</rt></ruby>が<ruby>八<rt>や</rt></ruby>つ<ruby>棟<rt>むね</rt></ruby>、<ruby>表<rt>おもて</rt></ruby>が<ruby>三<rt>み</rt></ruby>つ<ruby>棟玉堂造<rt>むねぎょくどうづくり</rt></ruby>、<ruby>破風<rt>はふ</rt></ruby>には<ruby>菊<rt>きく</rt></ruby>に<ruby>桐<rt>きり</rt></ruby>の<ruby>薹<rt>とう</rt></ruby>の<ruby>御紋<rt>ごもん</rt></ruby>を<ruby>御赦免<rt>ごしゃめん</rt></ruby>あって、<ruby>系図正<rt>けいずただ</rt></ruby>しき<ruby>薬<rt>くすり</rt></ruby>でござる。
+          </div>
+          <div style="font-size:11px;color:var(--text2);background:rgba(6,214,160,.06);border-radius:5px;padding:7px 9px;margin-top:7px">💡 商人の誇りと温かみ。聴衆を引き込む第一声が命</div>
+        </div>
+
+        <div class="uiro-section" id="uiro-s2">
+          <div class="uiro-sec-header">
+            <div>
+              <div style="font-size:13px;font-weight:900;color:var(--gold)">段落二（薬の効果）</div>
+              <div style="font-size:10px;color:var(--purple);margin-top:2px">演技指定: 説得・実証・驚き</div>
+            </div>
+            <button class="btn bt" style="font-size:10px;padding:5px 9px;white-space:nowrap" data-sid="s2" onclick="startUiroRec(this)">🎤 録音</button>
+          </div>
+          <div class="uiro-text uiro-main-text" id="uiro-text-s2">
+            <ruby>イヤ<rt>いや</rt></ruby><ruby>最前<rt>さいぜん</rt></ruby>より<ruby>家名<rt>かめい</rt></ruby>の<ruby>自慢<rt>じまん</rt></ruby>ばかり<ruby>申<rt>もう</rt></ruby>しても、<ruby>御存<rt>ごぞん</rt></ruby>じない<ruby>方<rt>かた</rt></ruby>には、<ruby>正身<rt>しょうしん</rt></ruby>の<ruby>胡椒<rt>こしょう</rt></ruby>の<ruby>丸呑<rt>まるのみ</rt></ruby>、<ruby>白川夜船<rt>しらかわよふね</rt></ruby>。<br><br>さらば<ruby>一粒食<rt>いちりゅうた</rt></ruby>べかけて、その<ruby>気味合<rt>きみあい</rt></ruby>をお<ruby>目<rt>め</rt></ruby>にかけましょう。<ruby>先<rt>ま</rt></ruby>ず<ruby>此<rt>こ</rt></ruby>の<ruby>薬<rt>くすり</rt></ruby>を、かように<ruby>一粒舌<rt>ひとつぶした</rt></ruby>の<ruby>上<rt>うえ</rt></ruby>に<ruby>乗<rt>の</rt></ruby>せまして、<ruby>腹内<rt>ふくない</rt></ruby>へ<ruby>納<rt>おさ</rt></ruby>めますると、<ruby>イヤ<rt>いや</rt></ruby>どうも<ruby>云<rt>い</rt></ruby>えぬは、<ruby>胃<rt>い</rt></ruby>、<ruby>心<rt>しん</rt></ruby>、<ruby>肺<rt>はい</rt></ruby>、<ruby>肝<rt>かん</rt></ruby>が<ruby>健<rt>すこ</rt></ruby>やかになりて、<ruby>薫風咽<rt>くんぷうのんど</rt></ruby>より<ruby>来<rt>きた</rt></ruby>り、<ruby>口中微涼<rt>こうちゅうびりょう</rt></ruby>を<ruby>生<rt>しょう</rt></ruby>ずるが<ruby>如<rt>ごと</rt></ruby>し。<br><br><ruby>魚鳥<rt>ぎょちょう</rt></ruby>、<ruby>茸<rt>きのこ</rt></ruby>、<ruby>麺類<rt>めんるい</rt></ruby>の<ruby>食<rt>く</rt></ruby>い<ruby>合<rt>あ</rt></ruby>わせ、<ruby>其<rt>そ</rt></ruby>の<ruby>外<rt>ほか</rt></ruby>、<ruby>万病速攻<rt>まんびょうそっこう</rt></ruby>あること<ruby>神<rt>かみ</rt></ruby>の<ruby>如<rt>ごと</rt></ruby>し。<br><br>さて、<ruby>此<rt>こ</rt></ruby>の<ruby>薬<rt>くすり</rt></ruby>、<ruby>第一<rt>だいいち</rt></ruby>の<ruby>奇妙<rt>きみょう</rt></ruby>には、<ruby>舌<rt>した</rt></ruby>の<ruby>廻<rt>まわ</rt></ruby>ることが、<ruby>銭独楽<rt>ぜにごま</rt></ruby>が<ruby>裸足<rt>はだし</rt></ruby>で<ruby>逃<rt>にげ</rt></ruby>る。ひょっと<ruby>舌<rt>した</rt></ruby>が<ruby>廻<rt>まわ</rt></ruby>り<ruby>出<rt>だ</rt></ruby>すと、<ruby>矢<rt>や</rt></ruby>も<ruby>楯<rt>たて</rt></ruby>も<ruby>堪<rt>たま</rt></ruby>らぬじゃ。
+          </div>
+          <div style="font-size:11px;color:var(--text2);background:rgba(6,214,160,.06);border-radius:5px;padding:7px 9px;margin-top:7px">💡 「イヤどうも云えぬは」の間が肝心。体で感じながら声に出す</div>
+        </div>
+
+        <div class="uiro-section" id="uiro-s3">
+          <div class="uiro-sec-header">
+            <div>
+              <div style="font-size:13px;font-weight:900;color:var(--gold)">段落三（早口言葉①）</div>
+              <div style="font-size:10px;color:var(--purple);margin-top:2px">演技指定: 明瞭・正確・速度</div>
+            </div>
+            <button class="btn bt" style="font-size:10px;padding:5px 9px;white-space:nowrap" data-sid="s3" onclick="startUiroRec(this)">🎤 録音</button>
+          </div>
+          <div class="uiro-text uiro-main-text" id="uiro-text-s3">
+            そりゃそりゃ、そらそりゃ。<ruby>廻<rt>まわ</rt></ruby>って<ruby>来<rt>き</rt></ruby>たわ、<ruby>廻<rt>まわ</rt></ruby>って<ruby>来<rt>く</rt></ruby>るわ。<br>アワヤ<ruby>咽<rt>のど</rt></ruby>、さたらな<ruby>舌<rt>した</rt></ruby>に、カ<ruby>牙<rt>げ</rt></ruby>サ<ruby>歯音<rt>しおん</rt></ruby>。ハマの<ruby>二<rt>ふた</rt></ruby>つは<ruby>唇<rt>くちびる</rt></ruby>の<ruby>軽重<rt>けいちょう</rt></ruby>、<ruby>開口爽<rt>かいごうさわ</rt></ruby>かに、あかさたなはまやらわ、おこそとのほもよろを。<br><br><ruby>一<rt>ひと</rt></ruby>つへぎへぎに、へぎほしはじかみ。<ruby>盆豆<rt>ぼんまめ</rt></ruby>、<ruby>盆米<rt>ぼんごめ</rt></ruby>、<ruby>盆牛蒡<rt>ぼんごぼう</rt></ruby>。<ruby>摘蓼<rt>つみたで</rt></ruby>、<ruby>摘豆<rt>つみまめ</rt></ruby>、<ruby>摘山椒<rt>つみさんしょう</rt></ruby>、<ruby>書写山<rt>しょしゃざん</rt></ruby>の<ruby>社僧正<rt>しゃそうじょう</rt></ruby>。<ruby>粉米<rt>こごめ</rt></ruby>の<ruby>生噛<rt>なまがみ</rt></ruby>、<ruby>粉米<rt>こごめ</rt></ruby>の<ruby>生噛<rt>なまがみ</rt></ruby>、こん<ruby>粉米<rt>こごめ</rt></ruby>の<ruby>小生噛<rt>こなまがみ</rt></ruby>。<br><br><ruby>繻子緋繻子<rt>しゅすひじゅす</rt></ruby>、<ruby>繻子繻珍<rt>しゅすしゅちん</rt></ruby>、<ruby>親<rt>おや</rt></ruby>も<ruby>嘉兵衛<rt>かへえ</rt></ruby>、<ruby>子<rt>こ</rt></ruby>も<ruby>嘉兵衛<rt>かへえ</rt></ruby>、<ruby>親嘉兵衛子嘉兵衛<rt>おやかへいこかへい</rt></ruby>、<ruby>子嘉兵衛親嘉兵衛<rt>こかへいおやかへい</rt></ruby>。<br><ruby>古栗<rt>ふるくり</rt></ruby>の<ruby>木<rt>き</rt></ruby>の<ruby>古切口<rt>ふるきりくち</rt></ruby>。<ruby>雨合羽<rt>あまがっぱ</rt></ruby>か<ruby>番合羽<rt>ばんがっぱ</rt></ruby>か。<ruby>貴様<rt>きさま</rt></ruby>の<ruby>脚絆<rt>きゃはん</rt></ruby>も<ruby>皮脚絆<rt>かわぎゃはん</rt></ruby>、<ruby>我等<rt>われら</rt></ruby>が<ruby>脚絆<rt>きゃはん</rt></ruby>も<ruby>皮脚絆<rt>かわぎゃはん</rt></ruby>。<ruby>尻皮袴<rt>しりかわばかま</rt></ruby>のしっぽころびを、<ruby>三針針長<rt>みはりはりなが</rt></ruby>にちょと<ruby>縫<rt>ぬ</rt></ruby>うて、<ruby>縫<rt>ぬ</rt></ruby>うてちょとぶん<ruby>出<rt>だ</rt></ruby>せ。<br><br><ruby>河原撫子<rt>かわらなでしこ</rt></ruby>、<ruby>野石竹<rt>のせきちく</rt></ruby>。<ruby>野良如来<rt>のらにょらい</rt></ruby>、<ruby>野良如来<rt>のらにょらい</rt></ruby>、<ruby>三野良如来<rt>みのらにょらい</rt></ruby>に<ruby>六野良如来<rt>むのらにょらい</rt></ruby>。<ruby>一寸先<rt>いっすんさき</rt></ruby>のお<ruby>小仏<rt>こぼとけ</rt></ruby>にお<ruby>蹴躓<rt>けつまず</rt></ruby>きゃるな。<ruby>細溝<rt>ほそみぞ</rt></ruby>に<ruby>泥鰌<rt>どじょ</rt></ruby>にょろり。<br><ruby>京<rt>きょう</rt></ruby>の<ruby>生鱈<rt>なまだら</rt></ruby>、<ruby>奈良生学鰹<rt>ならなままながつお</rt></ruby>、ちょと<ruby>四<rt>し</rt></ruby>、<ruby>五貫目<rt>ごかんめ</rt></ruby>。<br>お<ruby>茶立<rt>ちゃた</rt></ruby>ちょ、<ruby>茶立<rt>ちゃた</rt></ruby>ちょ、ちゃっと<ruby>立<rt>た</rt></ruby>ちょ、<ruby>茶立<rt>ちゃた</rt></ruby>ちょ、<ruby>青竹茶筅<rt>あおだけちゃせん</rt></ruby>でお<ruby>茶<rt>ちゃ</rt></ruby>ちゃっと<ruby>立<rt>た</rt></ruby>ちゃ。
+          </div>
+          <div style="font-size:11px;color:var(--text2);background:rgba(6,214,160,.06);border-radius:5px;padding:7px 9px;margin-top:7px">💡 アカサタナ行の切り替えが核心。速度より正確な音の粒立ちを意識する</div>
+        </div>
+
+        <div class="uiro-section" id="uiro-s4">
+          <div class="uiro-sec-header">
+            <div>
+              <div style="font-size:13px;font-weight:900;color:var(--gold)">段落四（早口言葉②）</div>
+              <div style="font-size:10px;color:var(--purple);margin-top:2px">演技指定: リズム・精度・爆発力</div>
+            </div>
+            <button class="btn bt" style="font-size:10px;padding:5px 9px;white-space:nowrap" data-sid="s4" onclick="startUiroRec(this)">🎤 録音</button>
+          </div>
+          <div class="uiro-text uiro-main-text" id="uiro-text-s4">
+            <ruby>来<rt>く</rt></ruby>るわ<ruby>来<rt>く</rt></ruby>るわ<ruby>何<rt>なに</rt></ruby>が<ruby>来<rt>く</rt></ruby>る、<ruby>高野<rt>こうや</rt></ruby>の<ruby>山<rt>やま</rt></ruby>のおこけら<ruby>小僧<rt>こぞう</rt></ruby>。<ruby>狸百匹<rt>たぬきひゃっぴき</rt></ruby>、<ruby>箸百膳<rt>はしひゃくぜん</rt></ruby>、<ruby>天目百杯<rt>てんもくひゃっぱい</rt></ruby>、<ruby>棒八百本<rt>ぼうはっぴゃっぽん</rt></ruby>。<br><br><ruby>武具馬具<rt>ぶぐばぐ</rt></ruby>、ぶく、ばぐ、<ruby>三武具馬具<rt>みぶぐばぐ</rt></ruby>、<ruby>合<rt>あ</rt></ruby>わせて<ruby>武具馬具<rt>ぶぐばぐ</rt></ruby>、<ruby>六武具馬具<rt>むぶぐばぐ</rt></ruby>。<ruby>菊栗<rt>きくくり</rt></ruby>、きく、くり、<ruby>三菊栗<rt>みきくくり</rt></ruby>、<ruby>合<rt>あ</rt></ruby>わせて<ruby>菊栗<rt>きくくり</rt></ruby>、<ruby>六菊栗<rt>むきくくり</rt></ruby>。<ruby>麦<rt>むぎ</rt></ruby>、ごみ、むぎ、ごみ、<ruby>三麦<rt>みむぎ</rt></ruby>ごみ、<ruby>合<rt>あ</rt></ruby>わせて<ruby>麦<rt>むぎ</rt></ruby>、ごみ、<ruby>六麦<rt>むむぎ</rt></ruby>ごみ。<br><br>あの<ruby>長押<rt>なげし</rt></ruby>の<ruby>長薙刀<rt>ながなぎなた</rt></ruby>は、<ruby>誰<rt>た</rt></ruby>が<ruby>長薙刀<rt>ながなぎなた</rt></ruby>ぞ。<ruby>向<rt>むこ</rt></ruby>うの<ruby>胡麻殻<rt>ごまがら</rt></ruby>は<ruby>荏<rt>え</rt></ruby>の<ruby>胡麻殻<rt>ごまがら</rt></ruby>か、<ruby>真胡麻殻<rt>まごまがら</rt></ruby>か、あれこそ<ruby>本<rt>ほん</rt></ruby>の<ruby>真胡麻殻<rt>まごまがら</rt></ruby>。<br>がらぴい、がらぴい<ruby>風車<rt>かざぐるま</rt></ruby>。おきゃがれ<ruby>小法師<rt>こぼし</rt></ruby>、おきゃがれ<ruby>小法師<rt>こぼうし</rt></ruby>、<ruby>昨夜<rt>ゆうべ</rt></ruby>もこぼして、<ruby>又<rt>また</rt></ruby>こぼした。<br><br>たあぷぽぽ、たあぷぽぽ、ちりから、ちりから、つったっぽ。たっぽたっぽ、<ruby>一丁蛸<rt>いっちょうだこ</rt></ruby>、<ruby>落<rt>おち</rt></ruby>たら<ruby>煮<rt>に</rt></ruby>て<ruby>食<rt>く</rt></ruby>を。<br><ruby>煮<rt>に</rt></ruby>ても<ruby>焼<rt>や</rt></ruby>いても<ruby>食<rt>く</rt></ruby>われぬものは、<ruby>五徳<rt>ごとく</rt></ruby>、<ruby>鉄弓<rt>てっきゅう</rt></ruby>、<ruby>金熊童子<rt>かなくまどうじ</rt></ruby>に、<ruby>石熊<rt>いしくま</rt></ruby>、<ruby>石持<rt>いしもち</rt></ruby>、<ruby>虎熊<rt>とらくま</rt></ruby>、<ruby>虎鱚<rt>とらきす</rt></ruby>、<ruby>中<rt>なか</rt></ruby>にも<ruby>東寺<rt>とうじ</rt></ruby>の<ruby>羅生門<rt>らしょうもん</rt></ruby>には、<ruby>茨木童子<rt>いばらきどうじ</rt></ruby>が、うで<ruby>栗五合<rt>ぐりごごう</rt></ruby>、<ruby>掴<rt>つか</rt></ruby>んでおむしゃる、かの<ruby>頼光<rt>らいこう</rt></ruby>の<ruby>膝元去<rt>ひざもとさ</rt></ruby>らず。
+          </div>
+          <div style="font-size:11px;color:var(--text2);background:rgba(6,214,160,.06);border-radius:5px;padding:7px 9px;margin-top:7px">💡 武具馬具や麦ごみのリズムを均等に。速さより等間隔が先</div>
+        </div>
+
+        <div class="uiro-section" id="uiro-s5">
+          <div class="uiro-sec-header">
+            <div>
+              <div style="font-size:13px;font-weight:900;color:var(--gold)">段落五（締め）</div>
+              <div style="font-size:10px;color:var(--purple);margin-top:2px">演技指定: 躍動・笑い・締め</div>
+            </div>
+            <button class="btn bt" style="font-size:10px;padding:5px 9px;white-space:nowrap" data-sid="s5" onclick="startUiroRec(this)">🎤 録音</button>
+          </div>
+          <div class="uiro-text uiro-main-text" id="uiro-text-s5">
+            <ruby>鮒<rt>ふな</rt></ruby>、<ruby>金柑<rt>きんかん</rt></ruby>、<ruby>椎茸<rt>しいたけ</rt></ruby>、<ruby>定<rt>さだ</rt></ruby>めて<ruby>後段<rt>ごだん</rt></ruby>な、<ruby>蕎麦切<rt>そばき</rt></ruby>り、<ruby>素麺<rt>そうめん</rt></ruby>、<ruby>饂飩<rt>うどん</rt></ruby>か、<ruby>愚鈍<rt>ぐどん</rt></ruby>な<ruby>小新発地<rt>こしんぼち</rt></ruby>。<ruby>小棚<rt>こだな</rt></ruby>の、<ruby>小下<rt>こした</rt></ruby>の、<ruby>小桶<rt>こおけ</rt></ruby>に、こ<ruby>味噌<rt>みそ</rt></ruby>が、こ<ruby>有<rt>あ</rt></ruby>るぞ、<ruby>小杓子<rt>こしゃくし</rt></ruby>、こ<ruby>持<rt>も</rt></ruby>って、こすくって、こよこせ。<br><br>おっと<ruby>合点<rt>がてん</rt></ruby>だ、<ruby>心得<rt>こころえ</rt></ruby>たんぼの、<ruby>川崎<rt>かわさき</rt></ruby>、<ruby>神奈川<rt>かながわ</rt></ruby>、<ruby>程ケ谷<rt>ほどがや</rt></ruby>、<ruby>戸塚<rt>とつか</rt></ruby>は、<ruby>走<rt>はし</rt></ruby>って<ruby>行<rt>い</rt></ruby>けば、<ruby>灸<rt>やいと</rt></ruby>を<ruby>擦<rt>す</rt></ruby>りむく、<ruby>三里<rt>さんり</rt></ruby>ばかりか、<ruby>藤沢<rt>ふじさわ</rt></ruby>、<ruby>平塚<rt>ひらつか</rt></ruby>、<ruby>大磯<rt>おおいそ</rt></ruby>がしや、<ruby>小磯<rt>こいそ</rt></ruby>の<ruby>宿<rt>しゅく</rt></ruby>を<ruby>七<rt>なな</rt></ruby>つ<ruby>起<rt>お</rt></ruby>きして、<ruby>早天早々<rt>そうてんそうそう</rt></ruby>、<ruby>相州小田原透頂香<rt>そうしゅうおだわらとうちんこう</rt></ruby>、<ruby>隠<rt>かく</rt></ruby>れござらぬ、<ruby>貴賤群衆<rt>きせんぐんじゅ</rt></ruby>の<ruby>花<rt>はな</rt></ruby>のお<ruby>江戸<rt>えど</rt></ruby>の<ruby>花<rt>はな</rt></ruby>ういろう。<br><br>あれあの<ruby>花<rt>はな</rt></ruby>を<ruby>見<rt>み</rt></ruby>てお<ruby>心<rt>こころ</rt></ruby>をお<ruby>和<rt>やわ</rt></ruby>らぎやという。<ruby>産子<rt>うぶこ</rt></ruby>、<ruby>這子<rt>はうこ</rt></ruby>に<ruby>至<rt>いた</rt></ruby>るまで、この<ruby>外郎<rt>ういろう</rt></ruby>の<ruby>御評判<rt>ごひょうばん</rt></ruby>、<ruby>御存知<rt>ごぞんじ</rt></ruby>ないとは<ruby>申<rt>もう</rt></ruby>されまいまいつぶり、<ruby>角出<rt>つのだ</rt></ruby>せ、<ruby>棒出<rt>ぼうだ</rt></ruby>せ、ぼうぼう<ruby>眉<rt>まゆ</rt></ruby>に、<ruby>臼<rt>うす</rt></ruby>、<ruby>杵<rt>きね</rt></ruby>、<ruby>擂鉢<rt>すりばち</rt></ruby>、ばちばちぐゎらぐゎらぐゎらと、<ruby>羽目<rt>はめ</rt></ruby>を<ruby>外<rt>はず</rt></ruby>して<ruby>今日御出<rt>こんにちおい</rt></ruby>の、いずれも<ruby>様<rt>さま</rt></ruby>に、<ruby>上<rt>あ</rt></ruby>げねばならぬ、<ruby>売<rt>う</rt></ruby>らねばならぬと、<ruby>息<rt>いき</rt></ruby>せい<ruby>引<rt>ひ</rt></ruby>っぱり、<ruby>東方世界<rt>とうほうせかい</rt></ruby>の<ruby>薬<rt>くすり</rt></ruby>の<ruby>元締<rt>もとじ</rt></ruby>め、<ruby>薬師如来<rt>やくしにょらい</rt></ruby>も<ruby>照覧<rt>しょうらん</rt></ruby>あれと、ホホを<ruby>敬<rt>うやま</rt></ruby>って、ういろうは、いらっしゃりませぬか。
+          </div>
+          <div style="font-size:11px;color:var(--text2);background:rgba(6,214,160,.06);border-radius:5px;padding:7px 9px;margin-top:7px">💡 最後まで崩れないこと。締めの「いらっしゃりませぬか」に全てを込める</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Auto-scroll reader overlay -->
+    <div id="uiro-scroll-ov" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.97);flex-direction:column">
+      <div style="background:var(--bg2);padding:12px 14px;display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:12px;font-weight:700;color:var(--gold)">📜 外郎売 初見読みモード</div>
+        <div style="display:flex;gap:7px">
+          <button class="btn bgr" style="font-size:11px;padding:5px 9px" onclick="changeScrollSpeed(-1)">遅く</button>
+          <button class="btn bgr" style="font-size:11px;padding:5px 9px" id="scroll-speed-lbl">普通</button>
+          <button class="btn bgr" style="font-size:11px;padding:5px 9px" onclick="changeScrollSpeed(1)">速く</button>
+          <button class="btn br" style="font-size:11px;padding:5px 9px" onclick="stopUiroScroll()">✕</button>
+        </div>
+      </div>
+      <div id="uiro-scroll-content" style="flex:1;overflow-y:auto;padding:24px 20px;font-size:20px;line-height:3.2;color:white;font-family:'Zen Kaku Gothic New',sans-serif"></div>
+      <div style="background:var(--bg2);padding:10px 14px;display:flex;gap:8px">
+        <button class="btn bt bfw" onclick="toggleUiroScrollPause()" id="uiro-pause-btn">⏸ 一時停止</button>
+        <button class="btn br" style="padding:10px 14px" onclick="stopUiroScroll()">停止</button>
+      </div>
+    </div>
+
+    <!-- Feature panels below the 外郎売 sections -->
+    <!-- 息芝居 Generator -->
+    <div class="card ca-blue">
+      <div class="sec">🌬️ 息芝居（アクションブレス）ランダムジェネレーター</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.7">アニメ・ゲーム現場で最も求められる非言語表現。台本のない「アドリブの息」の引き出しを強制的に増やす。</div>
+      <button class="btn bb bfw" style="margin-bottom:10px" onclick="generateBreath()">🎲 3シーンをランダム生成</button>
+      <div id="breath-trainer-wrap"><div style="text-align:center;padding:20px;color:var(--text3);font-size:13px">「ランダム生成」を押して開始</div></div>
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <button class="btn bt" style="flex:1" onclick="switchTab('prac','rec',null);goScreen('practice',document.querySelectorAll('.nb')[1])">🎤 録音して演じる</button>
+      </div>
+    </div>
+
+    <!-- キャラチェンジ -->
+    <div class="card ca-purple">
+      <div class="sec">🎭 多重人格キャラチェンジ タイムアタック</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.7">悠木碧さんが持つ「瞬時に別キャラへ憑依する技術」を鍛える。3キャラを1呼吸でノンストップで読む。</div>
+      <button class="btn bp bfw" style="margin-bottom:10px" onclick="generateCharaSwitch()">🎲 キャラセットを生成</button>
+      <div id="chara-switch-wrap"><div style="text-align:center;padding:16px;color:var(--text3)">「生成」を押してください</div></div>
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <button class="btn bt" style="flex:1" onclick="switchTab('prac','rec',null);goScreen('practice',document.querySelectorAll('.nb')[1])">🎤 ノンストップで録音</button>
+      </div>
+    </div>
+
+    <!-- タイム・コンストレイント -->
+    <div class="card ca-red">
+      <div class="sec">⏱ 初見読み タイム・コンストレイント</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.7">指定秒数で強制カット。現場の「ミリ秒尺合わせ」プレッシャーを再現。録音ゲートを完了してから実行。</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span style="font-size:12px;color:var(--text2)">制限時間:</span>
+        <select id="constraint-secs" style="background:var(--bg3);border:1px solid var(--bdr);color:var(--text);padding:7px 10px;border-radius:6px;font-size:12px">
+          <option value="10">10秒</option>
+          <option value="15" selected>15秒</option>
+          <option value="20">20秒</option>
+          <option value="30">30秒</option>
+          <option value="45">45秒</option>
+          <option value="60">60秒</option>
+        </select>
+        <span id="constraint-disp" style="font-family:'Share Tech Mono',monospace;font-size:18px;font-weight:900;color:var(--red)"></span>
+      </div>
+      <button class="btn br bfw bbig" onclick="startConstraintRec()">⚡ 制限録音スタート</button>
+    </div>
+
+    <!-- NGタグ -->
+    <div class="card" style="border-color:rgba(239,35,60,.25)">
+      <div class="sec">📊 NGタグ 弱点データベース</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.7">録音を聴いた後、当てはまるNGタグを選んで保存。Nyanoが蓄積データから弱点を冷酷に指摘する。</div>
+      <div id="ng-tag-wrap"></div>
+      <div style="margin-top:14px;border-top:1px solid var(--bdr);padding-top:12px">
+        <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:8px">Nyano冷酷ダッシュボード（過去7日）</div>
+        <div id="ng-dashboard"><div style="color:var(--text3);font-size:12px">まだデータがありません</div></div>
+      </div>
+    </div>
+
+    <!-- 外郎売 録音セルフチェック -->
+    <div class="card" style="border-color:rgba(76,201,240,.32)">
+      <div class="sec">🎧 外郎売 録音セルフチェック</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.7">録音を選んで再生し、6項目を即チェック。結果をレビュー欄に反映できます。</div>
+      <div id="uiro-selfcheck-wrap"><div style="text-align:center;padding:14px;color:var(--text3);font-size:12px">録音ライブラリを読み込み中...</div></div>
+    </div>
+
+    <!-- トップ層向け テイク比較 -->
+    <div class="card" style="border-color:rgba(168,85,247,.34)">
+      <div class="sec">🏆 トップ層テイク比較（A/B）</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.7">現在テイクと目標テイクをA/B再生し、トップ声優基準とのギャップを可視化。次回ミッションを自動提示します。</div>
+      <div id="uiro-compare-wrap"><div style="text-align:center;padding:14px;color:var(--text3);font-size:12px">比較データを準備中...</div></div>
+    </div>
+
+    <!-- 3テイク自動ランキング -->
+    <div class="card" style="border-color:rgba(240,180,41,.34)">
+      <div class="sec">🎯 3テイク自動ランキング（同条件）</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.7">同段落・同難易度のレビュー済み録音から、ベスト/中央値/ワーストを自動抽出して比較します。</div>
+      <div id="uiro-rank-wrap"><div style="text-align:center;padding:14px;color:var(--text3);font-size:12px">ランキングを集計中...</div></div>
+    </div>
+
+    <!-- 無料 外部AIフィードバック -->
+    <div class="card" style="border-color:rgba(34,197,94,.32)">
+      <div class="sec">🧠 無料 外部AIフィードバック（手動連携）</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.7">API不要・無料で利用可能。最新データからプロンプトを生成し、任意のAIへ貼り付けて第三者評価を取得します（同期機能に影響なし）。</div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px">
+        <button class="btn bg" style="font-size:11px;padding:6px 10px" onclick="generateUiroAIPrompt()">⚙️ プロンプト生成</button>
+        <button class="btn bt" style="font-size:11px;padding:6px 10px" onclick="copyUiroAIPrompt()">📋 プロンプトをコピー</button>
+      </div>
+      <textarea id="uiro-ai-prompt" rows="7" placeholder="ここに外部AIへ送るプロンプトを生成します"></textarea>
+      <div style="font-size:10px;color:var(--text3);margin:6px 0 8px">※ 推奨: Gemini / ChatGPT / Claude の無料プランへ貼り付け</div>
+      <textarea id="uiro-ai-feedback" rows="5" placeholder="AIから返ってきたフィードバックをここへ貼り付け"></textarea>
+      <button class="btn bp bfw" style="margin-top:8px;font-size:11px" onclick="saveAIFeedback()">✅ 外部フィードバックを保存</button>
+    </div>
+
+    <!-- 使い方ガイド -->
+    <div class="card" style="border-color:rgba(148,163,184,.36)">
+      <div class="sec">📘 外郎売トレーニング完全ガイド（詳細）</div>
+      <div style="margin-bottom:10px;padding:10px;border:1px solid var(--bdr);border-radius:8px;background:var(--bg3)">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:7px">
+          <div style="font-size:12px;font-weight:700;color:var(--gold)">✅ 今日の実行チェックリスト</div>
+          <div style="display:flex;gap:6px">
+            <button class="btn bgr" style="font-size:10px;padding:4px 8px" onclick="resetUiroChecklist(false)">今日のチェックを外す</button>
+            <button class="btn br" style="font-size:10px;padding:4px 8px" onclick="resetUiroChecklist(true)">全履歴をリセット</button>
+          </div>
+        </div>
+        <div id="uiro-checklist-wrap"></div>
+      </div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.8">
+        <div style="margin-bottom:8px">
+          <strong style="color:var(--gold)">目的:</strong> 「録音するだけ」で終わらせず、毎回 <strong style="color:white">改善点を言語化→次回メニュー化</strong> して、
+          再現性のある成長ループを回すこと。
+        </div>
+
+        <div style="font-size:12px;font-weight:700;color:var(--teal);margin:10px 0 6px">■ 毎回の基本フロー（10〜25分）</div>
+        <div>1) <strong style="color:white">外郎売 全文練習</strong> で段落を選ぶ（段落一〜五）</div>
+        <div>2) <strong style="color:white">録音</strong> ボタンで録音タブへ移動し、ゲート入力後に録音</div>
+        <div>3) <strong style="color:white">録音セルフチェック</strong> で6項目を OK/NG 判定して保存</div>
+        <div>4) <strong style="color:white">レビューに反映</strong> を押して、自己評価フォームへ自動入力</div>
+        <div>5) 必要なら <strong style="color:white">NGタグ</strong> を選択して保存（弱点統計に反映）</div>
+        <div>6) <strong style="color:white">外郎売レビュー保存</strong> で次回提案を更新</div>
+        <div>7) <strong style="color:white">トップ層テイク比較</strong> と <strong style="color:white">3テイクランキング</strong> で差分確認</div>
+
+        <div style="font-size:12px;font-weight:700;color:var(--teal);margin:12px 0 6px">■ 外部AIフィードバック（無料）</div>
+        <div>1) 「<strong style="color:white">プロンプト生成</strong>」→「<strong style="color:white">プロンプトをコピー</strong>」</div>
+        <div>2) 無料AI（Gemini / ChatGPT / Claude 等）に貼り付けて回答を取得</div>
+        <div>3) 回答を「AIから返ってきたフィードバック」欄に貼り付け</div>
+        <div>4) 「<strong style="color:white">外部フィードバックを保存</strong>」で履歴化</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px">※ API連携ではないため、アプリ同期や動作に負荷をかけません。</div>
+
+        <div style="font-size:12px;font-weight:700;color:var(--teal);margin:12px 0 6px">■ 週次ルール（おすすめ）</div>
+        <div>- 月〜金: 段落をローテーションし、1日1レビュー以上保存</div>
+        <div>- 土: 3テイクランキングで BEST/MEDIAN/WORST を聞き比べる</div>
+        <div>- 日: 外部AIフィードバックを1本取得し、次週課題を3つに絞る</div>
+
+        <div style="font-size:12px;font-weight:700;color:var(--teal);margin:12px 0 6px">■ 評価入力のコツ（迷ったら）</div>
+        <div>- 明瞭性: 子音が潰れず、語頭が立っているか</div>
+        <div>- 感情幅: 声色/圧/間で「感情の山」が作れているか</div>
+        <div>- 再現率: 2テイク目でも同品質を再現できるか</div>
+        <div>- 難易度体感: 余裕 / 適正 / ギリギリ / 破綻 で正直に記録</div>
+
+        <div style="font-size:12px;font-weight:700;color:var(--teal);margin:12px 0 6px">■ つまずき対策</div>
+        <div>- 録音が見つからない: 録音ラベルに「外郎売」を含めると抽出されます</div>
+        <div>- 評価がブレる: 同段落を連続2本録って2本目の再現率を最優先で確認</div>
+        <div>- 厳しすぎて折れる: 「次回1つだけ直す点」を必ずメモに残す</div>
+      </div>
+    </div>
+
+    <!-- 外郎売 レビュー -->
+    <div class="card ca-blue">
+      <div class="sec">🧭 外郎売 レビュー＆次回提案</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.7">録音後に自己評価を保存。直近データから次回の重点（段落・弱点・難易度）を自動提案します。</div>
+      <div id="uiro-review-wrap"></div>
+      <div style="margin-top:12px;border-top:1px solid var(--bdr);padding-top:11px">
+        <div style="font-size:11px;font-weight:700;color:var(--teal);margin-bottom:8px">次回の重点提案</div>
+        <div id="uiro-next-plan"><div style="color:var(--text3);font-size:12px">レビューを1件以上保存すると提案が表示されます</div></div>
+      </div>
+    </div>
+
+    <!-- エンタメ出力ミッション -->
+    <div class="card ca-gold">
+      <div class="sec">📺 エンタメ出力ミッション（声優×YouTube）</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.7">声優の練習を100万人YouTuberへの相乗効果に変える。週替わりの市場テスト指令。</div>
+      <div id="entame-mission-wrap"></div>
+    </div>
   </div>
 </div>
 
@@ -1375,7 +1731,7 @@ async function idbSaveRec(blob, label, dur){
   if(!idb) return;
   return new Promise(res=>{
     const tx = idb.transaction(['recs'],'readwrite');
-    tx.objectStore('recs').add({blob, label, date: new Date().toISOString(), dur});
+    tx.objectStore('recs').add({blob, label, date: new Date().toISOString(), dur, mime:blob.type});
     tx.oncomplete = () => res();
     tx.onerror = () => res();
   });
@@ -1432,7 +1788,14 @@ let S = {
   _ts:0,
   voiceSamples:[],
   extFeedback:{},
+  voiceLog:[],
+  ngHistory:[],
+  entameLog:[],
   obsData:[],
+  uiroReviewHistory:[],
+  uiroSelfChecks:[],
+  aiFeedbackLog:[],
+  uiroGuideChecklist:{},
 };
 
 function load(){
@@ -1441,7 +1804,15 @@ function load(){
     if(raw) S = Object.assign(S, JSON.parse(raw));
   }catch(e){}
 }
-function saveLocal(){ localStorage.setItem(SK, JSON.stringify(S)); }
+function stateForStorage(){
+  // Strip non-serializable Blobs from voiceSamples before saving
+  const stripped=JSON.parse(JSON.stringify(S, (key,val)=>{
+    if(val instanceof Blob) return undefined;
+    return val;
+  }));
+  return stripped;
+}
+function saveLocal(){ localStorage.setItem(SK, JSON.stringify(stateForStorage())); }
 function save(){ S._ts=Date.now(); saveLocal(); cloudSave(); }
 
 function todayKey(){ return new Date().toISOString().split('T')[0]; }
@@ -1839,22 +2210,33 @@ function stopRecording(){
 // ── RECORDING CORE ──
 let mediaRec=null, recChunks=[], isRecording=false, recSecs=0, recInt=null;
 
+// Detect best audio MIME type for this device (iOS needs audio/mp4)
+function getBestMime(){
+  const types=['audio/mp4;codecs=aac','audio/mp4','audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus'];
+  for(const t of types){ if(MediaRecorder.isTypeSupported(t)) return t; }
+  return '';
+}
+let _recMime='';
+
 async function startRec(){
   try{
-    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    const stream=await navigator.mediaDevices.getUserMedia({audio:{sampleRate:44100,channelCount:1,echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
     recChunks=[]; recSecs=0;
-    mediaRec=new MediaRecorder(stream);
+    _recMime=getBestMime();
+    mediaRec=_recMime?new MediaRecorder(stream,{mimeType:_recMime}):new MediaRecorder(stream);
     mediaRec.ondataavailable=e=>{ if(e.data.size>0) recChunks.push(e.data); };
     mediaRec.onstop=async()=>{
-      const blob=new Blob(recChunks,{type:'audio/webm'});
+      const mime=_recMime||'audio/webm';
+      const blob=new Blob(recChunks,{type:mime});
       const label=document.getElementById('rec-label').value.trim()||('録音 '+new Date().toLocaleString('ja-JP'));
       await idbSaveRec(blob,label,recSecs);
       stream.getTracks().forEach(t=>t.stop());
       S.st.recCount++; save(); checkAchs();
       renderRecLib();
       showToast('🎤','録音保存完了！',`「${label}」を保存しました`);
+      if(String(label).includes('外郎売')) markUiroChecklistItem('rec');
     };
-    mediaRec.start(); isRecording=true;
+    mediaRec.start(250); isRecording=true; // 250ms timeslice for iOS reliability
     document.getElementById('rec-status').textContent='録音中...';
     recInt=setInterval(()=>{
       recSecs++;
@@ -2050,7 +2432,7 @@ const MENTAL_POOL = {
     'ここに戻ってきたということは、まだ諦めていないということ。それで十分。',
   ],
   streak_high:[
-    `${0}日連続練習中！この調子で行こう。積み重ねは裏切らない。`,
+    '{N}日連続練習中！この調子で行こう。積み重ねは裏切らない。',
     '連続記録が伸びている。このリズムを体が覚えている。',
     '7日以上続けた人のほとんどは30日続ける。あなたはもうその仲間だ。',
   ]
@@ -2065,7 +2447,7 @@ function getMentalMsg(){
   else if(days>=3&&(td.yt.done||td.va.done)) pool=MENTAL_POOL.good;
   else pool=MENTAL_POOL.new;
   let msg=pool[new Date().getDate()%pool.length];
-  if(streak>=7) msg=msg.replace(String(0),String(streak));
+  if(streak>=7) msg=msg.replace('{N}',String(streak));
   return msg;
 }
 function renderMentalMsg(){
@@ -2111,7 +2493,17 @@ async function playRec(btnEl){
   const id=parseInt(btnEl.dataset.rid);
   const recs=await idbGetAll(); const r=recs.find(x=>x.id===id); if(!r) return;
   const el=document.getElementById('aud-'+id); if(!el) return;
-  el.src=URL.createObjectURL(r.blob); el.classList.add('show'); el.play().catch(()=>{});
+  // Revoke old object URL if exists
+  if(el._objUrl) URL.revokeObjectURL(el._objUrl);
+  const url=URL.createObjectURL(r.blob);
+  el._objUrl=url;
+  el.src=url;
+  el.classList.add('show');
+  el.load();
+  el.play().catch(err=>{
+    console.warn('playback error:',err);
+    showToast('⚠️','再生エラー','ファイルが破損しているか形式が未対応です。録音し直してください。');
+  });
 }
 async function editRecName(el){
   const id=parseInt(el.dataset.rid);
@@ -2132,8 +2524,9 @@ function completeQuest(id){
   if(id==='va'&&!isWUDone()){ showToast('🔒','WU未完了','ウォームアップを先に完了してください！'); return; }
   if(tRun[id]) stopTimer(id);
   const td=getTD(); if(td[id].done) return;
-  td[id].done=true; td[id].secs=Math.max(td[id].secs, tSecs[id]);
+  td[id].done=true;
   tSecs[id]=Math.max(tSecs[id],(id==='yt'?60:30)*60);
+  td[id].secs=Math.max(td[id].secs, tSecs[id]);
   const mins=Math.max(id==='yt'?60:30, Math.floor(tSecs[id]/60));
   gainXP(Math.round((id==='yt'?80:120)*S.p.xpBuff)); gainCry(70); S.p.xpBuff=1;
   if(id==='yt') S.st.ytSess++; else S.st.vaSess++;
@@ -2269,13 +2662,13 @@ function startResinTimer(){
   if(resinInt) clearInterval(resinInt);
   resinInt=setInterval(()=>{
     if(S.p.resin<160){ S.p.resin=Math.min(160,S.p.resin+1); save(); renderResin(); }
-    if(S.p.resin>=140&&S.notifs.resin) showToast('💎','練習の結晶が満タン！','ガチャを引いて消費しよう！（上限160個）');
+    if(S.p.resin>=100&&S.notifs.resin) showToast('💎','練習の結晶が満タン！','ガチャを引いて消費しよう！（上限160個）');
   },8*60*1000);
 }
 function renderResin(){
   const v=Math.floor(S.p.resin);
   const rv=document.getElementById('resin-val'); if(rv) rv.textContent=v;
-  const rf=document.getElementById('resin-fill'); if(rf) rf.style.width=(v/120*100)+'%';
+  const rf=document.getElementById('resin-fill'); if(rf) rf.style.width=(v/160*100)+'%';
   const rw=document.getElementById('resin-warn'); if(rw) rw.textContent=v>=150?'⚠️ もうすぐカンスト！':'';
   const rn=document.getElementById('resin-next'); if(rn) rn.textContent=v>=160?'満タン！ガチャで消費しよう':'回復中...';
   const gr=document.getElementById('g-res'); if(gr) gr.textContent=v;
@@ -2381,7 +2774,7 @@ function applyItem(item){
 function pull1(cur){
   const cost=cur==='crystal'?200:60;
   const have=cur==='crystal'?S.p.cry:S.p.resin;
-  if(have<cost){ showToast('💎','残高不足',`${cost}${cur==='crystal'?'クリスタル':'原石'}必要`); return; }
+  if(have<cost){ showToast('💎','残高不足',`${cost}${cur==='crystal'?'クリスタル':'練習の結晶'}必要`); return; }
   if(cur==='crystal') S.p.cry-=cost; else S.p.resin-=cost;
   const item=rollItem(); applyItem(item);
   S.gacha.unshift({r:item.r,icon:item.icon,name:item.name});
@@ -2391,7 +2784,7 @@ function pull1(cur){
 function pull10(cur){
   const cost=cur==='crystal'?2000:600;
   const have=cur==='crystal'?S.p.cry:S.p.resin;
-  if(have<cost){ showToast('💎','残高不足',`10連は${cost}${cur==='crystal'?'クリスタル':'原石'}必要`); return; }
+  if(have<cost){ showToast('💎','残高不足',`10連は${cost}${cur==='crystal'?'クリスタル':'練習の結晶'}必要`); return; }
   if(cur==='crystal') S.p.cry-=cost; else S.p.resin-=cost;
   const results=[]; let hasSR=false;
   for(let i=0;i<10;i++){
@@ -2716,7 +3109,7 @@ async function cloudSave(){
     const res=await fetch(url+'/nyano.json',{
       method:'PUT',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(S)
+      body:JSON.stringify(stateForStorage())
     });
     if(res.ok){ updateSyncBar('ok'); }
     else{
@@ -2900,7 +3293,8 @@ function goScreen(name, btnEl){
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
   const s=document.getElementById('s-'+name); if(s) s.classList.add('active');
   if(btnEl) btnEl.classList.add('active');
-  if(name==='practice'){ renderWarmup(); renderVPC(); renderRecLib(); renderVideoLib(); }
+  if(name==='practice'){ renderWarmup(); renderVPC(); renderRecLib(); renderVideoLib(); renderUiroTab(); renderArticulationWarning(); }
+  if(name!=='practice'&&_bpmRunning) stopMetronome();
   if(name==='daily'){ renderDCs(); renderLoginCal(); renderYTGrid(); }
   if(name==='gacha'){ renderBoss(); renderGHist(); }
   if(name==='set'){ renderAchs(); initNotifUI(); }
@@ -2919,7 +3313,7 @@ function switchTab(group, tab, btnEl){
   }else{
     const tabsEl=document.getElementById(group+'-tabs');
     if(tabsEl){
-      const tabOrder={wu:0,voice:1,rec:2,vid:3,ach:0,notif:1,vs:2,sync:3};
+      const tabOrder={wu:0,voice:1,rec:2,vid:3,uiro:4,ach:0,notif:1,vs:2,sync:3};
       const idx=tabOrder[tab];
       const btns=tabsEl.querySelectorAll('.tab-btn');
       if(idx!==undefined && btns[idx]) btns[idx].classList.add('active');
@@ -2928,13 +3322,14 @@ function switchTab(group, tab, btnEl){
   const pane=document.getElementById('tp-'+group+'-'+tab);
   if(pane){
     pane.classList.add('active');
-    if(tab==='wu') renderWarmup();
-    if(tab==='voice') renderVPC();
+    if(tab==='wu'){ renderWarmup(); renderArticulationWarning(); }
+    if(tab==='voice'&&group==='prac') renderVPC();
     if(tab==='rec'){ renderRecLib(); updateGateStatus(); }
     if(tab==='vid') renderVideoLib();
+    if(tab==='uiro') renderUiroTab();
     if(tab==='ach') renderAchs();
     if(tab==='notif') initNotifUI();
-    if(tab==='voice'){ renderVSList(); refreshSelfAudioList(); }
+    if(tab==='voice'&&group==='set'){ renderVSList(); refreshSelfAudioList(); }
   }
 }
 
@@ -2947,7 +3342,7 @@ function renderAll(){
   const dh=document.getElementById('dhrs'); if(dh) dh.textContent=(S.p.declines*2)+'時間';
   renderBoss(); renderGHist(); renderDCs(); renderLoginCal(); renderYTGrid();
   renderAchs(); renderWarmup(); renderVPC(); renderAffirm();
-  renderMentalMsg(); renderVideoLib(); renderVSList();
+  renderMentalMsg(); renderVideoLib(); renderVSList(); renderArticulationWarning();
 }
 
 // ═══════════════════════════════════════════════
@@ -3384,6 +3779,1101 @@ function markExternalFeedback(){
   const el=document.getElementById('ext-fb-status');
   if(el){ el.textContent=now.getMonth()+1+'月の外部フィードバック完了！ +100XP +50クリスタル'; el.style.display='block'; }
   showToast('📤','外部フィードバック記録！','自分と他人の「ズレ」を修正し続けることがプロへの道。+100XP');
+}
+
+
+// ═══════════════════════════════════════════════
+// 外郎売 DATA
+// ═══════════════════════════════════════════════
+const UIRO_DATA = [
+  {
+    id: 's1',
+    title: '段落一（冒頭・薬の紹介）',
+    emotion: '誇り高く・喜びと説得',
+    hint: '商人の誇りと温かみ。聴衆を引き込む第一声が命',
+    text: '<ruby>拙者<rt>せっしゃ</rt></ruby><ruby>親方<rt>おやかた</rt></ruby>と<ruby>申<rt>もう</rt></ruby>すは、お<ruby>立合<rt>たちあい</rt></ruby>の<ruby>中<rt>うち</rt></ruby>に<ruby>御存知<rt>ごぞんじ</rt></ruby>のお<ruby>方<rt>かた</rt></ruby>もござりましょうが、お<ruby>江戸<rt>えど</rt></ruby>を<ruby>発<rt>た</rt></ruby>って<ruby>二十里上方<rt>にじゅうりかみがた</rt></ruby>、<ruby>相州小田原一色町<rt>そうしゅうおだわらいっしきまち</rt></ruby>をお<ruby>過<rt>す</rt></ruby>ぎなされて、<ruby>青物町<rt>あおものちょう</rt></ruby>を<ruby>登<rt>のぼ</rt></ruby>りへおいでなさるれば、<ruby>欄干橋虎屋藤右衛門<rt>らんかんばしとらやとうえもん</rt></ruby>、<ruby>只今<rt>ただいま</rt></ruby>は<ruby>剃髪致<rt>ていはついた</rt></ruby>して、<ruby>円斎<rt>えんさい</rt></ruby>と<ruby>名乗<rt>なの</rt></ruby>りまする。<br><br><ruby>元朝<rt>がんちょう</rt></ruby>より<ruby>大晦日<rt>おおみそか</rt></ruby>まで、<ruby>御手<rt>おて</rt></ruby>に<ruby>入<rt>い</rt></ruby>れまする<ruby>此<rt>こ</rt></ruby>の<ruby>薬<rt>くすり</rt></ruby>は、<ruby>昔<rt>むかし</rt></ruby>ちんの<ruby>国<rt>くに</rt></ruby>の<ruby>唐人<rt>とうじん</rt></ruby>、<ruby>外郎<rt>ういろう</rt></ruby>という<ruby>人<rt>ひと</rt></ruby>、わが<ruby>朝<rt>ちょう</rt></ruby>へ<ruby>来<rt>きた</rt></ruby>り、<ruby>帝<rt>みかど</rt></ruby>へ<ruby>参代<rt>さんだい</rt></ruby>の<ruby>折<rt>おり</rt></ruby>から、<ruby>此<rt>こ</rt></ruby>の<ruby>薬<rt>くすり</rt></ruby>を<ruby>深<rt>ふか</rt></ruby>く<ruby>籠<rt>こ</rt></ruby>め<ruby>置<rt>お</rt></ruby>き、<ruby>用<rt>もち</rt></ruby>ゆる<ruby>時<rt>とき</rt></ruby>は<ruby>一粒<rt>ひとつぶ</rt></ruby>ずつ、<ruby>冠<rt>かんむり</rt></ruby>の<ruby>隙間<rt>すきま</rt></ruby>より<ruby>取<rt>と</rt></ruby>り<ruby>出<rt>だ</rt></ruby>す。<br><br><ruby>依<rt>よ</rt></ruby>って<ruby>其<rt>そ</rt></ruby>の<ruby>名<rt>な</rt></ruby>を<ruby>帝<rt>みかど</rt></ruby>より、「<ruby>透頂香<rt>とうちんこう</rt></ruby>」と<ruby>賜<rt>たまわ</rt></ruby>る。<ruby>即<rt>すなわ</rt></ruby>ち<ruby>文字<rt>もじ</rt></ruby>には、<ruby>頂<rt>いただ</rt></ruby>き、<ruby>透<rt>す</rt></ruby>く、<ruby>香<rt>にお</rt></ruby>いと<ruby>書<rt>か</rt></ruby>いて、とうちんこうと<ruby>申<rt>もう</rt></ruby>す。<br><br><ruby>只今<rt>ただいま</rt></ruby>は<ruby>此<rt>こ</rt></ruby>の<ruby>薬<rt>くすり</rt></ruby>、<ruby>殊<rt>こと</rt></ruby>の<ruby>外世上<rt>ほかせじょう</rt></ruby>に<ruby>弘<rt>ひろ</rt></ruby>まり、<ruby>方々<rt>ほうぼう</rt></ruby>に<ruby>似看板<rt>にせかんばん</rt></ruby>を<ruby>出<rt>だ</rt></ruby>し、イヤ、<ruby>小田原<rt>おだわら</rt></ruby>の、<ruby>灰俵<rt>はいだわら</rt></ruby>の、さん<ruby>俵<rt>だわら</rt></ruby>の、<ruby>炭俵<rt>すみだわら</rt></ruby>のと<ruby>色々<rt>いろいろ</rt></ruby>に<ruby>申<rt>もう</rt></ruby>せども、<ruby>平仮名<rt>ひらがな</rt></ruby>をもって「ういろう」と<ruby>記<rt>しる</rt></ruby>せしは<ruby>親方円斎<rt>おやかたえんさい</rt></ruby>ばかり。<br><br>もしやお<ruby>立合<rt>たちあい</rt></ruby>の<ruby>内<rt>うち</rt></ruby>に、<ruby>熱海<rt>あたみ</rt></ruby>か<ruby>塔<rt>とう</rt></ruby>の<ruby>沢<rt>さわ</rt></ruby>へ<ruby>湯治<rt>とうじ</rt></ruby>にお<ruby>出<rt>い</rt></ruby>でなさるるか、<ruby>又<rt>また</rt></ruby>は<ruby>伊勢参宮<rt>いせさんぐう</rt></ruby>の<ruby>折<rt>おり</rt></ruby>からは、<ruby>必<rt>かなら</rt></ruby>ず<ruby>門違<rt>かどちが</rt></ruby>いなされまするな。<br><br>お<ruby>登<rt>のぼ</rt></ruby>りならば<ruby>右<rt>みぎ</rt></ruby>の<ruby>方<rt>かた</rt></ruby>、お<ruby>下<rt>くだ</rt></ruby>りなれば<ruby>左側<rt>ひだりがわ</rt></ruby>、<ruby>八方<rt>はっぽう</rt></ruby>が<ruby>八<rt>や</rt></ruby>つ<ruby>棟<rt>むね</rt></ruby>、<ruby>表<rt>おもて</rt></ruby>が<ruby>三<rt>み</rt></ruby>つ<ruby>棟玉堂造<rt>むねぎょくどうづくり</rt></ruby>、<ruby>破風<rt>はふ</rt></ruby>には<ruby>菊<rt>きく</rt></ruby>に<ruby>桐<rt>きり</rt></ruby>の<ruby>薹<rt>とう</rt></ruby>の<ruby>御紋<rt>ごもん</rt></ruby>を<ruby>御赦免<rt>ごしゃめん</rt></ruby>あって、<ruby>系図正<rt>けいずただ</rt></ruby>しき<ruby>薬<rt>くすり</rt></ruby>でござる。'
+  },
+  {
+    id: 's2',
+    title: '段落二（薬の効果）',
+    emotion: '説得・実証・驚き',
+    hint: '「イヤどうも云えぬは」の間が肝心。体で感じながら声に出す',
+    text: '<ruby>イヤ<rt>いや</rt></ruby><ruby>最前<rt>さいぜん</rt></ruby>より<ruby>家名<rt>かめい</rt></ruby>の<ruby>自慢<rt>じまん</rt></ruby>ばかり<ruby>申<rt>もう</rt></ruby>しても、<ruby>御存<rt>ごぞん</rt></ruby>じない<ruby>方<rt>かた</rt></ruby>には、<ruby>正身<rt>しょうしん</rt></ruby>の<ruby>胡椒<rt>こしょう</rt></ruby>の<ruby>丸呑<rt>まるのみ</rt></ruby>、<ruby>白川夜船<rt>しらかわよふね</rt></ruby>。<br><br>さらば<ruby>一粒食<rt>いちりゅうた</rt></ruby>べかけて、その<ruby>気味合<rt>きみあい</rt></ruby>をお<ruby>目<rt>め</rt></ruby>にかけましょう。<ruby>先<rt>ま</rt></ruby>ず<ruby>此<rt>こ</rt></ruby>の<ruby>薬<rt>くすり</rt></ruby>を、かように<ruby>一粒舌<rt>ひとつぶした</rt></ruby>の<ruby>上<rt>うえ</rt></ruby>に<ruby>乗<rt>の</rt></ruby>せまして、<ruby>腹内<rt>ふくない</rt></ruby>へ<ruby>納<rt>おさ</rt></ruby>めますると、<ruby>イヤ<rt>いや</rt></ruby>どうも<ruby>云<rt>い</rt></ruby>えぬは、<ruby>胃<rt>い</rt></ruby>、<ruby>心<rt>しん</rt></ruby>、<ruby>肺<rt>はい</rt></ruby>、<ruby>肝<rt>かん</rt></ruby>が<ruby>健<rt>すこ</rt></ruby>やかになりて、<ruby>薫風咽<rt>くんぷうのんど</rt></ruby>より<ruby>来<rt>きた</rt></ruby>り、<ruby>口中微涼<rt>こうちゅうびりょう</rt></ruby>を<ruby>生<rt>しょう</rt></ruby>ずるが<ruby>如<rt>ごと</rt></ruby>し。<br><br><ruby>魚鳥<rt>ぎょちょう</rt></ruby>、<ruby>茸<rt>きのこ</rt></ruby>、<ruby>麺類<rt>めんるい</rt></ruby>の<ruby>食<rt>く</rt></ruby>い<ruby>合<rt>あ</rt></ruby>わせ、<ruby>其<rt>そ</rt></ruby>の<ruby>外<rt>ほか</rt></ruby>、<ruby>万病速攻<rt>まんびょうそっこう</rt></ruby>あること<ruby>神<rt>かみ</rt></ruby>の<ruby>如<rt>ごと</rt></ruby>し。<br><br>さて、<ruby>此<rt>こ</rt></ruby>の<ruby>薬<rt>くすり</rt></ruby>、<ruby>第一<rt>だいいち</rt></ruby>の<ruby>奇妙<rt>きみょう</rt></ruby>には、<ruby>舌<rt>した</rt></ruby>の<ruby>廻<rt>まわ</rt></ruby>ることが、<ruby>銭独楽<rt>ぜにごま</rt></ruby>が<ruby>裸足<rt>はだし</rt></ruby>で<ruby>逃<rt>にげ</rt></ruby>る。ひょっと<ruby>舌<rt>した</rt></ruby>が<ruby>廻<rt>まわ</rt></ruby>り<ruby>出<rt>だ</rt></ruby>すと、<ruby>矢<rt>や</rt></ruby>も<ruby>楯<rt>たて</rt></ruby>も<ruby>堪<rt>たま</rt></ruby>らぬじゃ。'
+  },
+  {
+    id: 's3',
+    title: '段落三（早口言葉①）',
+    emotion: '明瞭・正確・速度',
+    hint: 'アカサタナ行の切り替えが核心。速度より正確な音の粒立ちを意識する',
+    text: 'そりゃそりゃ、そらそりゃ。<ruby>廻<rt>まわ</rt></ruby>って<ruby>来<rt>き</rt></ruby>たわ、<ruby>廻<rt>まわ</rt></ruby>って<ruby>来<rt>く</rt></ruby>るわ。<br>アワヤ<ruby>咽<rt>のど</rt></ruby>、さたらな<ruby>舌<rt>した</rt></ruby>に、カ<ruby>牙<rt>げ</rt></ruby>サ<ruby>歯音<rt>しおん</rt></ruby>。ハマの<ruby>二<rt>ふた</rt></ruby>つは<ruby>唇<rt>くちびる</rt></ruby>の<ruby>軽重<rt>けいちょう</rt></ruby>、<ruby>開口爽<rt>かいごうさわ</rt></ruby>かに、あかさたなはまやらわ、おこそとのほもよろを。<br><br><ruby>一<rt>ひと</rt></ruby>つへぎへぎに、へぎほしはじかみ。<ruby>盆豆<rt>ぼんまめ</rt></ruby>、<ruby>盆米<rt>ぼんごめ</rt></ruby>、<ruby>盆牛蒡<rt>ぼんごぼう</rt></ruby>。<ruby>摘蓼<rt>つみたで</rt></ruby>、<ruby>摘豆<rt>つみまめ</rt></ruby>、<ruby>摘山椒<rt>つみさんしょう</rt></ruby>、<ruby>書写山<rt>しょしゃざん</rt></ruby>の<ruby>社僧正<rt>しゃそうじょう</rt></ruby>。<ruby>粉米<rt>こごめ</rt></ruby>の<ruby>生噛<rt>なまがみ</rt></ruby>、<ruby>粉米<rt>こごめ</rt></ruby>の<ruby>生噛<rt>なまがみ</rt></ruby>、こん<ruby>粉米<rt>こごめ</rt></ruby>の<ruby>小生噛<rt>こなまがみ</rt></ruby>。<br><br><ruby>繻子緋繻子<rt>しゅすひじゅす</rt></ruby>、<ruby>繻子繻珍<rt>しゅすしゅちん</rt></ruby>、<ruby>親<rt>おや</rt></ruby>も<ruby>嘉兵衛<rt>かへえ</rt></ruby>、<ruby>子<rt>こ</rt></ruby>も<ruby>嘉兵衛<rt>かへえ</rt></ruby>、<ruby>親嘉兵衛子嘉兵衛<rt>おやかへいこかへい</rt></ruby>、<ruby>子嘉兵衛親嘉兵衛<rt>こかへいおやかへい</rt></ruby>。<br><ruby>古栗<rt>ふるくり</rt></ruby>の<ruby>木<rt>き</rt></ruby>の<ruby>古切口<rt>ふるきりくち</rt></ruby>。<ruby>雨合羽<rt>あまがっぱ</rt></ruby>か<ruby>番合羽<rt>ばんがっぱ</rt></ruby>か。<ruby>貴様<rt>きさま</rt></ruby>の<ruby>脚絆<rt>きゃはん</rt></ruby>も<ruby>皮脚絆<rt>かわぎゃはん</rt></ruby>、<ruby>我等<rt>われら</rt></ruby>が<ruby>脚絆<rt>きゃはん</rt></ruby>も<ruby>皮脚絆<rt>かわぎゃはん</rt></ruby>。<ruby>尻皮袴<rt>しりかわばかま</rt></ruby>のしっぽころびを、<ruby>三針針長<rt>みはりはりなが</rt></ruby>にちょと<ruby>縫<rt>ぬ</rt></ruby>うて、<ruby>縫<rt>ぬ</rt></ruby>うてちょとぶん<ruby>出<rt>だ</rt></ruby>せ。<br><br><ruby>河原撫子<rt>かわらなでしこ</rt></ruby>、<ruby>野石竹<rt>のせきちく</rt></ruby>。<ruby>野良如来<rt>のらにょらい</rt></ruby>、<ruby>野良如来<rt>のらにょらい</rt></ruby>、<ruby>三野良如来<rt>みのらにょらい</rt></ruby>に<ruby>六野良如来<rt>むのらにょらい</rt></ruby>。<ruby>一寸先<rt>いっすんさき</rt></ruby>のお<ruby>小仏<rt>こぼとけ</rt></ruby>にお<ruby>蹴躓<rt>けつまず</rt></ruby>きゃるな。<ruby>細溝<rt>ほそみぞ</rt></ruby>に<ruby>泥鰌<rt>どじょ</rt></ruby>にょろり。<br><ruby>京<rt>きょう</rt></ruby>の<ruby>生鱈<rt>なまだら</rt></ruby>、<ruby>奈良生学鰹<rt>ならなままながつお</rt></ruby>、ちょと<ruby>四<rt>し</rt></ruby>、<ruby>五貫目<rt>ごかんめ</rt></ruby>。<br>お<ruby>茶立<rt>ちゃた</rt></ruby>ちょ、<ruby>茶立<rt>ちゃた</rt></ruby>ちょ、ちゃっと<ruby>立<rt>た</rt></ruby>ちょ、<ruby>茶立<rt>ちゃた</rt></ruby>ちょ、<ruby>青竹茶筅<rt>あおだけちゃせん</rt></ruby>でお<ruby>茶<rt>ちゃ</rt></ruby>ちゃっと<ruby>立<rt>た</rt></ruby>ちゃ。'
+  },
+  {
+    id: 's4',
+    title: '段落四（早口言葉②）',
+    emotion: 'リズム・精度・爆発力',
+    hint: '武具馬具や麦ごみのリズムを均等に。速さより等間隔が先',
+    text: '<ruby>来<rt>く</rt></ruby>るわ<ruby>来<rt>く</rt></ruby>るわ<ruby>何<rt>なに</rt></ruby>が<ruby>来<rt>く</rt></ruby>る、<ruby>高野<rt>こうや</rt></ruby>の<ruby>山<rt>やま</rt></ruby>のおこけら<ruby>小僧<rt>こぞう</rt></ruby>。<ruby>狸百匹<rt>たぬきひゃっぴき</rt></ruby>、<ruby>箸百膳<rt>はしひゃくぜん</rt></ruby>、<ruby>天目百杯<rt>てんもくひゃっぱい</rt></ruby>、<ruby>棒八百本<rt>ぼうはっぴゃっぽん</rt></ruby>。<br><br><ruby>武具馬具<rt>ぶぐばぐ</rt></ruby>、ぶく、ばぐ、<ruby>三武具馬具<rt>みぶぐばぐ</rt></ruby>、<ruby>合<rt>あ</rt></ruby>わせて<ruby>武具馬具<rt>ぶぐばぐ</rt></ruby>、<ruby>六武具馬具<rt>むぶぐばぐ</rt></ruby>。<ruby>菊栗<rt>きくくり</rt></ruby>、きく、くり、<ruby>三菊栗<rt>みきくくり</rt></ruby>、<ruby>合<rt>あ</rt></ruby>わせて<ruby>菊栗<rt>きくくり</rt></ruby>、<ruby>六菊栗<rt>むきくくり</rt></ruby>。<ruby>麦<rt>むぎ</rt></ruby>、ごみ、むぎ、ごみ、<ruby>三麦<rt>みむぎ</rt></ruby>ごみ、<ruby>合<rt>あ</rt></ruby>わせて<ruby>麦<rt>むぎ</rt></ruby>、ごみ、<ruby>六麦<rt>むむぎ</rt></ruby>ごみ。<br><br>あの<ruby>長押<rt>なげし</rt></ruby>の<ruby>長薙刀<rt>ながなぎなた</rt></ruby>は、<ruby>誰<rt>た</rt></ruby>が<ruby>長薙刀<rt>ながなぎなた</rt></ruby>ぞ。<ruby>向<rt>むこ</rt></ruby>うの<ruby>胡麻殻<rt>ごまがら</rt></ruby>は<ruby>荏<rt>え</rt></ruby>の<ruby>胡麻殻<rt>ごまがら</rt></ruby>か、<ruby>真胡麻殻<rt>まごまがら</rt></ruby>か、あれこそ<ruby>本<rt>ほん</rt></ruby>の<ruby>真胡麻殻<rt>まごまがら</rt></ruby>。<br>がらぴい、がらぴい<ruby>風車<rt>かざぐるま</rt></ruby>。おきゃがれ<ruby>小法師<rt>こぼし</rt></ruby>、おきゃがれ<ruby>小法師<rt>こぼうし</rt></ruby>、<ruby>昨夜<rt>ゆうべ</rt></ruby>もこぼして、<ruby>又<rt>また</rt></ruby>こぼした。<br><br>たあぷぽぽ、たあぷぽぽ、ちりから、ちりから、つったっぽ。たっぽたっぽ、<ruby>一丁蛸<rt>いっちょうだこ</rt></ruby>、<ruby>落<rt>おち</rt></ruby>たら<ruby>煮<rt>に</rt></ruby>て<ruby>食<rt>く</rt></ruby>を。<br><ruby>煮<rt>に</rt></ruby>ても<ruby>焼<rt>や</rt></ruby>いても<ruby>食<rt>く</rt></ruby>われぬものは、<ruby>五徳<rt>ごとく</rt></ruby>、<ruby>鉄弓<rt>てっきゅう</rt></ruby>、<ruby>金熊童子<rt>かなくまどうじ</rt></ruby>に、<ruby>石熊<rt>いしくま</rt></ruby>、<ruby>石持<rt>いしもち</rt></ruby>、<ruby>虎熊<rt>とらくま</rt></ruby>、<ruby>虎鱚<rt>とらきす</rt></ruby>、<ruby>中<rt>なか</rt></ruby>にも<ruby>東寺<rt>とうじ</rt></ruby>の<ruby>羅生門<rt>らしょうもん</rt></ruby>には、<ruby>茨木童子<rt>いばらきどうじ</rt></ruby>が、うで<ruby>栗五合<rt>ぐりごごう</rt></ruby>、<ruby>掴<rt>つか</rt></ruby>んでおむしゃる、かの<ruby>頼光<rt>らいこう</rt></ruby>の<ruby>膝元去<rt>ひざもとさ</rt></ruby>らず。'
+  },
+  {
+    id: 's5',
+    title: '段落五（締め）',
+    emotion: '躍動・笑い・締め',
+    hint: '最後まで崩れないこと。締めの「いらっしゃりませぬか」に全てを込める',
+    text: '<ruby>鮒<rt>ふな</rt></ruby>、<ruby>金柑<rt>きんかん</rt></ruby>、<ruby>椎茸<rt>しいたけ</rt></ruby>、<ruby>定<rt>さだ</rt></ruby>めて<ruby>後段<rt>ごだん</rt></ruby>な、<ruby>蕎麦切<rt>そばき</rt></ruby>り、<ruby>素麺<rt>そうめん</rt></ruby>、<ruby>饂飩<rt>うどん</rt></ruby>か、<ruby>愚鈍<rt>ぐどん</rt></ruby>な<ruby>小新発地<rt>こしんぼち</rt></ruby>。<ruby>小棚<rt>こだな</rt></ruby>の、<ruby>小下<rt>こした</rt></ruby>の、<ruby>小桶<rt>こおけ</rt></ruby>に、こ<ruby>味噌<rt>みそ</rt></ruby>が、こ<ruby>有<rt>あ</rt></ruby>るぞ、<ruby>小杓子<rt>こしゃくし</rt></ruby>、こ<ruby>持<rt>も</rt></ruby>って、こすくって、こよこせ。<br><br>おっと<ruby>合点<rt>がてん</rt></ruby>だ、<ruby>心得<rt>こころえ</rt></ruby>たんぼの、<ruby>川崎<rt>かわさき</rt></ruby>、<ruby>神奈川<rt>かながわ</rt></ruby>、<ruby>程ケ谷<rt>ほどがや</rt></ruby>、<ruby>戸塚<rt>とつか</rt></ruby>は、<ruby>走<rt>はし</rt></ruby>って<ruby>行<rt>い</rt></ruby>けば、<ruby>灸<rt>やいと</rt></ruby>を<ruby>擦<rt>す</rt></ruby>りむく、<ruby>三里<rt>さんり</rt></ruby>ばかりか、<ruby>藤沢<rt>ふじさわ</rt></ruby>、<ruby>平塚<rt>ひらつか</rt></ruby>、<ruby>大磯<rt>おおいそ</rt></ruby>がしや、<ruby>小磯<rt>こいそ</rt></ruby>の<ruby>宿<rt>しゅく</rt></ruby>を<ruby>七<rt>なな</rt></ruby>つ<ruby>起<rt>お</rt></ruby>きして、<ruby>早天早々<rt>そうてんそうそう</rt></ruby>、<ruby>相州小田原透頂香<rt>そうしゅうおだわらとうちんこう</rt></ruby>、<ruby>隠<rt>かく</rt></ruby>れござらぬ、<ruby>貴賤群衆<rt>きせんぐんじゅ</rt></ruby>の<ruby>花<rt>はな</rt></ruby>のお<ruby>江戸<rt>えど</rt></ruby>の<ruby>花<rt>はな</rt></ruby>ういろう。<br><br>あれあの<ruby>花<rt>はな</rt></ruby>を<ruby>見<rt>み</rt></ruby>てお<ruby>心<rt>こころ</rt></ruby>をお<ruby>和<rt>やわ</rt></ruby>らぎやという。<ruby>産子<rt>うぶこ</rt></ruby>、<ruby>這子<rt>はうこ</rt></ruby>に<ruby>至<rt>いた</rt></ruby>るまで、この<ruby>外郎<rt>ういろう</rt></ruby>の<ruby>御評判<rt>ごひょうばん</rt></ruby>、<ruby>御存知<rt>ごぞんじ</rt></ruby>ないとは<ruby>申<rt>もう</rt></ruby>されまいまいつぶり、<ruby>角出<rt>つのだ</rt></ruby>せ、<ruby>棒出<rt>ぼうだ</rt></ruby>せ、ぼうぼう<ruby>眉<rt>まゆ</rt></ruby>に、<ruby>臼<rt>うす</rt></ruby>、<ruby>杵<rt>きね</rt></ruby>、<ruby>擂鉢<rt>すりばち</rt></ruby>、ばちばちぐゎらぐゎらぐゎらと、<ruby>羽目<rt>はめ</rt></ruby>を<ruby>外<rt>はず</rt></ruby>して<ruby>今日御出<rt>こんにちおい</rt></ruby>の、いずれも<ruby>様<rt>さま</rt></ruby>に、<ruby>上<rt>あ</rt></ruby>げねばならぬ、<ruby>売<rt>う</rt></ruby>らねばならぬと、<ruby>息<rt>いき</rt></ruby>せい<ruby>引<rt>ひ</rt></ruby>っぱり、<ruby>東方世界<rt>とうほうせかい</rt></ruby>の<ruby>薬<rt>くすり</rt></ruby>の<ruby>元締<rt>もとじ</rt></ruby>め、<ruby>薬師如来<rt>やくしにょらい</rt></ruby>も<ruby>照覧<rt>しょうらん</rt></ruby>あれと、ホホを<ruby>敬<rt>うやま</rt></ruby>って、ういろうは、いらっしゃりませぬか。'
+  }
+];
+
+// ═══════════════════════════════════════════════
+// 外郎売 TAB FUNCTIONS
+// ═══════════════════════════════════════════════
+let _uiroScrollInt=null, _uiroScrollSpeed=2, _uiroScrollPaused=false;
+const UIRO_SCROLL_SPEEDS=[1,2,4,6,8];
+const UIRO_SCROLL_LABELS=['とても遅い','遅い','普通','速い','とても速い'];
+let _uiroSectionFilter='all';
+let _uiroSelfCheckScores=new Array(6).fill(null);
+let _uiroSelectedRecId='';
+let _uiroSelectedRecMeta=null;
+let _uiroCompareCurrentRecId='';
+let _uiroCompareTargetRecId='';
+let _uiroRankSection='all';
+let _uiroRankDifficulty='all';
+
+function normalizeUiroPlainText(html){
+  // rtタグ（フリガナ）を除去してからテキスト化することで「拙者せっしゃ」の重複を防ぐ
+  const noRt=html.replace(/<rt>[^<]*<\/rt>/gi,'');
+  const box=document.createElement('div');
+  box.innerHTML=noRt.replace(/<br\s*\/?>/gi,'\n');
+  return (box.textContent||'').replace(/\n{3,}/g,'\n\n').trim();
+}
+
+function getVisibleUiroSectionIds(){
+  return Array.from(document.querySelectorAll('#uiro-sections .uiro-section'))
+    .filter(section=>section.style.display!=='none')
+    .map(section=>section.id.replace('uiro-',''));
+}
+
+function updateUiroScrollSpeedLabel(){
+  const labelEl=document.getElementById('scroll-speed-lbl');
+  if(labelEl) labelEl.textContent=UIRO_SCROLL_LABELS[_uiroScrollSpeed];
+}
+
+function renderUiroSections(){
+  const wrap=document.getElementById('uiro-sections');
+  if(!wrap) return;
+  wrap.innerHTML=UIRO_DATA.map(section=>`
+    <div class="uiro-section" id="uiro-${section.id}">
+      <div class="uiro-sec-header">
+        <div>
+          <div style="font-size:13px;font-weight:900;color:var(--gold)">${section.title}</div>
+          <div style="font-size:10px;color:var(--purple);margin-top:2px">演技指定: ${section.emotion}</div>
+        </div>
+        <button class="btn bt" style="font-size:10px;padding:5px 9px;white-space:nowrap" data-sid="${section.id}" onclick="startUiroRec(this)">🎤 録音</button>
+      </div>
+      <div class="uiro-text uiro-main-text" id="uiro-text-${section.id}">
+        ${section.text}
+      </div>
+      <div style="font-size:11px;color:var(--text2);background:rgba(6,214,160,.06);border-radius:5px;padding:7px 9px;margin-top:7px">💡 ${section.hint}</div>
+    </div>
+  `).join('');
+}
+
+function renderUiroTab(){
+  renderUiroSections();
+  showUiroSection(_uiroSectionFilter);
+  renderUiroSelfCheckPanel();
+  renderUiroComparePanel();
+  renderUiroTakeRankingPanel();
+  renderUiroChecklist();
+  renderUiroReviewPanel();
+  renderUiroNextPlan();
+  renderNGTagPanel();
+  renderNGDashboard();
+  renderEntameMission();
+  renderBreathTrainer();
+  renderCharaSwitch();
+}
+function showUiroSection(sid){
+  _uiroSectionFilter=sid;
+  document.querySelectorAll('.uiro-section').forEach(s=>{
+    s.style.display=(sid==='all'||s.id==='uiro-'+sid)?'block':'none';
+  });
+}
+function uiroShowAll(){ showUiroSection('all'); }
+
+function startUiroRec(btnEl){
+  const sid=btnEl.dataset.sid;
+  const sec=UIRO_DATA.find(s=>s.id===sid); if(!sec) return;
+  const pu=document.getElementById('gate-purpose');
+  const al=document.getElementById('gate-adlib');
+  if(pu){ pu.value='外郎売 '+sec.title+'を完璧に読む'; updateGateStatus(); }
+  if(al){ al.value='この台本で聴衆を魅了したい'; updateGateStatus(); }
+  goScreen('practice',document.querySelectorAll('.nb')[1]);
+  switchTab('prac','rec',null);
+  const rl=document.getElementById('rec-label');
+  const emotion=document.getElementById('uiro-emotion-sel');
+  if(rl) rl.value='外郎売 '+sec.title+(emotion&&emotion.value?' ('+emotion.value+'感情)':'');
+  showToast('📜','外郎売録音モード','録音前ゲートを入力して録音してください');
+}
+
+function uiroAutoScroll(){
+  const ov=document.getElementById('uiro-scroll-ov');
+  const content=document.getElementById('uiro-scroll-content');
+  if(!ov||!content) return;
+  const visibleIds=getVisibleUiroSectionIds();
+  const sections=UIRO_DATA.filter(section=>visibleIds.includes(section.id));
+  // innerHTMLでrubyタグを有効にしてフリガナを漢字の上に表示する
+  const parts=sections.map(section=>{
+    const titleHtml=`<div style="color:var(--gold);font-weight:900;margin:20px 0 10px;font-size:16px;letter-spacing:.05em">━━ ${section.title} ━━</div>`;
+    const textHtml=`<div style="margin-bottom:28px;font-size:20px;line-height:3.0">${section.text}</div>`;
+    return titleHtml+textHtml;
+  });
+  content.innerHTML=parts.join('');
+  content.scrollTop=0;
+  ov.style.display='flex';
+  _uiroScrollPaused=false;
+  const pbtn=document.getElementById('uiro-pause-btn');
+  if(pbtn) pbtn.textContent='⏸ 一時停止';
+  updateUiroScrollSpeedLabel();
+  startUiroScrollInterval();
+}
+function startUiroScrollInterval(){
+  if(_uiroScrollInt) clearInterval(_uiroScrollInt);
+  const spd=UIRO_SCROLL_SPEEDS[_uiroScrollSpeed];
+  _uiroScrollInt=setInterval(()=>{
+    if(_uiroScrollPaused) return;
+    const c=document.getElementById('uiro-scroll-content');
+    if(!c) return;
+    if(c.scrollTop+c.clientHeight>=c.scrollHeight-10){ stopUiroScroll(); return; }
+    c.scrollTop+=spd;
+  },50);
+}
+function changeScrollSpeed(delta){
+  _uiroScrollSpeed=Math.min(4,Math.max(0,_uiroScrollSpeed+delta));
+  updateUiroScrollSpeedLabel();
+  startUiroScrollInterval();
+}
+function toggleUiroScrollPause(){
+  _uiroScrollPaused=!_uiroScrollPaused;
+  const btn=document.getElementById('uiro-pause-btn');
+  if(btn) btn.textContent=_uiroScrollPaused?'▶ 再開':'⏸ 一時停止';
+}
+function stopUiroScroll(){
+  if(_uiroScrollInt){ clearInterval(_uiroScrollInt); _uiroScrollInt=null; }
+  const ov=document.getElementById('uiro-scroll-ov');
+  if(ov) ov.style.display='none';
+}
+
+function escapeHtml(str){
+  return String(str||'').replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+
+const UIRO_SELF_CHECK_ITEMS=[
+  '1音目で目的が伝わる声だった',
+  '語尾が落ちず最後まで芯を維持した',
+  'テンポが走らずリズムを保てた',
+  '噛み/詰まりを自己修正できた',
+  '感情の山が1箇所以上作れた',
+  '収録後に再現できる課題が言語化できた',
+];
+
+async function renderUiroSelfCheckPanel(){
+  const wrap=document.getElementById('uiro-selfcheck-wrap');
+  if(!wrap) return;
+  const recs=(await idbGetAll()).filter(r=>String(r.label||'').includes('外郎売')).slice(0,20);
+  const latest=(S.uiroSelfChecks&&S.uiroSelfChecks[0])||null;
+  if(recs.length===0){
+    wrap.innerHTML='<div style="color:var(--text3);font-size:12px">外郎売録音がまだありません。外郎売の「🎤 録音」から1本録ってください。</div>';
+    return;
+  }
+  if(!_uiroSelectedRecId||!recs.some(r=>String(r.id)===String(_uiroSelectedRecId))){
+    _uiroSelectedRecId=String(recs[0].id);
+  }
+  const latestInfo=latest?`<div style="font-size:11px;color:var(--text2);margin-top:8px">直近スコア: ${latest.passed}/${UIRO_SELF_CHECK_ITEMS.length}（${new Date(latest.date).toLocaleDateString('ja-JP')}）</div>`:'';
+  wrap.innerHTML=`
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
+      <select id="uiro-selfcheck-rec" style="flex:1;min-width:220px;background:var(--bg3);border:1px solid var(--bdr);color:var(--text);padding:8px 10px;border-radius:6px;font-size:12px" onchange="selectUiroSelfCheckRec(this)">
+        ${recs.map(r=>{
+          const d=new Date(r.date);
+          const ds=`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+          const dur=r.dur?`${Math.floor(r.dur/60)}:${String(r.dur%60).padStart(2,'0')}`:'--:--';
+          return `<option value="${r.id}" ${String(r.id)===String(_uiroSelectedRecId)?'selected':''}>${escapeHtml(r.label||'外郎売録音')} (${ds} ${dur})</option>`;
+        }).join('')}
+      </select>
+      <button class="btn bt" style="font-size:11px;padding:6px 10px" onclick="playUiroSelfCheckRec()">▶ 再生</button>
+    </div>
+    <audio id="uiro-selfcheck-audio" controls preload="none" style="width:100%;margin-bottom:10px;display:none"></audio>
+    <div id="uiro-selfcheck-items"></div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">
+      <button class="btn bg" style="font-size:11px;padding:6px 10px" onclick="saveUiroSelfCheck()">📌 セルフチェック保存 (+20XP)</button>
+      <button class="btn bgr" style="font-size:11px;padding:6px 10px" onclick="applySelfCheckToReview()">🪄 レビューに反映</button>
+    </div>
+    ${latestInfo}
+  `;
+  _uiroSelectedRecMeta=recs.find(r=>String(r.id)===String(_uiroSelectedRecId))||null;
+  renderUiroSelfCheckItems();
+}
+
+function renderUiroSelfCheckItems(){
+  const box=document.getElementById('uiro-selfcheck-items');
+  if(!box) return;
+  const passed=_uiroSelfCheckScores.filter(v=>v===1).length;
+  box.innerHTML=`
+    <div style="font-size:11px;color:var(--text2);margin-bottom:6px">セルフチェック: ${passed}/${UIRO_SELF_CHECK_ITEMS.length}</div>
+    ${UIRO_SELF_CHECK_ITEMS.map((q,idx)=>`
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid var(--bdr)">
+        <div style="font-size:12px;line-height:1.5">${q}</div>
+        <div style="display:flex;gap:5px;flex-shrink:0">
+          <button class="btn ${_uiroSelfCheckScores[idx]===1?'bg':'bgr'}" style="font-size:10px;padding:4px 8px" onclick="setUiroSelfCheckScore(${idx},1)">OK</button>
+          <button class="btn ${_uiroSelfCheckScores[idx]===0?'br':'bgr'}" style="font-size:10px;padding:4px 8px" onclick="setUiroSelfCheckScore(${idx},0)">NG</button>
+        </div>
+      </div>
+    `).join('')}
+  `;
+}
+
+function setUiroSelfCheckScore(idx,val){
+  _uiroSelfCheckScores[idx]=val;
+  renderUiroSelfCheckItems();
+}
+
+function selectUiroSelfCheckRec(sel){
+  _uiroSelectedRecId=sel.value;
+}
+
+async function playUiroSelfCheckRec(){
+  if(!_uiroSelectedRecId) return;
+  const recs=await idbGetAll();
+  const rec=recs.find(r=>String(r.id)===String(_uiroSelectedRecId));
+  if(!rec) return;
+  _uiroSelectedRecMeta=rec;
+  const el=document.getElementById('uiro-selfcheck-audio');
+  if(!el) return;
+  if(el._objUrl) URL.revokeObjectURL(el._objUrl);
+  const url=URL.createObjectURL(rec.blob);
+  el._objUrl=url;
+  el.src=url;
+  el.style.display='block';
+  el.load();
+  el.play().catch(()=>{});
+}
+
+function applySelfCheckToReview(){
+  const scored=_uiroSelfCheckScores.filter(v=>v!==null);
+  if(scored.length===0){
+    showToast('⚠️','未入力','先にセルフチェックを入力してください');
+    return;
+  }
+  const passed=_uiroSelfCheckScores.filter(v=>v===1).length;
+  const rate=passed/UIRO_SELF_CHECK_ITEMS.length;
+  const to5=v=>String(Math.max(1,Math.min(5,Math.round(v))));
+  const clarity=to5(1+rate*4);
+  const emotion=to5(1+rate*4-(_uiroSelfCheckScores[4]===0?1:0));
+  const consistency=to5(1+rate*4-(_uiroSelfCheckScores[2]===0?1:0));
+  const c=document.getElementById('uiro-score-clarity'); if(c) c.value=clarity;
+  const e=document.getElementById('uiro-score-emotion'); if(e) e.value=emotion;
+  const k=document.getElementById('uiro-score-consistency'); if(k) k.value=consistency;
+  const d=document.getElementById('uiro-review-diff');
+  if(d) d.value=rate>=0.84?'easy':rate>=0.67?'normal':rate>=0.5?'hard':'very-hard';
+  const note=document.getElementById('uiro-review-note');
+  if(note){
+    const ngs=UIRO_SELF_CHECK_ITEMS.map((q,i)=>_uiroSelfCheckScores[i]===0?`- ${q}`:'').filter(Boolean).join('\n');
+    note.value=`セルフチェック反映 (${passed}/${UIRO_SELF_CHECK_ITEMS.length})\n${ngs}`;
+  }
+  showToast('🪄','レビュー反映完了','セルフチェック結果を評価フォームに反映しました');
+}
+
+function saveUiroSelfCheck(){
+  const scored=_uiroSelfCheckScores.filter(v=>v!==null);
+  if(scored.length<UIRO_SELF_CHECK_ITEMS.length){
+    showToast('⚠️','未入力項目あり','6項目すべてをOK/NGで入力してください');
+    return;
+  }
+  const passed=_uiroSelfCheckScores.filter(v=>v===1).length;
+  if(!S.uiroSelfChecks) S.uiroSelfChecks=[];
+  S.uiroSelfChecks.unshift({
+    date:new Date().toISOString(),
+    recId:_uiroSelectedRecId?parseInt(_uiroSelectedRecId):null,
+    recLabel:_uiroSelectedRecMeta?_uiroSelectedRecMeta.label:'',
+    passed,
+    scores:[..._uiroSelfCheckScores],
+  });
+  if(S.uiroSelfChecks.length>300) S.uiroSelfChecks=S.uiroSelfChecks.slice(0,300);
+  gainXP(20);
+  save();
+  checkAchs();
+  markUiroChecklistItem('self');
+  showToast('🎧','セルフチェック保存',`${passed}/${UIRO_SELF_CHECK_ITEMS.length} を記録しました。+20XP`);
+  renderUiroSelfCheckPanel();
+}
+
+function getTopReviewScoreByRecId(recId){
+  if(!S.uiroReviewHistory||!S.uiroReviewHistory.length||!recId) return null;
+  const items=S.uiroReviewHistory.filter(r=>String(r.recId||'')===String(recId));
+  if(!items.length) return null;
+  const scored=items.map(r=>({
+    avg:(r.clarity+r.emotion+r.consistency)/3,
+    selfRate:(r.selfCheckTotal?((r.selfCheckPassed||0)/r.selfCheckTotal):0),
+    r,
+  })).sort((a,b)=>(b.avg+b.selfRate)-(a.avg+a.selfRate))[0];
+  return scored.r;
+}
+
+function calcEliteGap(){
+  const latest=(S.uiroReviewHistory&&S.uiroReviewHistory[0])||null;
+  if(!latest) return null;
+  const target={clarity:5,emotion:5,consistency:5,selfRate:1};
+  const selfRate=latest.selfCheckTotal?((latest.selfCheckPassed||0)/latest.selfCheckTotal):0;
+  return {
+    clarity:Math.max(0,target.clarity-latest.clarity),
+    emotion:Math.max(0,target.emotion-latest.emotion),
+    consistency:Math.max(0,target.consistency-latest.consistency),
+    selfRate:Math.max(0,target.selfRate-selfRate),
+  };
+}
+
+function buildEliteMissionText(gap){
+  if(!gap) return 'まず1本レビュー保存して基準を作る。';
+  const entries=[
+    ['明瞭性',gap.clarity],
+    ['感情幅',gap.emotion],
+    ['再現率',gap.consistency],
+    ['自己一致率',gap.selfRate*5],
+  ].sort((a,b)=>b[1]-a[1]);
+  const weak=entries[0][0];
+  if(weak==='明瞭性') return '段落三を半速2回→通常2回。子音の頭を0.1秒だけ前に置く意識で録音1本。';
+  if(weak==='感情幅') return '段落一を「喜び→威厳→絶望」で3連続。感情切替の1音目だけを重点チェック。';
+  if(weak==='再現率') return '同一段落を連続2テイク収録し、2本目で1本目の抑揚を再現する訓練を行う。';
+  return '録音直後に6項目セルフチェックを必ず実施し、NG2つ以下になるまで再挑戦。';
+}
+
+async function renderUiroComparePanel(){
+  const wrap=document.getElementById('uiro-compare-wrap');
+  if(!wrap) return;
+  const recs=(await idbGetAll()).filter(r=>String(r.label||'').includes('外郎売')).slice(0,30);
+  if(!recs.length){
+    wrap.innerHTML='<div style="color:var(--text3);font-size:12px">比較用の外郎売録音がありません。まず2本以上録音してください。</div>';
+    return;
+  }
+  if(!_uiroCompareCurrentRecId) _uiroCompareCurrentRecId=String(recs[0].id);
+  if(!_uiroCompareTargetRecId){
+    const bestReview=(S.uiroReviewHistory||[]).find(r=>r.recId);
+    _uiroCompareTargetRecId=bestReview?String(bestReview.recId):String((recs[1]||recs[0]).id);
+  }
+  const gap=calcEliteGap();
+  const mission=buildEliteMissionText(gap);
+  const pct=v=>`${Math.max(0,Math.min(100,Math.round((1-(v/5))*100)))}%`;
+  wrap.innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div>
+        <div style="font-size:10px;color:var(--text3);margin-bottom:4px">現在テイク</div>
+        <select id="uiro-compare-current" style="width:100%;background:var(--bg3);border:1px solid var(--bdr);color:var(--text);padding:8px;border-radius:6px;font-size:12px" onchange="selectUiroCompareRec(this,'current')">
+          ${recs.map(r=>`<option value="${r.id}" ${String(r.id)===String(_uiroCompareCurrentRecId)?'selected':''}>${escapeHtml(r.label||'外郎売録音')}</option>`).join('')}
+        </select>
+        <button class="btn bt" style="margin-top:6px;font-size:11px;padding:5px 9px" onclick="playUiroCompare('current')">▶ 現在を再生</button>
+      </div>
+      <div>
+        <div style="font-size:10px;color:var(--text3);margin-bottom:4px">目標テイク</div>
+        <select id="uiro-compare-target" style="width:100%;background:var(--bg3);border:1px solid var(--bdr);color:var(--text);padding:8px;border-radius:6px;font-size:12px" onchange="selectUiroCompareRec(this,'target')">
+          ${recs.map(r=>`<option value="${r.id}" ${String(r.id)===String(_uiroCompareTargetRecId)?'selected':''}>${escapeHtml(r.label||'外郎売録音')}</option>`).join('')}
+        </select>
+        <button class="btn bp" style="margin-top:6px;font-size:11px;padding:5px 9px" onclick="playUiroCompare('target')">▶ 目標を再生</button>
+      </div>
+    </div>
+    <audio id="uiro-compare-audio-current" controls preload="none" style="width:100%;display:none;margin-bottom:6px"></audio>
+    <audio id="uiro-compare-audio-target" controls preload="none" style="width:100%;display:none"></audio>
+    <div style="margin-top:10px;padding:10px;border:1px solid var(--bdr);border-radius:7px;background:var(--bg3)">
+      <div style="font-size:11px;color:var(--gold);font-weight:700;margin-bottom:6px">松岡禎丞級ギャップ（最新レビュー基準）</div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.8">
+        明瞭性達成率: ${gap?pct(gap.clarity):'--'} / 感情幅達成率: ${gap?pct(gap.emotion):'--'} / 再現率達成率: ${gap?pct(gap.consistency):'--'}
+      </div>
+      <div style="font-size:11px;color:var(--purple);margin-top:6px;line-height:1.7"><strong>次回トップ層ミッション:</strong> ${mission}</div>
+    </div>
+  `;
+}
+
+function selectUiroCompareRec(sel,type){
+  if(type==='current') _uiroCompareCurrentRecId=sel.value;
+  else _uiroCompareTargetRecId=sel.value;
+}
+
+async function playUiroCompare(type){
+  const rid=type==='current'?_uiroCompareCurrentRecId:_uiroCompareTargetRecId;
+  if(!rid) return;
+  const recs=await idbGetAll();
+  const rec=recs.find(r=>String(r.id)===String(rid));
+  if(!rec) return;
+  const el=document.getElementById(type==='current'?'uiro-compare-audio-current':'uiro-compare-audio-target');
+  if(!el) return;
+  if(el._objUrl) URL.revokeObjectURL(el._objUrl);
+  const url=URL.createObjectURL(rec.blob);
+  el._objUrl=url;
+  el.src=url;
+  el.style.display='block';
+  el.load();
+  el.play().catch(()=>{});
+  markUiroChecklistItem('rank');
+}
+
+function getReviewCompositeScore(review){
+  const base=(review.clarity+review.emotion+review.consistency)/3;
+  const selfRate=review.selfCheckTotal?((review.selfCheckPassed||0)/review.selfCheckTotal):0;
+  const diffPenalty=review.difficulty==='very-hard'?0.8:review.difficulty==='hard'?0.4:0;
+  return base + selfRate - diffPenalty;
+}
+
+function buildRankedTriplet(reviews){
+  if(reviews.length<3) return null;
+  const sorted=[...reviews].sort((a,b)=>getReviewCompositeScore(b)-getReviewCompositeScore(a));
+  const midIdx=Math.floor((sorted.length-1)/2);
+  return { best:sorted[0], mid:sorted[midIdx], worst:sorted[sorted.length-1], total:sorted.length };
+}
+
+async function playRankedTake(recId, slot){
+  if(!recId) return;
+  const recs=await idbGetAll();
+  const rec=recs.find(r=>String(r.id)===String(recId));
+  if(!rec) return;
+  const el=document.getElementById(`uiro-rank-audio-${slot}`);
+  if(!el) return;
+  if(el._objUrl) URL.revokeObjectURL(el._objUrl);
+  const url=URL.createObjectURL(rec.blob);
+  el._objUrl=url;
+  el.src=url;
+  el.style.display='block';
+  el.load();
+  el.play().catch(()=>{});
+  markUiroChecklistItem('rank');
+}
+
+function setUiroRankFilter(sel, kind){
+  if(kind==='section') _uiroRankSection=sel.value;
+  else _uiroRankDifficulty=sel.value;
+  renderUiroTakeRankingPanel();
+}
+
+const UIRO_CHECKLIST_ITEMS=[
+  {id:'rec',label:'外郎売を1本録音した'},
+  {id:'self',label:'セルフチェック6項目を入力した'},
+  {id:'review',label:'レビューを保存した'},
+  {id:'rank',label:'3テイク比較（BEST/WORST）を聞いた'},
+  {id:'ai',label:'外部AIフィードバックを取得または保存した'},
+];
+
+function getUiroChecklistTodayKey(){
+  return new Date().toISOString().slice(0,10);
+}
+
+function getChecklistState(){
+  const dayKey=getUiroChecklistTodayKey();
+  if(!S.uiroGuideChecklist) S.uiroGuideChecklist={};
+  if(!S.uiroGuideChecklist[dayKey]) S.uiroGuideChecklist[dayKey]={};
+  return {dayKey,state:S.uiroGuideChecklist[dayKey]};
+}
+
+function markUiroChecklistItem(id){
+  const {state}=getChecklistState();
+  if(!state[id]){
+    state[id]=true;
+    save();
+  }
+  renderUiroChecklist();
+}
+
+function renderUiroChecklist(){
+  const wrap=document.getElementById('uiro-checklist-wrap');
+  if(!wrap) return;
+  const {dayKey,state}=getChecklistState();
+  const done=UIRO_CHECKLIST_ITEMS.filter(i=>state[i.id]).length;
+  wrap.innerHTML=`
+    <div style="font-size:11px;color:var(--text2);margin-bottom:6px">${dayKey} の進捗: <strong style="color:var(--teal)">${done}/${UIRO_CHECKLIST_ITEMS.length}</strong></div>
+    ${UIRO_CHECKLIST_ITEMS.map(item=>`
+      <label style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--bdr);font-size:12px;color:var(--text)">
+        <input type="checkbox" ${state[item.id]?'checked':''} onchange="toggleUiroChecklist('${item.id}', this.checked)" style="accent-color:var(--teal)">
+        <span>${item.label}</span>
+      </label>
+    `).join('')}
+  `;
+}
+
+function toggleUiroChecklist(id,checked){
+  const {state}=getChecklistState();
+  state[id]=checked;
+  save();
+  renderUiroChecklist();
+}
+
+function resetUiroChecklist(allHistory){
+  if(allHistory){
+    if(!confirm('外郎売チェックリストの全履歴をリセットしますか？')) return;
+    S.uiroGuideChecklist={};
+  }else{
+    const {dayKey}=getChecklistState();
+    S.uiroGuideChecklist[dayKey]={};
+  }
+  save();
+  renderUiroChecklist();
+  showToast('🧹','チェックリストを更新','リセットしました');
+}
+
+function generateUiroAIPrompt(){
+  const promptEl=document.getElementById('uiro-ai-prompt');
+  if(!promptEl) return;
+  const latestReview=(S.uiroReviewHistory&&S.uiroReviewHistory[0])||null;
+  const latestCheck=(S.uiroSelfChecks&&S.uiroSelfChecks[0])||null;
+  const ngRecent=(S.ngHistory||[]).slice(0,8);
+  const ngCount={};
+  ngRecent.forEach(r=>(r.tags||[]).forEach(t=>{ ngCount[t]=(ngCount[t]||0)+1; }));
+  const topNg=Object.entries(ngCount).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([t,c])=>`${t} x${c}`).join(', ')||'データ不足';
+  const reviewBlock=latestReview?[
+    `- 段落: ${latestReview.sectionId}`,
+    `- 難易度体感: ${latestReview.difficulty}`,
+    `- 明瞭性: ${latestReview.clarity}/5`,
+    `- 感情幅: ${latestReview.emotion}/5`,
+    `- 再現率: ${latestReview.consistency}/5`,
+    `- メモ: ${latestReview.note||'なし'}`,
+  ].join('\n'):'- レビュー未保存';
+  const selfBlock=latestCheck?[
+    `- セルフチェック: ${latestCheck.passed}/6`,
+    `- 録音ラベル: ${latestCheck.recLabel||'不明'}`,
+  ].join('\n'):'- セルフチェック未保存';
+  promptEl.value=`あなたはトップレベル声優コーチです。以下の練習ログを分析し、厳しめかつ具体的に改善指示をください。
+
+[目標]
+- 松岡禎丞さん級の「1音目の説得力」「感情爆発」「再現性」を獲得する
+
+[最新レビュー]
+${reviewBlock}
+
+[最新セルフチェック]
+${selfBlock}
+
+[直近NGタグ]
+- ${topNg}
+
+[依頼]
+1) 最優先で直すべき欠点を3つ（理由つき）
+2) 明日の30分練習メニュー（5分刻み）
+3) 録音時のチェックポイントを5個（YES/NO判定可能な形）
+4) 現在のレベルを100点満点で採点し、根拠を簡潔に示す`;
+  showToast('⚙️','プロンプト生成完了','外部AIへ貼り付けてください');
+}
+
+function copyUiroAIPrompt(){
+  const promptEl=document.getElementById('uiro-ai-prompt');
+  if(!promptEl||!promptEl.value.trim()){
+    generateUiroAIPrompt();
+  }
+  const text=(document.getElementById('uiro-ai-prompt')||{}).value||'';
+  if(!text.trim()){ showToast('⚠️','未生成','先にプロンプトを生成してください'); return; }
+  navigator.clipboard.writeText(text).then(()=>{
+    showToast('📋','コピー完了','無料AIへ貼り付けて評価を取得してください');
+  }).catch(()=>{
+    showToast('⚠️','コピー失敗','手動でテキストをコピーしてください');
+  });
+}
+
+function saveAIFeedback(){
+  const fbEl=document.getElementById('uiro-ai-feedback');
+  const pmEl=document.getElementById('uiro-ai-prompt');
+  if(!fbEl||!pmEl) return;
+  const feedback=fbEl.value.trim();
+  if(!feedback){ showToast('⚠️','空です','AIの回答を貼り付けてから保存してください'); return; }
+  if(!S.aiFeedbackLog) S.aiFeedbackLog=[];
+  S.aiFeedbackLog.unshift({
+    date:new Date().toISOString(),
+    prompt:pmEl.value.trim(),
+    feedback,
+  });
+  if(S.aiFeedbackLog.length>120) S.aiFeedbackLog=S.aiFeedbackLog.slice(0,120);
+  save();
+  markUiroChecklistItem('ai');
+  markExternalFeedback();
+  fbEl.value='';
+  showToast('🧠','外部フィードバック保存','第三者評価を記録しました');
+}
+
+async function renderUiroTakeRankingPanel(){
+  const wrap=document.getElementById('uiro-rank-wrap');
+  if(!wrap) return;
+  const reviews=(S.uiroReviewHistory||[]).filter(r=>r.recId);
+  if(reviews.length<3){
+    wrap.innerHTML='<div style="color:var(--text3);font-size:12px">レビュー付き録音が3件以上あるとランキング表示できます。</div>';
+    return;
+  }
+  const bySection=_uiroRankSection==='all'?reviews:reviews.filter(r=>r.sectionId===_uiroRankSection);
+  const filtered=_uiroRankDifficulty==='all'?bySection:bySection.filter(r=>r.difficulty===_uiroRankDifficulty);
+  const triplet=buildRankedTriplet(filtered);
+  const sections=[{id:'all',title:'全段落'},...UIRO_DATA.map(s=>({id:s.id,title:s.title}))];
+  const diffOpts=[
+    {id:'all',label:'全難易度'},
+    {id:'easy',label:'余裕あり'},
+    {id:'normal',label:'適正'},
+    {id:'hard',label:'ギリギリ'},
+    {id:'very-hard',label:'破綻した'},
+  ];
+  if(!triplet){
+    wrap.innerHTML=`
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+        <select style="background:var(--bg3);border:1px solid var(--bdr);color:var(--text);padding:8px;border-radius:6px;font-size:12px" onchange="setUiroRankFilter(this,'section')">
+          ${sections.map(s=>`<option value="${s.id}" ${s.id===_uiroRankSection?'selected':''}>${s.title}</option>`).join('')}
+        </select>
+        <select style="background:var(--bg3);border:1px solid var(--bdr);color:var(--text);padding:8px;border-radius:6px;font-size:12px" onchange="setUiroRankFilter(this,'difficulty')">
+          ${diffOpts.map(d=>`<option value="${d.id}" ${d.id===_uiroRankDifficulty?'selected':''}>${d.label}</option>`).join('')}
+        </select>
+      </div>
+      <div style="color:var(--text3);font-size:12px">この条件ではデータ不足です。レビューを増やしてください（必要: 3件以上）。</div>
+    `;
+    return;
+  }
+  const makeCard=(title,color,review,slot)=>`
+    <div style="border:1px solid ${color};border-radius:8px;padding:10px;background:var(--bg3)">
+      <div style="font-size:11px;color:${color};font-weight:700;margin-bottom:5px">${title}</div>
+      <div style="font-size:12px;line-height:1.6;margin-bottom:4px">${escapeHtml(review.note||'メモなし')}</div>
+      <div style="font-size:10px;color:var(--text3);margin-bottom:6px">総合: ${getReviewCompositeScore(review).toFixed(2)} / 段落: ${escapeHtml(review.sectionId||'-')} / 難易度: ${escapeHtml(review.difficulty||'-')}</div>
+      <button class="btn bt" style="font-size:11px;padding:5px 9px" onclick="playRankedTake(${review.recId},'${slot}')">▶ 再生</button>
+      <audio id="uiro-rank-audio-${slot}" controls preload="none" style="width:100%;display:none;margin-top:6px"></audio>
+    </div>
+  `;
+  wrap.innerHTML=`
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+      <select style="background:var(--bg3);border:1px solid var(--bdr);color:var(--text);padding:8px;border-radius:6px;font-size:12px" onchange="setUiroRankFilter(this,'section')">
+        ${sections.map(s=>`<option value="${s.id}" ${s.id===_uiroRankSection?'selected':''}>${s.title}</option>`).join('')}
+      </select>
+      <select style="background:var(--bg3);border:1px solid var(--bdr);color:var(--text);padding:8px;border-radius:6px;font-size:12px" onchange="setUiroRankFilter(this,'difficulty')">
+        ${diffOpts.map(d=>`<option value="${d.id}" ${d.id===_uiroRankDifficulty?'selected':''}>${d.label}</option>`).join('')}
+      </select>
+      <div style="font-size:11px;color:var(--text3);align-self:center">対象レビュー: ${triplet.total}件</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr;gap:8px">
+      ${makeCard('🥇 BEST', 'var(--gold)', triplet.best, 'best')}
+      ${makeCard('🥈 MEDIAN', 'var(--teal)', triplet.mid, 'mid')}
+      ${makeCard('🥉 WORST', 'var(--red)', triplet.worst, 'worst')}
+    </div>
+  `;
+}
+
+function renderUiroReviewPanel(){
+  const wrap=document.getElementById('uiro-review-wrap');
+  if(!wrap) return;
+  const latest=(S.uiroReviewHistory&&S.uiroReviewHistory[0])||null;
+  const latestNote=latest&&latest.note?`<div style="font-size:11px;color:var(--text2);margin-top:8px;line-height:1.6">直近メモ: ${escapeHtml(latest.note)}</div>`:'';
+  wrap.innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div>
+        <label style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px">段落</label>
+        <select id="uiro-review-section" style="background:var(--bg3);border:1px solid var(--bdr);color:var(--text);padding:7px 9px;border-radius:6px;font-size:12px;width:100%">
+          ${UIRO_DATA.map(sec=>`<option value="${sec.id}">${sec.title}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px">難易度体感</label>
+        <select id="uiro-review-diff" style="background:var(--bg3);border:1px solid var(--bdr);color:var(--text);padding:7px 9px;border-radius:6px;font-size:12px;width:100%">
+          <option value="easy">余裕あり</option>
+          <option value="normal" selected>適正</option>
+          <option value="hard">ギリギリ</option>
+          <option value="very-hard">破綻した</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+      <div>
+        <label style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px">明瞭性 (1-5)</label>
+        <input type="number" id="uiro-score-clarity" min="1" max="5" value="3">
+      </div>
+      <div>
+        <label style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px">感情幅 (1-5)</label>
+        <input type="number" id="uiro-score-emotion" min="1" max="5" value="3">
+      </div>
+      <div>
+        <label style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px">再現率 (1-5)</label>
+        <input type="number" id="uiro-score-consistency" min="1" max="5" value="3">
+      </div>
+    </div>
+    <div style="font-size:10px;color:var(--text3);margin-bottom:4px">メモ（崩れた地点・次回の意識）</div>
+    <textarea id="uiro-review-note" rows="3" placeholder="例: 段落三のアカサタナ行で舌先が遅れる。次回は最初の2文を半速で3回。"></textarea>
+    <button class="btn bt bfw" style="margin-top:8px" onclick="saveUiroReview()">🧷 レビュー保存 (+25XP)</button>
+    ${latestNote}
+  `;
+}
+
+function getRecentUiroReviews(days){
+  if(!S.uiroReviewHistory||S.uiroReviewHistory.length===0) return [];
+  const cutoff=Date.now()-days*24*60*60*1000;
+  return S.uiroReviewHistory.filter(r=>new Date(r.date).getTime()>=cutoff);
+}
+
+function renderUiroNextPlan(){
+  const box=document.getElementById('uiro-next-plan');
+  if(!box) return;
+  if(!S.uiroReviewHistory||S.uiroReviewHistory.length===0){
+    box.innerHTML='<div style="color:var(--text3);font-size:12px">レビューを1件以上保存すると提案が表示されます</div>';
+    return;
+  }
+  const recent=getRecentUiroReviews(14);
+  const scope=recent.length?recent:S.uiroReviewHistory.slice(0,10);
+  const secScore={};
+  const weakTagCount={};
+  let hardCount=0;
+  scope.forEach(r=>{
+    const avg=(r.clarity+r.emotion+r.consistency)/3;
+    secScore[r.sectionId]=(secScore[r.sectionId]||{sum:0,n:0});
+    secScore[r.sectionId].sum+=avg; secScore[r.sectionId].n++;
+    (r.tags||[]).forEach(t=>{ weakTagCount[t]=(weakTagCount[t]||0)+1; });
+    if(r.difficulty==='hard'||r.difficulty==='very-hard') hardCount++;
+  });
+  const weakestSec=Object.entries(secScore).map(([id,v])=>({id,avg:v.sum/v.n})).sort((a,b)=>a.avg-b.avg)[0];
+  const section=weakestSec?UIRO_DATA.find(s=>s.id===weakestSec.id):null;
+  const topWeak=Object.entries(weakTagCount).sort((a,b)=>b[1]-a[1])[0];
+  const planDifficulty=hardCount>=Math.ceil(scope.length*0.5)?'負荷を下げる':'現状維持〜微増';
+  box.innerHTML=`
+    <div style="font-size:12px;line-height:1.7;color:var(--text2)">
+      <div><strong style="color:var(--gold)">重点段落:</strong> ${section?section.title:'全段落を均等ローテーション'}</div>
+      <div><strong style="color:var(--red)">最頻弱点:</strong> ${topWeak?`${topWeak[0]}（${topWeak[1]}回）`:'NGタグ記録を増やすと精度が上がります'}</div>
+      <div><strong style="color:var(--teal)">推奨難易度:</strong> ${planDifficulty}</div>
+      <div style="margin-top:6px;font-size:11px;color:var(--text3)">方針: 重点段落を半速2回→通常2回→録音1回。最後にNGタグを必ず記録。</div>
+    </div>
+  `;
+}
+
+function saveUiroReview(){
+  const secEl=document.getElementById('uiro-review-section');
+  const diffEl=document.getElementById('uiro-review-diff');
+  const cEl=document.getElementById('uiro-score-clarity');
+  const eEl=document.getElementById('uiro-score-emotion');
+  const kEl=document.getElementById('uiro-score-consistency');
+  const noteEl=document.getElementById('uiro-review-note');
+  if(!secEl||!diffEl||!cEl||!eEl||!kEl||!noteEl) return;
+  const clamp=v=>Math.max(1,Math.min(5,parseInt(v)||3));
+  const entry={
+    date:new Date().toISOString(),
+    sectionId:secEl.value,
+    difficulty:diffEl.value,
+    clarity:clamp(cEl.value),
+    emotion:clamp(eEl.value),
+    consistency:clamp(kEl.value),
+    note:noteEl.value.trim(),
+    tags:[...selectedNGTags],
+    selfCheckPassed:_uiroSelfCheckScores.filter(v=>v===1).length,
+    selfCheckTotal:UIRO_SELF_CHECK_ITEMS.length,
+    recId:_uiroSelectedRecId?parseInt(_uiroSelectedRecId):null,
+  };
+  if(!S.uiroReviewHistory) S.uiroReviewHistory=[];
+  S.uiroReviewHistory.unshift(entry);
+  if(S.uiroReviewHistory.length>300) S.uiroReviewHistory=S.uiroReviewHistory.slice(0,300);
+  if(S.st) S.st.evalCount=(S.st.evalCount||0)+1;
+  gainXP(25);
+  save();
+  markUiroChecklistItem('review');
+  checkAchs();
+  noteEl.value='';
+  showToast('🧭','外郎売レビュー保存','次回提案を更新しました。+25XP');
+  renderUiroReviewPanel();
+  renderUiroNextPlan();
+  renderNGDashboard();
+}
+
+// ═══════════════════════════════════════════════
+// 1. 息芝居 RANDOM GENERATOR
+// ═══════════════════════════════════════════════
+const BREATH_SCENES=[
+  {scene:'斬りかかる息',desc:'刀を振りかぶった瞬間の鋭い吸気。腹から一気に引き込む',example:'スッ...（静止）...ハァッ！'},
+  {scene:'腹を殴られた息',desc:'予期せぬ一撃に空気が飛ぶ。「ウッ」ではなく「フッ」',example:'フッ...（少し間）...ハァ、ハァ'},
+  {scene:'瀕死の呼吸',desc:'肺が半分しか動かない。浅く、震えながら、でも意識はある',example:'ハッ...ハッ...（長い沈黙）...ふぅ'},
+  {scene:'全力疾走から立ち止まった息',desc:'突然止まった体。大きく乱れた呼吸が徐々に整っていく',example:'ハァ、ハァ、ハァ...（落ち着いていく）'},
+  {scene:'恐怖で息が止まった瞬間',desc:'心臓が跳ね上がった瞬間。吸うことも吐くことも止まる',example:'（長い無音）...ふぅぅ（やっと呼吸を再開）'},
+  {scene:'怒りを押し殺す息',desc:'爆発寸前の感情を制御している。鼻から長く出す',example:'ふぅぅぅ...（3秒かけて）'},
+  {scene:'驚いて飛び起きた息',desc:'眠りから突然目覚めた瞬間。上半身が跳ね上がる',example:'ハッ！（目覚め）...ハァ、ハァ...'},
+  {scene:'勝利の直前の深呼吸',desc:'最終決戦前、自分に言い聞かせるように。腹の奥から',example:'スゥゥゥ...（5秒吸う）...（ゆっくり吐く）'},
+  {scene:'泣きじゃくった後の息',desc:'激しく泣いた後のしゃっくりのような呼吸',example:'ひっく...ふぅ...ひっく...'},
+  {scene:'息を止めて聞き耳を立てる',desc:'物音がした。全身を固め、音を追う。微細な息',example:'（無音）...（かすかな音）...（更に無音）'},
+  {scene:'火球を放つ直前の息',desc:'喉の奥から炎を集める。発声前の圧縮と解放',example:'（腹に力を入れる）...フォォォッ！'},
+  {scene:'抱擁を受けた安心の息',desc:'緊張がほどける瞬間。大切な人の腕の中で力が抜ける',example:'はぁぁ...（体から力が抜ける）'},
+];
+let breathSelected=[];
+function renderBreathTrainer(){
+  const wrap=document.getElementById('breath-trainer-wrap'); if(!wrap) return;
+  if(breathSelected.length===0){
+    wrap.innerHTML='<div style="text-align:center;padding:20px;color:var(--text3);font-size:13px">「ランダム生成」を押して開始</div>';
+    return;
+  }
+  wrap.innerHTML=breathSelected.map((b,i)=>`
+    <div style="background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;padding:12px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+        <span style="background:rgba(76,201,240,.15);color:var(--blue);font-family:'Share Tech Mono',monospace;font-size:11px;padding:2px 8px;border-radius:10px">${i+1}/3</span>
+        <span style="font-size:13px;font-weight:700;color:var(--gold)">${b.scene}</span>
+      </div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:5px;line-height:1.6">${b.desc}</div>
+      <div style="font-size:11px;color:var(--purple);font-family:'Share Tech Mono',monospace">${b.example}</div>
+    </div>`).join('');
+}
+function generateBreath(){
+  const shuffled=[...BREATH_SCENES].sort(()=>Math.random()-0.5);
+  breathSelected=shuffled.slice(0,3);
+  renderBreathTrainer();
+  showToast('🌬️','息芝居3シーン生成！','録音して3つ連続で演じてください');
+}
+
+// ═══════════════════════════════════════════════
+// 2. 多重人格キャラチェンジタイムアタック
+// ═══════════════════════════════════════════════
+const CHARA_SETS=[
+  {chars:['熱血少年主人公','冷酷な悪役（低音）','気のいいおっちゃん'],lines:['「お前に負けるつもりはない！」','「くだらない。消えろ。」','「まあまあ、ええやないか！」']},
+  {chars:['お嬢様（高音・優雅）','武人（重厚な低音）','子供（高く明るく）'],lines:['「まあ、なんてこと！」','「覚悟はできているか。」','「ねえねえ、聞いて聞いて！」']},
+  {chars:['AI（無機質・無感情）','狂気のキャラ（不安定）','温かい老師（重厚）'],lines:['「処理を実行します。」','「はははっ、全部壊してやる！」','「そうじゃな。それが正解じゃ。」']},
+  {chars:['王族の威厳（威圧）','ビビった小物（裏声）','ヒーロー覚醒（魂の叫び）'],lines:['「余の前にひれ伏せ。」','「ひぃっ！か、勘弁してくれ…」','「今こそ、立ち上がる時だ！」']},
+  {chars:['悪のラスボス（泰然）','可憐な少女（繊細）','ベテラン刑事（渋い低音）'],lines:['「世界を滅ぼすのは私の使命。」','「えっ…うそ、そんなの嫌だよ…」','「証拠はある。観念しろ。」']},
+];
+let charaSetCur=null;
+function generateCharaSwitch(){
+  charaSetCur=CHARA_SETS[Math.floor(Math.random()*CHARA_SETS.length)];
+  renderCharaSwitch();
+  showToast('🎭','キャラチェンジセット生成！','ノンストップで3キャラを演じきれ');
+}
+function renderCharaSwitch(){
+  const wrap=document.getElementById('chara-switch-wrap'); if(!wrap) return;
+  if(!charaSetCur){ wrap.innerHTML='<div style="text-align:center;padding:16px;color:var(--text3)">「生成」を押してください</div>'; return; }
+  const colors=['var(--gold)','var(--red)','var(--teal)'];
+  wrap.innerHTML=charaSetCur.chars.map((c,i)=>`
+    <div style="background:var(--bg3);border:1px solid ${colors[i]};border-radius:8px;padding:11px;margin-bottom:7px">
+      <div style="font-size:10px;color:var(--text3);font-family:'Share Tech Mono',monospace;margin-bottom:3px">セリフ ${i+1}</div>
+      <div style="font-size:12px;font-weight:700;margin-bottom:5px;color:${colors[i]}">キャラ: ${c}</div>
+      <div style="font-size:13px;line-height:1.6;color:var(--text)">${charaSetCur.lines[i]}</div>
+    </div>`).join('')+
+    '<div style="font-size:11px;color:var(--text3);margin-top:6px">評価: ピッチ切り替え・共鳴腔（胸/鼻/頭）の瞬時切り替え・1音目のキャラ確立</div>';
+}
+
+// ═══════════════════════════════════════════════
+// 3. 音域＆共鳴トラッカー
+// ═══════════════════════════════════════════════
+function saveVoiceCondition(){
+  const lo=document.getElementById('vc-low'); if(!lo) return;
+  const hi=document.getElementById('vc-high');
+  const hydration=document.getElementById('vc-hydration');
+  const sleep=document.getElementById('vc-sleep');
+  const condition={date:todayKey(),lowPitch:parseInt(lo.value||3),highPitch:parseInt(hi?hi.value:3),hydration:parseInt(hydration?hydration.value:3),sleep:parseInt(sleep?sleep.value:7)};
+  if(!S.voiceLog) S.voiceLog=[];
+  S.voiceLog=S.voiceLog.filter(v=>v.date!==condition.date);
+  S.voiceLog.unshift(condition);
+  if(S.voiceLog.length>60) S.voiceLog=S.voiceLog.slice(0,60);
+  save();
+  let msg='';
+  if(condition.sleep<6) msg='睡眠不足は声帯の柔軟性を低下させます。高音の無理な発声は今日は控えてください。';
+  else if(condition.hydration<=2) msg='水分不足で声帯が乾燥しています。温かい飲み物を飲んでからウォームアップを。';
+  else if(condition.lowPitch<=2||condition.highPitch<=2) msg='声帯の調子が低下しています。今日は軽めのウォームアップのみ推奨。喉に違和感があれば喉休め日モードを。';
+  else if(condition.lowPitch>=5&&condition.highPitch>=5) msg='コンディション最高！今日は限界に挑戦する絶好のチャンスです。録音を多く残してください。';
+  else msg='コンディション良好。通常通りの練習で大丈夫です。';
+  const el=document.getElementById('vc-analysis');
+  if(el){ el.textContent='Nyano: '+msg; el.style.display='block'; }
+  showToast('📊','音域コンディション記録！',msg.slice(0,40));
+}
+
+// ═══════════════════════════════════════════════
+// 4. タイム・コンストレイント録音
+// ═══════════════════════════════════════════════
+let constraintTimerInt=null, constraintSecs=0, constraintLimit=0;
+function startConstraintRec(){
+  const secEl=document.getElementById('constraint-secs');
+  if(!secEl) return;
+  constraintLimit=parseInt(secEl.value)||15;
+  constraintSecs=0;
+  goScreen('practice',document.querySelectorAll('.nb')[1]);
+  switchTab('prac','rec',null);
+  setTimeout(()=>{
+    if(gateOK){
+      startGatedRecording();
+      if(constraintTimerInt) clearInterval(constraintTimerInt);
+      constraintTimerInt=setInterval(()=>{
+        constraintSecs++;
+        const el=document.getElementById('constraint-disp');
+        if(el) el.textContent=(constraintLimit-constraintSecs)+'秒';
+        if(constraintSecs>=constraintLimit){
+          clearInterval(constraintTimerInt);
+          if(isRecording) stopRecording();
+          showToast('⏱','制限時間終了！',constraintLimit+'秒で強制カット。');
+        }
+      },1000);
+    }else{
+      showToast('⚡','制限録音モード','録音前ゲートを完了してから開始してください');
+    }
+  },500);
+}
+
+// ═══════════════════════════════════════════════
+// 5. NGタグ データベース
+// ═══════════════════════════════════════════════
+const NG_TAGS=['#語尾のピッチ落ち','#説明芝居','#マ行の鼻腔共鳴不足','#心アドリブの不発','#1音目が作られた声','#感情より先に声が出た','#息の支えが切れた','#母音の無声化ミス','#鼻濁音の処理ミス','#テンポが走った','#テンポが遅れた','#軟口蓋が落ちた','#丹田の支えなし','#共鳴が喉に落ちた','#距離感が合わない','#目的が曖昧','#感情が単調','#クライマックスを超えた','#ブレスのタイミングミス','#高音で喉が締まった'];
+let selectedNGTags=[];
+function renderNGTagPanel(){
+  const wrap=document.getElementById('ng-tag-wrap'); if(!wrap) return;
+  wrap.innerHTML='<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px">'+
+    NG_TAGS.map(t=>`<button class="ng-chip${selectedNGTags.includes(t)?' ng-selected':''}" data-tag="${t}" onclick="toggleNGTag(this)">${t}</button>`).join('')+
+    '</div><button class="btn br" style="font-size:11px;padding:6px 12px" onclick="saveNGTags()">NGタグを保存</button>';
+}
+function toggleNGTag(btnEl){
+  const tag=btnEl.dataset.tag;
+  if(selectedNGTags.includes(tag)){ selectedNGTags=selectedNGTags.filter(t=>t!==tag); btnEl.classList.remove('ng-selected'); }
+  else{ selectedNGTags.push(tag); btnEl.classList.add('ng-selected'); }
+}
+function saveNGTags(){
+  if(!selectedNGTags.length){ showToast('⚠️','タグを選択してください',''); return; }
+  if(!S.ngHistory) S.ngHistory=[];
+  S.ngHistory.unshift({date:new Date().toISOString(),tags:[...selectedNGTags]});
+  if(S.ngHistory.length>200) S.ngHistory=S.ngHistory.slice(0,200);
+  selectedNGTags=[];
+  gainXP(15); save(); checkAchs();
+  showToast('📊','NGタグ保存！','+15XP');
+  renderNGTagPanel(); renderNGDashboard();
+}
+function renderNGDashboard(){
+  const wrap=document.getElementById('ng-dashboard'); if(!wrap) return;
+  if(!S.ngHistory||S.ngHistory.length===0){ wrap.innerHTML='<div style="color:var(--text3);font-size:12px;padding:10px">まだNGタグのデータがありません</div>'; return; }
+  const cutoff=new Date(); cutoff.setDate(cutoff.getDate()-7);
+  const counts={};
+  S.ngHistory.filter(h=>new Date(h.date)>=cutoff).forEach(r=>r.tags.forEach(t=>{ counts[t]=(counts[t]||0)+1; }));
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  if(!sorted.length){ wrap.innerHTML='<div style="color:var(--text3);font-size:12px;padding:10px">今週のNGタグはありません</div>'; return; }
+  wrap.innerHTML='<div style="font-size:11px;color:var(--red);font-weight:700;margin-bottom:8px">Nyano冷酷指摘 (過去7日):</div>'+
+    sorted.map(([tag,count])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--bdr)"><span style="font-size:12px">${tag}</span><span style="font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:900;color:${count>=5?'var(--red)':count>=3?'var(--orange)':'var(--gold)'}">x${count}</span></div>`).join('')+
+    `<div style="font-size:11px;color:var(--text3);margin-top:8px;line-height:1.6">最頻NG: <strong style="color:var(--red)">${sorted[0][0]}</strong> が今週${sorted[0][1]}回。これを集中的に潰せ。</div>`;
+}
+
+// ═══════════════════════════════════════════════
+// 6. エンタメ出力ミッション
+// ═══════════════════════════════════════════════
+const ENTAME_MISSIONS=[
+  {title:'冷酷悪役トーン実況',desc:'本日のゲーム実況の最初3分間を「冷酷な悪役のトーン」のみで喋り通す。視聴者維持率を計測。'},
+  {title:'感情爆発クライマックス挿入',desc:'実況の中で1シーン、松岡禎丞レベルの120%感情爆発シーンを意図的に作る。コメントの反応を記録。'},
+  {title:'ナレーション語りシーン',desc:'ゲームのロア（世界観）説明を「NHKドキュメンタリー調」のナレーションで語る10秒を作る。'},
+  {title:'ウィスパー技法テスト',desc:'通常の実況の途中、15秒間だけ囁き声（ウィスパー）で喋る。視聴者のコメントを記録する。'},
+  {title:'距離感変化実験',desc:'会話シーンで、1文は「1m距離感」で、次は「10m距離感」で交互に喋る。声質の変化に視聴者が気づくか実験。'},
+  {title:'老師キャラ挿入',desc:'実況中にランダムで老師キャラに憑依し、2-3行の格言を言う。視聴者の反応を確認。'},
+];
+function getWeeklyEntameMission(){ const w=Math.floor(Date.now()/(7*24*3600*1000)); return ENTAME_MISSIONS[w%ENTAME_MISSIONS.length]; }
+function renderEntameMission(){
+  const wrap=document.getElementById('entame-mission-wrap'); if(!wrap) return;
+  const mission=getWeeklyEntameMission();
+  const isWeekend=[0,6].includes(new Date().getDay());
+  wrap.innerHTML=`<div style="background:${isWeekend?'rgba(240,180,41,.08)':'rgba(75,85,99,.12)'};border:1px solid ${isWeekend?'rgba(240,180,41,.3)':'var(--bdr)'};border-radius:8px;padding:12px;margin-bottom:10px">
+    <div style="font-size:10px;color:${isWeekend?'var(--gold)':'var(--text3)'};margin-bottom:4px">${isWeekend?'⚡ 今週末の市場テスト指令':'📅 今週末に実行予定'}</div>
+    <div style="font-size:14px;font-weight:700;margin-bottom:6px">${mission.title}</div>
+    <div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:8px">${mission.desc}</div>
+    <textarea id="entame-result" placeholder="結果メモ：ウケたか、スベったか、コメントの反応は？" rows="3" style="font-size:12px;font-family:'Zen Kaku Gothic New',sans-serif;margin-bottom:7px"></textarea>
+    <button class="btn bg bfw" onclick="saveEntameResult()">📊 結果を記録 (+60XP)</button>
+  </div>`;
+}
+function saveEntameResult(){
+  const el=document.getElementById('entame-result');
+  const memo=el?el.value.trim():'';
+  if(!memo){ showToast('⚠️','結果をメモしてください',''); return; }
+  if(!S.entameLog) S.entameLog=[];
+  S.entameLog.unshift({date:new Date().toISOString(),mission:getWeeklyEntameMission().title,memo});
+  if(S.entameLog.length>52) S.entameLog=S.entameLog.slice(0,52);
+  gainXP(60); gainCry(30); save(); checkAchs();
+  if(el) el.value='';
+  showToast('📺','エンタメ出力記録！','+60XP');
+  renderEntameMission();
+}
+
+
+// ═══════════════════════════════════════════════
+// BPM METRONOME
+// ═══════════════════════════════════════════════
+let _bpmInt=null, _bpmRunning=false;
+
+function toggleMetronome(){
+  if(_bpmRunning){ stopMetronome(); }
+  else { startMetronome(); }
+}
+function startMetronome(){
+  const bpm=parseInt(document.getElementById('bpm-slider').value)||100;
+  const interval=Math.round(60000/bpm);
+  _bpmRunning=true;
+  const btn=document.getElementById('bpm-start-btn');
+  if(btn) btn.textContent='⏹ 停止';
+  _bpmInt=setInterval(()=>{ metronomeBeat(bpm); }, interval);
+  metronomeBeat(bpm); // immediate first beat
+}
+function stopMetronome(){
+  _bpmRunning=false;
+  if(_bpmInt){ clearInterval(_bpmInt); _bpmInt=null; }
+  const btn=document.getElementById('bpm-start-btn');
+  if(btn) btn.textContent='▶ 開始';
+  const dot=document.getElementById('bpm-dot');
+  if(dot){ dot.style.background='rgba(6,214,160,.15)'; dot.style.boxShadow='none'; dot.style.transform='scale(1)'; }
+}
+function metronomeBeat(bpm){
+  // Visual flash
+  const dot=document.getElementById('bpm-dot');
+  if(dot){
+    dot.style.background='rgba(6,214,160,.9)';
+    dot.style.boxShadow='0 0 18px rgba(6,214,160,.7)';
+    dot.style.transform='scale(1.18)';
+    setTimeout(()=>{
+      dot.style.background='rgba(6,214,160,.15)';
+      dot.style.boxShadow='none';
+      dot.style.transform='scale(1)';
+    }, Math.min(120, Math.round(60000/bpm*0.3)));
+  }
+  // Audio click (Web Audio API)
+  const soundEl=document.getElementById('bpm-sound');
+  if(soundEl&&soundEl.checked){
+    const c=getCtx(); if(!c) return;
+    try{
+      const osc=c.createOscillator();
+      const g=c.createGain();
+      osc.connect(g); g.connect(c.destination);
+      osc.type='sine'; osc.frequency.value=1200;
+      const t=c.currentTime;
+      g.gain.setValueAtTime(0.18,t);
+      g.gain.exponentialRampToValueAtTime(0.001,t+0.06);
+      osc.start(t); osc.stop(t+0.06);
+    }catch(e){}
+  }
+}
+
+// ═══════════════════════════════════════════════
+// ARTICULATION WEAKNESS DETECTION
+// ═══════════════════════════════════════════════
+// Map NG tags to specific 行 (articulation rows)
+const ROW_MAP = {
+  'ア行':['#ア行','#母音の無声化ミス'],
+  'カ行':['#カ行'],
+  'サ行':['#サ行','#母音の無声化ミス'],
+  'タ行':['#タ行'],
+  'ナ行':['#ナ行'],
+  'マ行':['#マ行の鼻腔共鳴不足'],
+  'ヤ行':['#ヤ行'],
+  'ラ行':['#ラ行'],
+  'ワ行':['#ワ行'],
+  '鼻濁音':['#鼻濁音の処理ミス'],
+  '語尾':['#語尾のピッチ落ち'],
+};
+
+function getWeakestRow(){
+  if(!S.ngHistory||S.ngHistory.length===0) return null;
+  // Check last 14 days
+  const cutoff=new Date(); cutoff.setDate(cutoff.getDate()-14);
+  const recent=S.ngHistory.filter(r=>new Date(r.date)>=cutoff);
+  const rowCounts={};
+  recent.forEach(rec=>{
+    rec.tags.forEach(tag=>{
+      for(const [row,tags] of Object.entries(ROW_MAP)){
+        if(tags.includes(tag)){
+          rowCounts[row]=(rowCounts[row]||0)+1;
+        }
+      }
+    });
+  });
+  const sorted=Object.entries(rowCounts).sort((a,b)=>b[1]-a[1]);
+  return sorted.length>0?{row:sorted[0][0],count:sorted[0][1]}:null;
+}
+
+function renderArticulationWarning(){
+  const el=document.getElementById('articulation-warning'); if(!el) return;
+  const weak=getWeakestRow();
+  if(!weak||weak.count<2){ el.style.display='none'; return; }
+  el.style.display='block';
+  el.innerHTML=`<strong style="color:var(--red)">⚠️ Nyano警告：</strong>過去2週間で<strong style="color:white">【${weak.row}】</strong>の弱点が${weak.count}回検出されました。本日のウォームアップで<strong style="color:var(--gold)">「${weak.row}集中ドリル」</strong>を必ず行ってください。<br><span style="font-size:10px;color:var(--text3)">NGタグを記録するほど精度が上がります。</span>`;
 }
 
 
