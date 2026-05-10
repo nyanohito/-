@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>NYANO VOICE QUEST</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NYANO VQ">
+<meta name="theme-color" content="#060a12">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060a12;--bg2:#0c1220;--bg3:#101828;--bdr:#1a2540;
+  --gold:#f0b429;--teal:#06d6a0;--red:#ef233c;--blue:#4cc9f0;
+  --purple:#a855f7;--pink:#ec4899;--orange:#f97316;--gray:#4b5563;
+  --text:#e2e8f0;--text2:#94a3b8;--text3:#2d3748;--resin:#7dd3fc;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow-x:hidden}
+body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg);color:var(--text);overscroll-behavior:none}
+#app{display:flex;flex-direction:column;min-height:100vh;max-width:680px;margin:0 auto}
+#hd{background:var(--bg2);border-bottom:1px solid var(--bdr);padding:10px 14px;position:sticky;top:0;z-index:60}
+#hd-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.logo{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--gold);letter-spacing:2px}
+.hd-r{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.bdg{display:flex;align-items:center;gap:3px;padding:3px 8px;border-radius:14px;font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;border:1px solid}
+.b-str{background:rgba(240,180,41,.12);border-color:rgba(240,180,41,.3);color:var(--gold)}
+.b-cry{background:rgba(168,85,247,.12);border-color:rgba(168,85,247,.3);color:var(--purple)}
+.b-lv{background:rgba(6,214,160,.1);border-color:rgba(6,214,160,.25);color:var(--teal);font-size:10px}
+#xp-row{display:flex;align-items:center;gap:8px}
+#xp-lbl{font-size:10px;color:var(--text2);font-family:'Share Tech Mono',monospace;white-space:nowrap;min-width:90px}
+#xp-bar{flex:1;height:5px;background:var(--bdr);border-radius:3px;overflow:hidden}
+#xp-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:3px;transition:width .6s}
+#content{flex:1;padding:14px;padding-bottom:76px}
+.screen{display:none}.screen.active{display:block}
+#nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:680px;background:var(--bg2);border-top:1px solid var(--bdr);display:flex;z-index:60}
+.nb{flex:1;padding:10px 2px 8px;min-height:56px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;border:none;background:none;color:var(--text2);font-family:'Zen Kaku Gothic New',sans-serif;font-size:9px;transition:color .15s;position:relative;-webkit-tap-highlight-color:rgba(240,180,41,.15)}
+.nb .ni{font-size:17px;line-height:1}
+.nb.active{color:var(--gold)}
+.nb-dot{position:absolute;top:6px;right:calc(50% - 12px);width:7px;height:7px;background:var(--red);border-radius:50%;display:none}
+.nb-dot.on{display:block}
+.card{background:var(--bg2);border:1px solid var(--bdr);border-radius:10px;padding:14px;margin-bottom:12px;position:relative;overflow:hidden}
+.card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.ca-gold::after{background:var(--gold)}.ca-teal::after{background:var(--teal)}
+.ca-red::after{background:var(--red)}.ca-purple::after{background:var(--purple)}
+.ca-blue::after{background:var(--blue)}.ca-resin::after{background:var(--resin)}
+.sec{font-size:10px;font-family:'Share Tech Mono',monospace;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.tab-bar{display:flex;gap:4px;margin-bottom:12px}
+.tab-btn{flex:1;padding:10px 4px;min-height:44px;border-radius:6px;border:1px solid var(--bdr);background:none;color:var(--text2);font-family:'Zen Kaku Gothic New',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;text-align:center}
+.tab-btn.active{background:rgba(240,180,41,.12);border-color:var(--gold);color:var(--gold)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+.btn{padding:8px 14px;min-height:42px;border-radius:6px;border:1px solid;cursor:pointer;font-size:12px;font-weight:700;font-family:'Zen Kaku Gothic New',sans-serif;transition:transform .1s;user-select:none;white-space:nowrap}
+.btn:active{transform:scale(.95)}
+.bt{background:rgba(6,214,160,.13);border-color:var(--teal);color:var(--teal)}
+.bg{background:rgba(240,180,41,.13);border-color:var(--gold);color:var(--gold)}
+.br{background:rgba(239,35,60,.1);border-color:var(--red);color:var(--red)}
+.bp{background:rgba(168,85,247,.13);border-color:var(--purple);color:var(--purple)}
+.bb{background:rgba(76,201,240,.12);border-color:var(--blue);color:var(--blue)}
+.bry{background:rgba(125,211,252,.1);border-color:var(--resin);color:var(--resin)}
+.bgr{background:rgba(75,85,99,.25);border-color:var(--gray);color:var(--text2)}
+.bpk{background:rgba(236,72,153,.12);border-color:var(--pink);color:var(--pink)}
+.bfw{width:100%;text-align:center}
+.bbig{padding:12px 18px;font-size:14px}
+.qc{background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;padding:12px;margin-bottom:8px;transition:border-color .3s}
+.qc.done{border-color:var(--teal);background:rgba(6,214,160,.04)}
+.qc.locked{opacity:.45;pointer-events:none}
+.qh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.qn{font-size:14px;font-weight:700}
+.xpp{background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.22);color:var(--gold);font-family:'Share Tech Mono',monospace;font-size:11px;padding:2px 6px;border-radius:10px}
+.qpw{height:5px;background:var(--bdr);border-radius:3px;overflow:hidden;margin-bottom:8px}
+.qp{height:100%;border-radius:3px;transition:width .4s}
+.pt{background:linear-gradient(90deg,var(--teal),var(--blue))}
+.qm{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px;color:var(--text2);font-family:'Share Tech Mono',monospace}
+.tmr{font-size:22px;font-weight:900;color:var(--gold)}
+.tmr.run{color:var(--teal);animation:tp 1s ease-in-out infinite}
+@keyframes tp{0%,100%{opacity:1}50%{opacity:.4}}
+.qbs{display:flex;gap:7px}
+.wu-item{background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:12px;transition:border-color .3s}
+.wu-item.done{border-color:var(--teal);background:rgba(6,214,160,.04)}
+.wu-check{width:28px;height:28px;border-radius:50%;border:2px solid var(--bdr);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .25s;background:transparent}
+.wu-item.done .wu-check{background:var(--teal);border-color:var(--teal);color:white}
+.wu-info{flex:1;min-width:0}
+.wu-name{font-size:13px;font-weight:700}
+.wu-desc{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.5}
+.wu-hint{font-size:10px;color:var(--text3);margin-top:4px}
+.wu-prog{height:4px;background:var(--bdr);border-radius:2px;overflow:hidden;margin-top:5px}
+.wu-prog-fill{height:100%;background:var(--teal);border-radius:2px;transition:width .3s}
+.wu-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.wu-tmr{font-family:'Share Tech Mono',monospace;font-size:17px;font-weight:900;color:var(--gold)}
+.vpc{background:var(--bg3);border:1px solid var(--bdr);border-radius:10px;padding:14px;margin-bottom:10px}
+.vpc-source{font-size:10px;color:var(--gold);font-family:'Share Tech Mono',monospace;margin-bottom:4px}
+.vpc-title{font-size:15px;font-weight:700;margin-bottom:8px}
+.vpc-body{background:var(--bg2);border-radius:6px;padding:12px;border-left:3px solid var(--teal);font-size:13px;line-height:1.75;margin-bottom:8px;white-space:pre-line}
+.vpc-hint{font-size:11px;color:var(--text2);line-height:1.6;margin-bottom:10px}
+.vpc-foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+.cat-pill{font-size:10px;padding:2px 8px;border-radius:10px;border:1px solid}
+.cP{border-color:rgba(76,201,240,.35);color:var(--blue);background:rgba(76,201,240,.07)}
+.cE{border-color:rgba(236,72,153,.35);color:var(--pink);background:rgba(236,72,153,.07)}
+.cA{border-color:rgba(240,180,41,.35);color:var(--gold);background:rgba(240,180,41,.07)}
+.cC{border-color:rgba(168,85,247,.35);color:var(--purple);background:rgba(168,85,247,.07)}
+/* Recording */
+.rec-big{width:80px;height:80px;border-radius:50%;border:3px solid var(--red);background:rgba(239,35,60,.12);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto;cursor:pointer;transition:all .2s;user-select:none}
+.rec-big.on{background:var(--red);animation:rpulse 1s ease-in-out infinite}
+@keyframes rpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.rec-timer{font-family:'Share Tech Mono',monospace;font-size:32px;color:var(--red);text-align:center;margin:10px 0 4px;letter-spacing:2px}
+.rec-status{font-size:12px;color:var(--text2);text-align:center;margin-bottom:8px}
+.ri{background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;padding:11px 12px;margin-bottom:8px}
+.ri.protected{border-color:var(--gold);background:rgba(240,180,41,.04)}
+.ri-top{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px}
+.ri-name{font-size:13px;font-weight:700;flex:1;line-height:1.4}
+.ri-date{font-size:10px;color:var(--text2);font-family:'Share Tech Mono',monospace;white-space:nowrap}
+.ri-ctrl{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+audio{width:100%;height:36px;margin-top:6px;display:none}
+audio.show{display:block}
+/* TIME DEVIATION */
+.dev-box{border-radius:10px;padding:14px;text-align:center;margin-bottom:12px}
+.dev-perfect{background:rgba(6,214,160,.12);border:2px solid var(--teal)}
+.dev-good{background:rgba(240,180,41,.12);border:2px solid var(--gold)}
+.dev-bad{background:rgba(239,35,60,.12);border:2px solid var(--red)}
+.dev-val{font-family:'Share Tech Mono',monospace;font-size:40px;font-weight:900;line-height:1}
+.dev-lbl{font-size:12px;margin-top:6px;line-height:1.6}
+/* STICKY REC BAR */
+#rec-sticky{display:none;position:fixed;bottom:56px;left:50%;transform:translateX(-50%);width:100%;max-width:680px;background:rgba(4,8,16,.97);border-top:2px solid var(--red);padding:10px 16px;z-index:59;align-items:center;gap:10px}
+#rec-sticky.show{display:flex}
+#rec-sticky-timer{font-family:'Share Tech Mono',monospace;font-size:22px;font-weight:900;color:var(--red);min-width:110px}
+#rec-sticky-adlib{flex:1;font-size:11px;color:var(--purple);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+#rec-sticky-stop{background:var(--red);border:none;border-radius:8px;padding:11px 18px;color:white;font-weight:700;font-size:14px;cursor:pointer;min-height:44px;flex-shrink:0}
+/* DAILY */
+.dc{background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;padding:12px;margin-bottom:10px;transition:border-color .3s}
+.dc.done{border-color:var(--gold);background:rgba(240,180,41,.04)}
+.dc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.dc-num{font-size:10px;font-family:'Share Tech Mono',monospace;color:var(--text3)}
+.dc-done-num{color:var(--gold)}
+.dc-title{font-size:14px;font-weight:700;margin-bottom:4px}
+.dc-body{background:var(--bg2);border-radius:6px;padding:9px 11px;border-left:3px solid var(--bdr);font-size:13px;line-height:1.65;margin-bottom:7px}
+.dc.done .dc-body{border-left-color:var(--gold)}
+.dc-hint{font-size:11px;color:var(--text3);margin-bottom:7px}
+.dc-foot{display:flex;justify-content:space-between;align-items:center}
+.login-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.ld{background:var(--bg3);border:1px solid var(--bdr);border-radius:6px;padding:6px 2px;text-align:center}
+.ld.ok{border-color:var(--gold);background:rgba(240,180,41,.07)}
+.ld.today{border-color:var(--teal)}
+.ld-ic{font-size:17px;margin-bottom:1px}
+#resin-box{background:rgba(125,211,252,.07);border:1px solid rgba(125,211,252,.2);border-radius:8px;padding:11px 13px;margin-bottom:12px}
+.resin-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.resin-val{font-family:'Share Tech Mono',monospace;font-size:22px;font-weight:900;color:var(--resin)}
+#resin-bar{height:7px;background:var(--bdr);border-radius:4px;overflow:hidden;margin-bottom:4px}
+#resin-fill{height:100%;background:linear-gradient(90deg,#38bdf8,#7dd3fc);border-radius:4px;transition:width .5s}
+#boss-wrap{text-align:center;padding:6px 0 12px}
+#boss-emo{font-size:66px;line-height:1;display:block}
+#boss-emo.hit{animation:bhit .4s}
+@keyframes bhit{0%{transform:translateX(0)}25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-4px)}100%{transform:translateX(0)}}
+.hpw{margin:8px 0 5px}
+.hpl{display:flex;justify-content:space-between;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);margin-bottom:4px}
+#hp-bar{height:14px;background:var(--bdr);border-radius:4px;overflow:hidden}
+#hp-fill{height:100%;background:linear-gradient(90deg,#dc2626,#f97316);border-radius:4px;transition:width .8s}
+#dmgn{position:relative;height:30px;overflow:hidden;pointer-events:none}
+.dn{position:absolute;font-family:'Share Tech Mono',monospace;font-size:15px;font-weight:900;color:var(--orange);animation:fup 1.2s forwards;pointer-events:none}
+@keyframes fup{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-28px)}}
+.g-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
+.g-box{background:var(--bg3);border:1px solid var(--bdr);border-radius:7px;padding:9px;text-align:center}
+.g-val{font-family:'Share Tech Mono',monospace;font-size:20px;font-weight:900;display:block;line-height:1.1}
+.g-lbl{font-size:9px;color:var(--text2);margin-top:2px}
+.pity-bar{height:6px;background:var(--bdr);border-radius:3px;overflow:hidden;margin:5px 0 3px}
+.pity-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:3px;transition:width .4s}
+.g-hist{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:4px;margin-top:10px}
+.gi{background:var(--bg3);border:1px solid var(--bdr);border-radius:5px;padding:5px 3px;text-align:center}
+.gi-ic{font-size:17px;display:block;margin-bottom:1px}
+.gi-nm{font-size:8px;color:var(--text2);line-height:1.2}
+.rR{border-color:var(--blue)}.rSR{border-color:var(--gold)}.rSR .gi-nm{color:var(--gold)}
+.rSSR{border-color:var(--purple);background:rgba(168,85,247,.08);animation:ssg 2s ease-in-out infinite}.rSSR .gi-nm{color:var(--purple)}
+@keyframes ssg{0%,100%{box-shadow:0 0 4px rgba(168,85,247,.3)}50%{box-shadow:0 0 12px rgba(168,85,247,.7)}}
+.ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:6px}
+.ai{background:var(--bg3);border:1px solid var(--bdr);border-radius:7px;padding:8px 4px;text-align:center}
+.ai.ul{border-color:var(--gold);background:rgba(240,180,41,.05)}.ai.lk{opacity:.25;filter:grayscale(1)}
+.ai-ic{font-size:22px;display:block;margin-bottom:3px}.ai-nm{font-size:9px;color:var(--text2);line-height:1.3}
+.ai.ul .ai-nm{color:var(--gold)}
+.n-row{background:var(--bg3);border:1px solid var(--bdr);border-radius:7px;padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.n-row-l{flex:1;min-width:0}
+.toggle{width:40px;height:22px;background:var(--gray);border-radius:11px;position:relative;cursor:pointer;border:none;flex-shrink:0;transition:background .2s}
+.toggle.on{background:var(--teal)}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;background:white;border-radius:50%;transition:left .2s}
+.toggle.on::after{left:21px}
+#m10{display:none;position:fixed;inset:0;z-index:200;flex-direction:column;align-items:center;justify-content:center}
+#m10.show{display:flex}
+#m10-ov{position:absolute;inset:0;background:rgba(0,0,0,.95)}
+#m10-in{position:relative;z-index:1;width:96%;max-width:660px;padding:18px}
+#m10-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:14px}
+.pc{background:var(--bg3);border:2px solid var(--bdr);border-radius:9px;padding:9px 3px;text-align:center;opacity:0;transform:scale(.7) rotateY(90deg);transition:all .4s}
+.pc.rev{opacity:1;transform:scale(1) rotateY(0deg)}
+.pc-ic{font-size:26px;display:block;margin-bottom:2px}.pc-nm{font-size:9px;line-height:1.3}.pc-r{font-family:'Share Tech Mono',monospace;font-size:8px;margin-top:2px}
+.pcN{border-color:var(--bdr)}.pcR{border-color:var(--blue)}.pcSR{border-color:var(--gold);background:rgba(240,180,41,.07)}.pcSSR{border-color:var(--purple);background:rgba(168,85,247,.1);animation:ssg 2s ease-in-out infinite}
+#gm{display:none;position:fixed;inset:0;z-index:200;flex-direction:column;align-items:center;justify-content:center}
+#gm.show{display:flex}
+#gm-ov{position:absolute;inset:0;background:rgba(0,0,0,.93)}
+#gm-in{position:relative;z-index:1;text-align:center;padding:34px 26px;width:90%;max-width:310px}
+#gm-orb{width:96px;height:96px;border-radius:50%;margin:0 auto 14px;animation:os 1.4s ease-out forwards;display:flex;align-items:center;justify-content:center;font-size:38px}
+@keyframes os{0%{transform:scale(0) rotate(-180deg);opacity:0}60%{transform:scale(1.18) rotate(10deg);opacity:1}80%{transform:scale(.93) rotate(-4deg)}100%{transform:scale(1) rotate(0)}}
+.oN{background:radial-gradient(circle,#6b7280,#374151)}.oR{background:radial-gradient(circle,#60a5fa,#1d4ed8)}.oSR{background:radial-gradient(circle,#fcd34d,#b45309)}.oSSR{background:radial-gradient(circle,#c084fc,#7c3aed,#1e1b4b)}
+#gm-rar{font-size:22px;font-weight:900;margin-bottom:4px;font-family:'Share Tech Mono',monospace}
+#gm-nm{font-size:18px;font-weight:700;margin-bottom:4px}
+#gm-ef{font-size:12px;color:var(--text2);margin-bottom:18px;line-height:1.6}
+.tN{color:var(--text2)}.tR{color:var(--blue)}.tSR{color:var(--gold)}.tSSR{color:var(--purple);animation:rain 1.5s linear infinite}
+@keyframes rain{0%{color:#a855f7}25%{color:#ec4899}50%{color:#f0b429}75%{color:#06d6a0}100%{color:#a855f7}}
+#luo{display:none;position:fixed;inset:0;z-index:250;background:rgba(0,0,0,.96);align-items:center;justify-content:center}
+#luo.show{display:flex}
+#lui{text-align:center;padding:20px}
+#lun{font-family:'Share Tech Mono',monospace;font-size:88px;font-weight:900;color:var(--teal);line-height:1;animation:lb .6s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes lb{0%{transform:scale(0)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+#nw{display:none;position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.97);align-items:center;justify-content:center;padding:20px}
+#nw.show{display:flex}
+#nwi{max-width:320px;text-align:center}
+#nw-time{font-family:'Share Tech Mono',monospace;font-size:44px;color:var(--red);margin-bottom:10px;font-weight:900}
+#toast{position:fixed;top:-80px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--gold);border-radius:8px;padding:10px 14px;z-index:300;display:flex;align-items:center;gap:10px;min-width:230px;max-width:92vw;transition:top .4s cubic-bezier(.175,.885,.32,1.275);box-shadow:0 4px 24px rgba(0,0,0,.5)}
+#toast.show{top:14px}
+#ti{font-size:20px}
+#tt{font-size:10px;font-weight:700;color:var(--gold);font-family:'Share Tech Mono',monospace;margin-bottom:2px}
+#tb{font-size:12px;line-height:1.4}
+.sr{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--bdr);font-size:12px}
+.sr:last-child{border-bottom:none}
+.sv{font-family:'Share Tech Mono',monospace;color:var(--teal);font-weight:700}
+.divider{border:none;border-top:1px solid var(--bdr);margin:11px 0}
+.infobox{background:rgba(76,201,240,.06);border:1px solid rgba(76,201,240,.18);border-radius:6px;padding:9px 12px;font-size:12px;color:#93c5fd;line-height:1.7}
+.fr{display:flex;gap:7px;align-items:center}
+input[type=number],input[type=text]{background:var(--bg3);border:1px solid var(--bdr);border-radius:6px;color:var(--text);padding:8px 11px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:13px;width:100%}
+input:focus{outline:none;border-color:var(--gold)}
+textarea{background:var(--bg3);border:1px solid var(--bdr);border-radius:6px;color:var(--text);padding:9px 11px;font-family:'Share Tech Mono',monospace;font-size:11px;resize:vertical;width:100%}
+textarea:focus{outline:none;border-color:var(--teal)}
+.affirm-box{background:linear-gradient(135deg,rgba(168,85,247,.1),rgba(76,201,240,.08));border:1px solid rgba(168,85,247,.25);border-radius:10px;padding:14px;text-align:center;margin-bottom:12px}
+.affirm-text{font-size:17px;font-weight:900;color:var(--purple);line-height:1.6}
+.affirm-sub{font-size:12px;color:var(--text2);margin-top:5px}
+.twomin-box{background:rgba(6,214,160,.06);border:1px solid rgba(6,214,160,.2);border-radius:8px;padding:12px;margin-bottom:12px;text-align:center}
+.psych-box{background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.2);border-radius:8px;padding:11px;margin-bottom:9px}
+.psych-title{font-size:12px;font-weight:700;color:var(--purple);margin-bottom:5px}
+.psych-body{font-size:11px;color:var(--text2);line-height:1.7}
+.gh-box{background:var(--bg3);border:1px solid rgba(240,180,41,.25);border-radius:8px;padding:12px;font-size:12px;line-height:1.9;color:var(--text2)}
+/* 外郎売 — CRITICAL: line-height 2.8 */
+.uiro-section{background:var(--bg3);border:1px solid var(--bdr);border-radius:9px;padding:12px;margin-bottom:12px}
+.uiro-sec-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:9px}
+.uiro-text{font-size:14px;line-height:2.8 !important;color:var(--text);background:var(--bg2);border-radius:6px;padding:12px;border-left:3px solid var(--gold);font-family:'Zen Kaku Gothic New',sans-serif;white-space:pre-wrap}
+.uiro-main-text{font-size:15px;line-height:2.8 !important;ruby-position:over}
+ruby{line-height:inherit;ruby-align:center}
+ruby rt{font-size:0.55em;color:#f0b429;font-weight:700;font-family:'Zen Kaku Gothic New',sans-serif}
+.ng-chip{font-size:10px;padding:4px 8px;border-radius:10px;border:1px solid var(--bdr);background:none;color:var(--text3);cursor:pointer;font-family:'Zen Kaku Gothic New',sans-serif;transition:all .15s}
+.ng-chip.ng-selected{background:rgba(239,35,60,.12);border-color:var(--red);color:var(--red)}
+/* GATE */
+.gate-row{margin-bottom:14px}
+.gate-lbl{font-size:11px;font-weight:700;color:var(--text2);margin-bottom:7px;display:block;letter-spacing:.3px}
+.gate-dist-wrap{display:flex;gap:5px;flex-wrap:wrap}
+.gdist{padding:8px 10px;border-radius:6px;border:1px solid var(--bdr);background:none;color:var(--text2);font-size:11px;font-family:'Share Tech Mono',monospace;cursor:pointer;transition:all .15s;text-align:center;line-height:1.4;min-width:44px}
+.gdist.sel{background:rgba(76,201,240,.12);border-color:var(--blue);color:var(--blue)}
+.gate-body-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bdr);cursor:pointer;user-select:none}
+.gate-body-row:last-child{border-bottom:none}
+.gchkbox{width:24px;height:24px;border-radius:50%;border:2px solid var(--bdr);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .22s}
+.gchkbox.on{background:var(--teal);border-color:var(--teal);color:white}
+.purpose-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.gate-chip{font-size:10px;padding:4px 9px;border-radius:10px;border:1px solid var(--bdr);background:none;color:var(--text3);cursor:pointer;font-family:'Zen Kaku Gothic New',sans-serif;transition:all .15s}
+/* EVAL */
+.ev-item{display:flex;align-items:center;gap:7px;padding:9px 0;border-bottom:1px solid var(--bdr)}
+.ev-item:last-child{border-bottom:none}
+.ev-cat{font-size:9px;font-family:'Share Tech Mono',monospace;padding:2px 6px;border-radius:8px;white-space:nowrap;flex-shrink:0;font-weight:700}
+.evc-body{background:rgba(6,214,160,.1);color:var(--teal)}
+.evc-res{background:rgba(76,201,240,.1);color:var(--blue)}
+.evc-tech{background:rgba(249,115,22,.1);color:var(--orange)}
+.evc-act{background:rgba(168,85,247,.1);color:var(--purple)}
+.ev-q{flex:1;font-size:12px;line-height:1.4}
+.ev-ok{background:rgba(6,214,160,.13)!important;border-color:var(--teal)!important;color:var(--teal)!important}
+.ev-ng{background:rgba(239,35,60,.1)!important;border-color:var(--red)!important;color:var(--red)!important}
+/* COUNTDOWN */
+#cd-ov{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.97);flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
+#cd-ov.show{display:flex}
+#cd-num{font-family:'Share Tech Mono',monospace;font-size:110px;font-weight:900;color:var(--teal);line-height:1}
+#cd-num.pop{animation:cdpop .5s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes cdpop{0%{transform:scale(.4);opacity:0}100%{transform:scale(1);opacity:1}}
+#cd-adlib{font-size:21px;font-weight:900;color:var(--purple);margin-bottom:28px;line-height:1.5;max-width:320px;word-break:break-all}
+/* HOME STATS */
+.home-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.hs-box{background:var(--bg2);border:1px solid var(--bdr);border-radius:10px;padding:13px 10px;text-align:center}
+.hs-val{font-family:'Share Tech Mono',monospace;font-size:34px;font-weight:900;line-height:1}
+.hs-lbl{font-size:10px;color:var(--text2);margin-top:4px}
+.mental-card{background:linear-gradient(135deg,rgba(168,85,247,.07),rgba(6,214,160,.04));border:1px solid rgba(168,85,247,.18);border-radius:10px;padding:13px 14px;margin-bottom:12px}
+#uiro-scroll-ov{display:none;position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.97);flex-direction:column}
+.sub-bar{height:8px;background:var(--bdr);border-radius:4px;overflow:hidden}
+.sub-fill{height:100%;background:linear-gradient(90deg,#7c3aed,#4cc9f0);border-radius:4px;transition:width 1s}
+@media(max-width:380px){.nb{font-size:8px}.nb .ni{font-size:15px}}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- HEADER -->
+<div id="hd">
+  <div id="hd-top">
+    <div>
+      <div style="display:flex;align-items:center;gap:7px">
+        <div class="logo">NYANO VOICE QUEST</div>
+        <div class="bdg b-lv" id="h-lv">Lv.1</div>
+      </div>
+      <div style="font-size:10px;color:var(--text2);margin-top:2px" id="h-title">称号: 迷える冒険者</div>
+    </div>
+    <div class="hd-r">
+      <div class="bdg b-str">🔥<span id="h-str">0</span>日</div>
+      <div class="bdg b-cry">💎<span id="h-cry">0</span></div>
+    </div>
+  </div>
+  <div id="xp-row">
+    <div id="xp-lbl">XP 0/150</div>
+    <div id="xp-bar"><div id="xp-fill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div id="content">
+
+<!-- ===== HOME ===== -->
+<div class="screen active" id="s-home">
+  <div id="late-bar" style="display:none;background:rgba(239,35,60,.08);border:1px solid rgba(239,35,60,.2);border-radius:8px;padding:9px 13px;margin-bottom:12px;font-size:12px;color:#fca5a5;line-height:1.6">
+    ⚡ 深夜でも、プロとしてマイク前に立つ選択をした。<br><span style="font-size:10px;color:var(--text2)">2分だけウォームアップしよう。</span>
+  </div>
+  <div class="home-stats">
+    <div class="hs-box">
+      <div class="hs-val" style="color:var(--gold)" id="home-streak">0</div>
+      <div class="hs-lbl">🔥 連続練習日数</div>
+      <div id="streak-warn" style="display:none;font-size:9px;color:var(--red);margin-top:3px;font-weight:700">今日練習しないと消える</div>
+    </div>
+    <div class="hs-box">
+      <div class="hs-val" style="color:var(--teal)" id="home-active">0</div>
+      <div class="hs-lbl">📅 総活動日数</div>
+    </div>
+  </div>
+  <div class="mental-card">
+    <div style="font-size:10px;font-family:'Share Tech Mono',monospace;color:var(--purple);letter-spacing:2px;margin-bottom:6px">💙 NYANO より</div>
+    <div id="mental-msg" style="font-size:13px;line-height:1.75;color:var(--text2)">読み込み中...</div>
+  </div>
+  <div id="resin-box">
+    <div class="resin-row">
+      <div><div class="sec" style="margin:0">💎 練習の結晶</div><div style="font-size:10px;color:var(--text2)">8分に1回復 / 最大160</div></div>
+      <div style="text-align:right"><div class="resin-val"><span id="resin-val">0</span>/160</div><div style="font-size:10px;color:var(--orange)" id="resin-warn"></div></div>
+    </div>
+    <div id="resin-bar"><div id="resin-fill" style="width:0%"></div></div>
+    <div style="font-size:10px;color:var(--text2);font-family:'Share Tech Mono',monospace;text-align:right;margin-top:3px" id="resin-next"></div>
+  </div>
+  <!-- VA Quest (声優練習のみ) -->
+  <div class="card ca-teal">
+    <div class="sec">🎙️ 本日の声優練習 <span id="va-lock-lbl" style="font-size:10px;color:var(--red)">🔒 WU完了後解放</span></div>
+    <div class="qc locked" id="qc-va">
+      <div class="qh"><div class="qn" id="qn-va">🎙️ 声優練習</div><div class="xpp">+120 XP</div></div>
+      <div class="qpw"><div class="qp pt" id="qp-va" style="width:0%"></div></div>
+      <div class="qm"><span>目標: <strong style="color:var(--teal)">30分</strong></span><span class="tmr" id="qt-va">00:00</span></div>
+      <div class="qbs">
+        <button class="btn bt" id="qb-va" onclick="toggleTimer('va')" style="flex:1">▶ スタート</button>
+        <button class="btn bg" onclick="completeQuest('va')">✓ 完了</button>
+      </div>
+    </div>
+  </div>
+  <!-- Decline -->
+  <div class="card">
+    <div class="sec">🛡️ 誘いを断った回数</div>
+    <div style="text-align:center;margin-bottom:10px">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:44px;font-weight:900;color:var(--teal);transition:transform .2s" id="dcnt">0</div>
+      <div style="font-size:11px;color:var(--text2)">回断った = <span style="color:var(--teal)" id="dhrs">0時間</span>守った</div>
+    </div>
+    <button class="btn bt bfw" onclick="addDecline()">＋ 今日断った！ (+20XP)</button>
+  </div>
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <button class="btn bpk bfw" style="flex:1;padding:10px 8px;font-size:12px" onclick="openObsModal()">📝 観察メモ</button>
+    <button class="btn bp bfw" style="flex:1;padding:10px 8px;font-size:12px" onclick="goScreen('set',document.querySelectorAll('.nb')[4]);switchTab('set','voice',null)">🎤 ボイスサンプル</button>
+  </div>
+  <div class="twomin-box">
+    <div style="font-size:13px;font-weight:700;color:var(--teal);margin-bottom:4px">⏱ 今日は2分だけでいい</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:8px">バイトで疲れていても2分だけ。プロは「疲れてるから」とは言わない。</div>
+    <div style="display:flex;gap:7px">
+      <button class="btn bt" style="flex:1" onclick="startTwoMin()">⚡ 2分練習モード</button>
+      <button class="btn bgr" style="flex:1;font-size:11px" onclick="startThroatRestDay()">🤫 喉休め日モード</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PRACTICE ===== -->
+<div class="screen" id="s-practice">
+      <div class="tab-pane" id="tp-set-notif">
+      <div class="card ca-blue">
+        <div class="sec">🔔 通知設定</div>
+        <div class="n-row"><div class="n-row-l"><div style="font-size:13px">🌅 朝の練習リマインド</div><div style="font-size:10px;color:var(--text2)">毎朝 8:00</div></div><button class="toggle" id="tog-morning" onclick="togNotif('morning')"></button></div>
+        <div class="n-row"><div class="n-row-l"><div style="font-size:13px">🌆 バイト後リマインド</div><div style="font-size:10px;color:var(--text2)">毎晩 22:00</div></div><button class="toggle" id="tog-after" onclick="togNotif('after')"></button></div>
+        <div class="n-row"><div class="n-row-l"><div style="font-size:13px">🌙 深夜練習リマインド</div><div style="font-size:10px;color:var(--text2)">23:00 — 練習未完了なら通知</div></div><button class="toggle on" id="tog-night" onclick="togNotif('night')"></button></div>
+        <div class="n-row"><div class="n-row-l"><div style="font-size:13px">💠 練習の結晶 満タン警告</div><div style="font-size:10px;color:var(--text2)">100個超えたら通知</div></div><button class="toggle on" id="tog-resin" onclick="togNotif('resin')"></button></div>
+        <div class="n-row"><div class="n-row-l"><div style="font-size:13px">🎵 アンビエントBGM</div><div style="font-size:10px;color:var(--text2)">Aマイナー低音パッド / 集中力向上</div></div><button class="toggle" id="tog-bgm" onclick="togBGM()"></button></div>
+        <div class="divider"></div>
+        <div style="font-size:11px;color:var(--text2);margin-bottom:8px">スマホのアラームにコピー:</div>
+        <button class="btn bb bfw" style="margin-bottom:6px" onclick="copyAlarm('8:00 NYANOウォームアップ🎙️ アプリを開こう')">📋 朝8時アラーム文をコピー</button>
+        <button class="btn bb bfw" onclick="copyAlarm('22:00 バイトお疲れ！NYANO声優練習しよう⚔️')">📋 夜10時アラーム文をコピー</button>
+      </div>
+    </div>
+    <div class="tab-pane" id="tp-set-voice">
+      <div class="card ca-teal">
+        <div class="sec">🎤 ボイスサンプル管理</div>
+        <div style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.7">プロは<strong style="color:var(--teal)">絶対的エース</strong>を常に用意する。3ヶ月に1度、自分を超えたと思えたら更新する。</div>
+        <div style="background:rgba(239,35,60,.07);border:1px solid rgba(239,35,60,.2);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;line-height:1.8">
+          <div style="font-weight:700;color:var(--red);margin-bottom:4px">⚠️ 月1回の「他者評価」が必須</div>
+          <div style="color:var(--text2)">自分の耳は必ず慣れる。<strong style="color:white">毎月1本、第三者に音声を叩きつけること。</strong></div>
+          <button class="btn br" style="margin-top:8px;font-size:11px;padding:6px 12px" onclick="markExternalFeedback()">✓ 今月の外部フィードバック完了</button>
+          <div id="ext-fb-status" style="font-size:11px;color:var(--teal);margin-top:5px;display:none"></div>
+        </div>
+        <div id="vs-list"></div>
+        <div style="background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;padding:12px;margin-top:10px">
+          <div class="sec" style="margin-bottom:8px">＋ 新しいサンプルカテゴリを追加</div>
+          <input type="text" id="vs-cat-name" placeholder="カテゴリ名（例: 主人公系、悪役、ナレーション）" style="font-size:12px;margin-bottom:7px">
+          <button class="btn bt bfw" onclick="addVSCategory()">カテゴリを追加</button>
+        </div>
+      </div>
+      <!-- オーディションパニック -->
+      <div class="card ca-red">
+        <div class="sec">😱 オーディション・パニックシミュレーター</div>
+        <div style="font-size:11px;color:var(--text2);margin-bottom:12px;line-height:1.7">現場の「むちゃぶり」に対応する訓練。<strong style="color:var(--red)">3秒後に強制録音スタート。</strong></div>
+        <button class="btn br bfw bbig" onclick="startPanicSim()">⚡ パニックシミュレーター開始</button>
+      </div>
+      <!-- 録音ストレージ管理 (新機能) -->
+      <div class="card" style="border-color:rgba(249,115,22,.35)">
+        <div class="sec" style="color:var(--orange)">🗂 録音ストレージ管理</div>
+        <div style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.7">IndexedDBに蓄積された音声データを管理します。<br>🔒保護フラグのない録音は<strong style="color:var(--red)">14日経過で自動削除</strong>されます。</div>
+        <div id="storage-stats" style="background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;padding:11px;margin-bottom:10px;font-size:12px;line-height:1.9;font-family:'Share Tech Mono',monospace"></div>
+        <button class="btn bg bfw" style="margin-bottom:8px" onclick="calcStorageStats()">📊 ストレージ使用量を計算</button>
+        <button class="btn br bfw" onclick="purgeUnprotectedRecs()">🗑 保護されていない録音を一括削除</button>
+        <div style="font-size:10px;color:var(--text3);margin-top:7px;line-height:1.6">※ 録音ライブラリで「🔒」ボタンを押すと保護できます（自動削除対象外になります）</div>
+      </div>
+      <!-- デュアル再生 -->
+      <div class="card ca-blue">
+        <div class="sec">🎵 プロ vs 自分 比較プレイヤー</div>
+        <div style="font-size:11px;color:var(--text2);margin-bottom:12px;line-height:1.7">プロの音声ファイルと自分の録音を交互に再生。<strong style="color:var(--blue)">音の立ち上がり・鼻腔共鳴・間の差</strong>を耳に叩き込む。</div>
+        <div style="margin-bottom:12px">
+          <div style="font-size:12px;font-weight:700;margin-bottom:6px">🎯 お手本音声（プロ）</div>
+          <input type="file" id="pro-audio-file" accept="audio/*" onchange="loadProAudio(this)" style="font-size:11px;color:var(--text2);margin-bottom:6px;width:100%">
+          <audio id="pro-audio-player" controls style="width:100%;display:none;margin-top:4px"></audio>
+          <div id="pro-audio-label" style="font-size:11px;color:var(--text3);margin-top:4px"></div>
+        </div>
+        <div style="margin-bottom:12px">
+          <div style="font-size:12px;font-weight:700;margin-bottom:6px">🎙️ 自分の録音</div>
+          <select id="self-audio-sel" style="width:100%;background:var(--bg3);border:1px solid var(--bdr);color:var(--text);padding:8px 10px;border-radius:6px;font-size:12px;margin-bottom:6px"><option value="">録音を選択...</option></select>
+          <audio id="self-audio-player" controls style="width:100%;display:none;margin-top:4px"></audio>
+        </div>
+        <button class="btn bb bfw" onclick="refreshSelfAudioList()">🔄 録音リストを更新</button>
+      </div>
+    </div>
+    <div class="tab-pane" id="tp-set-sync">
+      <div style="background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between">
+        <div><div style="font-size:11px;color:var(--text2)">クラウド同期ステータス</div><div id="sync-status-bar" style="font-size:13px;font-weight:700;color:var(--text3);margin-top:2px">☁️ クラウド未設定</div></div>
+        <div id="last-sync-time" style="font-size:10px;color:var(--text3);text-align:right"></div>
+      </div>
+      <div class="card ca-teal">
+        <div class="sec">☁️ 自動クラウド同期 (Firebase)</div>
+        <div id="file-proto-warn" style="display:none;background:rgba(239,35,60,.08);border:1px solid rgba(239,35,60,.2);border-radius:6px;padding:8px 12px;font-size:12px;color:#fca5a5;margin-bottom:8px">⚠️ ファイルを直接開いています（file://）。Firebase同期はGitHub PagesのURLで開いた場合のみ動作します。</div>
+        <div class="fr" style="margin-bottom:8px">
+          <input type="text" id="fb-url-in" placeholder="https://YOUR-ID-default-rtdb.firebaseio.com" style="font-size:11px">
+          <button class="btn bt" style="white-space:nowrap;padding:8px 12px" onclick="saveFBUrl()">保存</button>
+        </div>
+        <button class="btn bb bfw" style="margin-bottom:10px" onclick="testFBConnection()">🔗 接続テストを実行</button>
+        <div id="fb-423-fix" style="display:none;background:rgba(239,35,60,.07);border:1px solid rgba(239,35,60,.25);border-radius:8px;padding:12px;margin-bottom:10px;font-size:12px;line-height:2;color:#fca5a5">
+          <strong style="color:var(--red)">⚠️ HTTP 423 = Firebaseのルールがロックされています</strong><br>
+          Firebaseコンソール → Realtime Database → 「ルール」タブ → 以下に書き換えて「公開」
+          <div style="background:var(--bg);border:1px solid var(--bdr);border-radius:5px;padding:9px;margin-top:6px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--teal);line-height:1.8">{"rules":{".read":true,".write":true}}</div>
+          <button class="btn br bfw" style="margin-top:8px" onclick="copyRules()">📋 ルールをコピー</button>
+        </div>
+        <div id="fb-connected-box" style="display:none;background:rgba(6,214,160,.08);border:1px solid rgba(6,214,160,.2);border-radius:6px;padding:9px 12px;font-size:12px;color:var(--teal);margin-bottom:10px">
+          ✓ Firebase接続済み。自動同期が有効です。<br>
+          <button class="btn bt" style="margin-top:7px;font-size:11px" onclick="cloudLoad()">今すぐ手動で同期</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="sec">🔄 手動同期（バックアップ用）</div>
+        <button class="btn bg bfw" onclick="exportData()" style="margin-bottom:8px">📤 同期コードを生成</button>
+        <div id="sync-code-box" style="display:none;background:var(--bg3);border:1px solid var(--bdr);border-radius:6px;padding:9px;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text2);word-break:break-all;max-height:70px;overflow:auto;margin-bottom:6px"></div>
+        <button class="btn bgr bfw" id="copy-code-btn" style="display:none;margin-bottom:16px" onclick="copyCode()">📋 コードをコピー</button>
+        <div class="divider"></div>
+        <textarea id="sync-in" placeholder="同期コードを貼り付け..." rows="3" style="margin-bottom:8px"></textarea>
+        <button class="btn bt bfw" onclick="importData()" style="margin-bottom:12px">📥 インポート実行</button>
+        <div class="divider"></div>
+        <button class="btn br bfw" onclick="resetAll()">⚠️ 全データリセット</button>
+      </div>
+    </div>
+  </div><!-- /s-set -->
+
+</div><!-- /content -->
+
+<!-- BOTTOM NAV -->
+<nav id="nav">
+  <button class="nb active" onclick="goScreen('home',this)"><span class="ni">🏠</span>ホーム</button>
+  <button class="nb" onclick="goScreen('practice',this)"><span class="ni">🎙️</span>練習<span class="nb-dot" id="nd-wu"></span></button>
+  <button class="nb" onclick="goScreen('daily',this)"><span class="ni">⚔️</span>デイリー<span class="nb-dot" id="nd-daily"></span></button>
+  <button class="nb" onclick="goScreen('gacha',this)"><span class="ni">💎</span>ガチャ</button>
+  <button class="nb" onclick="goScreen('set',this)"><span class="ni">⚙️</span>設定</button>
+</nav>
+</div><!-- /app -->
+
+<!-- STICKY REC BAR (スマホ下部固定 録音中表示) -->
+<div id="rec-sticky">
+  <div id="rec-sticky-timer">00:00.00</div>
+  <div id="rec-sticky-adlib">録音中...</div>
+  <button id="rec-sticky-stop" onclick="stopRecording()">⏹ 停止</button>
+</div>
+
+<!-- COUNTDOWN -->
+<div id="cd-ov">
+  <div id="cd-adlib">「心アドリブ」</div>
+  <div id="cd-num" class="pop">3</div>
+  <div style="font-size:13px;color:var(--text2);margin-top:20px">この感情のまま1音目へ！</div>
+</div>
+
+<!-- 10連ガチャModal -->
+<div id="m10"><div id="m10-ov"></div>
+<div id="m10-in">
+  <div style="text-align:center;margin-bottom:12px;font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--gold)">✨ 10連結果</div>
+  <div id="m10-grid"></div>
+  <div style="text-align:center;margin-top:10px;font-size:12px;color:var(--text2)" id="m10-sum"></div>
+  <button class="btn bg bfw bbig" style="margin-top:12px" onclick="closeM10()">✓ 受け取る</button>
+</div></div>
+
+<!-- シングルガチャModal -->
+<div id="gm"><div id="gm-ov"></div>
+<div id="gm-in">
+  <div id="gm-orb" class="oN">💠</div>
+  <div id="gm-rar" class="tN">NORMAL</div>
+  <div id="gm-nm"></div>
+  <div id="gm-ef"></div>
+  <button class="btn bg bfw bbig" onclick="closeGM()">✓ 受け取る</button>
+</div></div>
+
+<!-- Level Up -->
+<div id="luo"><div id="lui">
+  <div style="font-size:11px;color:var(--text2);font-family:'Share Tech Mono',monospace;letter-spacing:3px;margin-bottom:2px">LEVEL UP!</div>
+  <div id="lun">5</div>
+  <div id="lu-tx" style="color:var(--text2);margin-top:5px;font-size:14px"></div>
+  <div id="lu-ti" style="font-size:17px;font-weight:700;color:var(--gold);margin-top:7px"></div>
+  <button class="btn bt" style="margin-top:18px;padding:12px 28px" onclick="closeLU()">続ける</button>
+</div></div>
+
+<!-- Toast -->
+<div id="toast"><div id="ti">🏆</div><div><div id="tt"></div><div id="tb"></div></div></div>
+
+<!-- 観察メモModal -->
+<div id="obs-modal" style="display:none;position:fixed;inset:0;z-index:350;background:rgba(0,0,0,.95);flex-direction:column;padding:20px;overflow-y:auto">
+  <div style="max-width:480px;margin:0 auto;width:100%">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="font-size:15px;font-weight:900;color:var(--pink)">📝 観察メモ</div>
+      <button class="btn bgr" style="padding:6px 12px;font-size:11px" onclick="closeObsModal()">閉じる</button>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;padding:12px;margin-bottom:12px">
+      <input type="text" id="obs-scene" placeholder="場面（例: コンビニのレジ、バスで隣の人）" style="font-size:12px;margin-bottom:7px">
+      <textarea id="obs-text" placeholder="観察したこと：&#10;・どんな感情が見えた？&#10;・声の大きさ・距離感は？" rows="4" style="margin-bottom:7px;font-size:12px;font-family:'Zen Kaku Gothic New',sans-serif"></textarea>
+      <div style="display:flex;gap:6px">
+        <select id="obs-emotion" style="flex:1;background:var(--bg3);border:1px solid var(--bdr);color:var(--text);padding:7px 8px;border-radius:6px;font-size:11px;font-family:'Zen Kaku Gothic New',sans-serif">
+          <option>怒り</option><option>悲しみ</option><option>喜び</option><option>恐怖</option><option>焦り</option><option>羞恥</option><option>懇願</option><option>葛藤</option><option>その他</option>
+        </select>
+        <button class="btn bpk" style="white-space:nowrap;padding:7px 14px;font-size:12px" onclick="saveObsMemo()">💾 保存</button>
+      </div>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px">蓄積データ (<span id="obs-count">0</span>件)</div>
+    <div id="obs-list"></div>
+  </div>
+</div>
+
+<!-- パニックシミュレーターOverlay -->
+<div id="panic-ov" style="display:none;position:fixed;inset:0;z-index:450;background:rgba(0,0,0,.97);flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px">
+  <div style="font-size:13px;color:var(--red);font-family:'Share Tech Mono',monospace;letter-spacing:2px;margin-bottom:16px">⚡ オーディション指示</div>
+  <div id="panic-dir" style="font-size:18px;font-weight:900;color:white;line-height:1.6;margin-bottom:24px;max-width:320px"></div>
+  <div id="panic-count" style="font-family:'Share Tech Mono',monospace;font-size:80px;font-weight:900;color:var(--red);line-height:1"></div>
+  <div style="font-size:13px;color:var(--text2);margin-top:12px">この指示でセリフを演じろ！</div>
+</div>
+
+<!-- 喉休め日Modal -->
+<div id="throat-modal" style="display:none;position:fixed;inset:0;z-index:480;background:rgba(0,0,0,.97);flex-direction:column;align-items:center;justify-content:center;padding:20px;overflow-y:auto">
+  <div style="max-width:480px;width:100%;background:var(--bg2);border:1px solid rgba(6,214,160,.3);border-radius:12px;padding:20px">
+    <div style="font-size:16px;font-weight:900;color:var(--teal);margin-bottom:8px;text-align:center">🤫 喉休め日モード</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:16px;line-height:1.8;text-align:center">声帯を休める日も<strong style="color:white">プロの技術</strong>です。</div>
+    <div style="background:var(--bg3);border-radius:8px;padding:12px;margin-bottom:14px"><div id="throat-tasks-list"></div></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn bt" style="flex:2" onclick="completeThroatDay()">✓ これを今日の完了とする (+50XP)</button>
+      <button class="btn bgr" style="flex:1" onclick="closeThroatModal()">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<!-- マイクガイドModal -->
+<div id="mic-guide-modal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.97);flex-direction:column;align-items:center;justify-content:center;padding:20px;overflow-y:auto">
+  <div style="max-width:480px;width:100%;background:var(--bg2);border:1px solid var(--bdr);border-radius:12px;padding:20px">
+    <div style="font-size:16px;font-weight:900;color:var(--red);margin-bottom:14px;text-align:center">🎙️ マイクが使えません</div>
+    <div id="mic-guide-content"></div>
+    <button class="btn br bfw bbig" style="margin-top:16px" onclick="closeMicGuide()">閉じる</button>
+  </div>
+</div>
+
+<!-- 夜の警告 -->
+<div id="nw"><div id="nwi">
+  <div id="nw-time">23:00</div>
+  <div id="nw-msg" style="font-size:13px;color:var(--text2);line-height:1.9;margin-bottom:18px"></div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <button class="btn bt bfw bbig" onclick="closeNW('practice')">🎙️ ウォームアップを開く</button>
+    <button class="btn bg bfw" onclick="closeNW('sleep')">😴 もう寝る（正解！）</button>
+    <button class="btn bgr bfw" onclick="closeNW('skip')">閉じる</button>
+  </div>
+</div></div>
+
+<script>
+'use strict';
+const SK='nyano_v6';
+
+// ── UIRO_DATA (プロンプト指定の正確なデータ) ──
+const UIRO_DATA=[
+  {id:'s1',title:'段落一（冒頭・薬の紹介）',emotion:'誇り高く・喜びと説得',hint:'商人の誇りと温かみ。聴衆を引き込む第一声が命',
+   text:'<ruby>拙者<rt>せっしゃ</rt></ruby><ruby>親方<rt>おやかた</rt></ruby>と<ruby>申<rt>もう</rt></ruby>すは、お<ruby>立合<rt>たちあい</rt></ruby>の<ruby>中<rt>うち</rt></ruby>に<ruby>御存知<rt>ごぞんじ</rt></ruby>のお<ruby>方<rt>かた</rt></ruby>もござりましょうが、お<ruby>江戸<rt>えど</rt></ruby>を<ruby>発<rt>た</rt></ruby>って<ruby>二十里上方<rt>にじゅうりかみがた</rt></ruby>、<ruby>相州小田原一色町<rt>そうしゅうおだわらいっしきまち</rt></ruby>をお<ruby>過<rt>す</rt></ruby>ぎなされて、<ruby>青物町<rt>あおものちょう</rt></ruby>を<ruby>登<rt>のぼ</rt></ruby>りへおいでなさるれば、<ruby>欄干橋虎屋藤右衛門<rt>らんかんばしとらやとうえもん</rt></ruby>、<ruby>只今<rt>ただいま</rt></ruby>は<ruby>剃髪致<rt>ていはついた</rt></ruby>して、<ruby>円斎<rt>えんさい</rt></ruby>と<ruby>名乗<rt>なの</rt></ruby>りまする。<br><br><ruby>元朝<rt>がんちょう</rt></ruby>より<ruby>大晦日<rt>おおみそか</rt></ruby>まで、<ruby>御手<rt>おて</rt></ruby>に<ruby>入<rt>い</rt></ruby>れまする<ruby>此<rt>こ</rt></ruby>の<ruby>薬<rt>くすり</rt></ruby>は、<ruby>昔<rt>むかし</rt></ruby>ちんの<ruby>国<rt>くに</rt></ruby>の<ruby>唐人<rt>とうじん</rt></ruby>、<ruby>外郎<rt>ういろう</rt></ruby>という<ruby>人<rt>ひと</rt></ruby>、わが<ruby>朝<rt>ちょう</rt></ruby>へ<ruby>来<rt>きた</rt></ruby>り、<ruby>帝<rt>みかど</rt></ruby>へ<ruby>参内<rt>さんだい</rt></ruby>の<ruby>折<rt>おり</rt></ruby>から、<ruby>此<rt>こ</rt></ruby>の<ruby>薬<rt>くすり</rt></ruby>を<ruby>深<rt>ふか</rt></ruby>く<ruby>籠<rt>こ</rt></ruby>め<ruby>置<rt>お</rt></ruby>き、<ruby>用<rt>もち</rt></ruby>ゆる<ruby>時<rt>とき</rt></ruby>は<ruby>一粒<rt>ひとつぶ</rt></ruby>ずつ、<ruby>冠<rt>かんむり</rt></ruby>の<ruby>隙間<rt>すきま</rt></ruby>より<ruby>取<rt>と</rt></ruby>り<ruby>出<rt>いだ</rt></ruby>す。<br><br><ruby>依<rt>よ</rt></ruby>って<ruby>其<rt>そ</rt></ruby>の<ruby>名<rt>な</rt></ruby>を<ruby>帝<rt>みかど</rt></ruby>より、「<ruby>透頂香<rt>とうちんこう</rt></ruby>」と<ruby>賜<rt>たまわ</rt></ruby>る。<ruby>即<rt>すなわ</rt></ruby>ち<ruby>文字<rt>もじ</rt></ruby>には、<ruby>頂<rt>いただ</rt></ruby>き、<ruby>透<rt>す</rt></ruby>く、<ruby>香<rt>にお</rt></ruby>いと<ruby>書<rt>か</rt></ruby>いて、とうちんこうと<ruby>申<rt>もう</rt></ruby>す。<br><br><ruby>只今<rt>ただいま</rt></ruby>は<ruby>此<rt>こ</rt></ruby>の<ruby>薬<rt>くすり</rt></ruby>、<ruby>殊<rt>こと</rt></ruby>の<ruby>外世上<rt>ほかせじょう</rt></ruby>に<ruby>広<rt>ひろ</rt></ruby>まり、<ruby>方々<rt>ほうぼう</rt></ruby>に<ruby>偽看板<rt>にせかんばん</rt></ruby>を<ruby>出<rt>いだ</rt></ruby>し、イヤ、<ruby>小田原<rt>おだわら</rt></ruby>の、<ruby>灰俵<rt>はいだわら</rt></ruby>の、さん<ruby>俵<rt>だわら</rt></ruby>の、<ruby>炭俵<rt>すみだわら</rt></ruby>のと<ruby>色々<rt>いろいろ</rt></ruby>に<ruby>申<rt>もう</rt></ruby>せども、<ruby>平仮名<rt>ひらがな</rt></ruby>をもって「ういろう」と<ruby>記<rt>しる</rt></ruby>せしは<ruby>親方円斎<rt>おやかたえんさい</rt></ruby>ばかり。<br><br>もしやお<ruby>立合<rt>たちあい</rt></ruby>の<ruby>内<rt>うち</rt></ruby>に、<ruby>熱海<rt>あたみ</rt></ruby>か<ruby>塔<rt>とう</rt></ruby>の<ruby>沢<rt>さわ</rt></ruby>へ<ruby>湯治<rt>とうじ</rt></ruby>にお<ruby>出<rt>い</rt></ruby>でなさるるか、<ruby>又<rt>また</rt></ruby>は<ruby>伊勢参宮<rt>いせさんぐう</rt></ruby>の<ruby>折<rt>おり</rt></ruby>からは、<ruby>必<rt>かなら</rt></ruby>ず<ruby>門違<rt>かどちが</rt></ruby>いなされまするな。<br><br>お<ruby>上<rt>のぼ</rt></ruby>りならば<ruby>右<rt>みぎ</rt></ruby>の<ruby>方<rt>かた</rt></ruby>、お<ruby>下<rt>くだ</rt></ruby>りなれば<ruby>左側<rt>ひだりがわ</rt></ruby>、<ruby>八方<rt>はっぽう</rt></ruby>が<ruby>八<rt>や</rt></ruby>つ<ruby>棟<rt>むね</rt></ruby>、<ruby>表<rt>おもて</rt></ruby>が<ruby>三<rt>み</rt></ruby>つ<ruby>棟玉堂造<rt>むねぎょくどうづくり</rt></ruby>、<ruby>破風<rt>はふ</rt></ruby>には<ruby>菊<rt>きく</rt></ruby>に<ruby>桐<rt>きり</rt></ruby>の<ruby>御紋<rt>ごもん</rt></ruby>を<ruby>御赦免<rt>ごしゃめん</rt></ruby>あって、<ruby>系図正<rt>けいずただ</rt></ruby>しき<ruby>薬<rt>くすり</rt></ruby>でござる。'},
+  {id:'s2',title:'段落二（薬の効果）',emotion:'説得・実証・驚き',hint:'「イヤどうも云えぬは」の間が肝心。体で感じながら声に出す',
+   text:'<ruby>イヤ<rt>いや</rt></ruby><ruby>最前<rt>さいぜん</rt></ruby>より<ruby>家名<rt>かめい</rt></ruby>の<ruby>自慢<rt>じまん</rt></ruby>ばかり<ruby>申<rt>もう</rt></ruby>しても、<ruby>御存知<rt>ごぞんじ</rt></ruby>ない<ruby>方<rt>かた</rt></ruby>には、<ruby>正体<rt>しょうたい</rt></ruby>の<ruby>知<rt>し</rt></ruby>れぬ<ruby>胡椒<rt>こしょう</rt></ruby>の<ruby>丸呑<rt>まるのみ</rt></ruby>、<ruby>白河夜船<rt>しらかわよふね</rt></ruby>。<br><br>さらば<ruby>一粒味見<rt>いちりゅうあじみ</rt></ruby>に<ruby>召<rt>め</rt></ruby>し<ruby>上<rt>あ</rt></ruby>がってみなされ。<ruby>先<rt>ま</rt></ruby>ず<ruby>此<rt>こ</rt></ruby>の<ruby>薬<rt>くすり</rt></ruby>を、かように<ruby>一粒舌<rt>ひとつぶした</rt></ruby>の<ruby>上<rt>うえ</rt></ruby>に<ruby>乗<rt>の</rt></ruby>せまして、<ruby>腹内<rt>ふくない</rt></ruby>へ<ruby>納<rt>おさ</rt></ruby>めますると、<ruby>イヤ<rt>いや</rt></ruby>どうも<ruby>言<rt>い</rt></ruby>えぬは、<ruby>胃<rt>い</rt></ruby>、<ruby>心<rt>しん</rt></ruby>、<ruby>肺<rt>はい</rt></ruby>、<ruby>肝<rt>かん</rt></ruby>が<ruby>健<rt>すこ</rt></ruby>やかになりて、<ruby>薫風喉<rt>くんぷうのんど</rt></ruby>より<ruby>来<rt>きた</rt></ruby>り、<ruby>口中微涼<rt>こうちゅうびりょう</rt></ruby>を<ruby>生<rt>しょう</rt></ruby>ずるが<ruby>如<rt>ごと</rt></ruby>し。<br><br><ruby>魚鳥<rt>ぎょちょう</rt></ruby>、<ruby>きのこ</ruby>、<ruby>麺類<rt>めんるい</rt></ruby>の<ruby>食<rt>く</rt></ruby>い<ruby>合<rt>あ</rt></ruby>わせ、<ruby>其<rt>そ</rt></ruby>の<ruby>外<rt>ほか</rt></ruby>、<ruby>万病速効<rt>まんびょうそっこう</rt></ruby>あること<ruby>神<rt>かみ</rt></ruby>の<ruby>如<rt>ごと</rt></ruby>し。<br><br>さて、<ruby>此<rt>こ</rt></ruby>の<ruby>薬<rt>くすり</rt></ruby>、<ruby>第一<rt>だいいち</rt></ruby>の<ruby>奇妙<rt>きみょう</rt></ruby>には、<ruby>舌<rt>した</rt></ruby>の<ruby>回<rt>まわ</rt></ruby>ることが、<ruby>銭<rt>ぜに</rt></ruby>ゴマがはだしで<ruby>逃<rt>にげ</rt></ruby>る。ひょっと<ruby>舌<rt>した</rt></ruby>が<ruby>回<rt>まわ</rt></ruby>り<ruby>出<rt>だ</rt></ruby>すと、<ruby>矢<rt>や</rt></ruby>も<ruby>盾<rt>たて</rt></ruby>もたまらぬじゃ。'},
+  {id:'s3',title:'段落三（早口言葉①）',emotion:'明瞭・正確・速度',hint:'アカサタナ行の切り替えが核心。速度より正確な音の粒立ちを意識する',
+   text:'そりゃそりゃ、そらそりゃ。<ruby>回<rt>まわ</rt></ruby>って<ruby>来<rt>き</rt></ruby>たわ、<ruby>回<rt>まわ</rt></ruby>って<ruby>来<rt>く</rt></ruby>るわ。<br>アワヤ<ruby>喉<rt>のんど</rt></ruby>、サタラナ<ruby>舌<rt>した</rt></ruby>に、カ<ruby>牙<rt>げ</rt></ruby>サ<ruby>歯音<rt>しおん</rt></ruby>。ハマの<ruby>二<rt>ふた</rt></ruby>つは<ruby>唇<rt>くちびる</rt></ruby>の<ruby>軽重<rt>けいちょう</rt></ruby>、<ruby>開合爽<rt>かいごうさわ</rt></ruby>かに、あかさたなはまやらわ、おこそとのほもよろを。<br><br><ruby>一<rt>ひと</rt></ruby>つへぎへぎに、へぎほしはじかみ。<ruby>盆豆<rt>ぼんまめ</rt></ruby>、<ruby>盆米<rt>ぼんごめ</rt></ruby>、<ruby>盆牛蒡<rt>ぼんごぼう</rt></ruby>。<ruby>摘蓼<rt>つみたで</rt></ruby>、<ruby>つみ豆<rt>つみまめ</rt></ruby>、<ruby>つみ山椒<rt>つみさんしょう</rt></ruby>、<ruby>書写山<rt>しょしゃざん</rt></ruby>の<ruby>社僧正<rt>しゃそうじょう</rt></ruby>。<ruby>粉米<rt>こごめ</rt></ruby>のなまがみ、<ruby>粉米<rt>こごめ</rt></ruby>のなまがみ、こん<ruby>粉米<rt>こごめ</rt></ruby>のこなまがみ。<br><br><ruby>繻子<rt>しゅす</rt></ruby>、ひじゅす、<ruby>繻子<rt>しゅす</rt></ruby>、<ruby>繻珍<rt>しゅちん</rt></ruby>、<ruby>親<rt>おや</rt></ruby>も<ruby>嘉兵衛<rt>かへえ</rt></ruby>、<ruby>子<rt>こ</rt></ruby>も<ruby>嘉兵衛<rt>かへえ</rt></ruby>、<ruby>親<rt>おや</rt></ruby>かへえ<ruby>子<rt>こ</rt></ruby>かへえ、<ruby>子<rt>こ</rt></ruby>かへえ<ruby>親<rt>おや</rt></ruby>かへえ。<br><ruby>古栗<rt>ふるくり</rt></ruby>の<ruby>木<rt>き</rt></ruby>の<ruby>古切口<rt>ふるきりくち</rt></ruby>。<ruby>雨合羽<rt>あまがっぱ</rt></ruby>か、<ruby>番合羽<rt>ばんがっぱ</rt></ruby>か。<ruby>貴様<rt>きさま</rt></ruby>のきゃはんも<ruby>皮脚絆<rt>かわぎゃはん</rt></ruby>、<ruby>我等<rt>われら</rt></ruby>がきゃはんも<ruby>皮脚絆<rt>かわぎゃはん</rt></ruby>。しっかばかまのしっぽころびを、<ruby>三針<rt>みはり</rt></ruby>はりながにちょこっと<ruby>縫<rt>ぬ</rt></ruby>うて、ぬうてちょこっとぶんだせ。<br><br>かわら<ruby>撫子<rt>なでしこ</rt></ruby>、<ruby>野石竹<rt>のせきちく</rt></ruby>。のら如来、のら如来、<ruby>三<rt>み</rt></ruby>のら如来に<ruby>六<rt>む</rt></ruby>のら如来。<ruby>一寸先<rt>ちょっとさき</rt></ruby>のお<ruby>小仏<rt>こぼとけ</rt></ruby>におけつまずきゃるな。<ruby>細溝<rt>ほそみぞ</rt></ruby>にどじょにょろり。<br><ruby>京<rt>きょう</rt></ruby>の<ruby>生鱈<rt>なまだら</rt></ruby>、<ruby>奈良<rt>なら</rt></ruby><ruby>生学鰹<rt>なままなかつお</rt></ruby>、ちょと<ruby>四<rt>し</rt></ruby>、<ruby>五貫目<rt>ごかんめ</rt></ruby>。<br>お<ruby>茶立<rt>ちゃた</rt></ruby>ちょ、<ruby>茶立<rt>ちゃた</rt></ruby>ちょ、ちゃっと<ruby>立<rt>た</rt></ruby>ちょ、<ruby>茶立<rt>ちゃた</rt></ruby>ちょ、<ruby>青竹茶筅<rt>あおだけちゃせん</rt></ruby>でお<ruby>茶<rt>ちゃ</rt></ruby>ちゃっと<ruby>立<rt>た</rt></ruby>ちゃ。'},
+  {id:'s4',title:'段落四（早口言葉②）',emotion:'リズム・精度・爆発力',hint:'武具馬具や麦ごみのリズムを均等に。速さより等間隔が先',
+   text:'<ruby>来<rt>く</rt></ruby>るわ<ruby>来<rt>く</rt></ruby>るわ<ruby>何<rt>なに</rt></ruby>が<ruby>来<rt>く</rt></ruby>る、<ruby>高野<rt>こうや</rt></ruby>の<ruby>山<rt>やま</rt></ruby>のおこけら<ruby>小僧<rt>こぞう</rt></ruby>。<ruby>狸百匹<rt>たぬきひゃっぴき</rt></ruby>、<ruby>箸百膳<rt>はしひゃくぜん</rt></ruby>、<ruby>天目百杯<rt>てんもくひゃっぱい</rt></ruby>、<ruby>棒八百本<rt>ぼうはっぴゃっぽん</rt></ruby>。<br><br><ruby>武具<rt>ぶぐ</rt></ruby>、<ruby>馬具<rt>ばぐ</rt></ruby>、<ruby>武具<rt>ぶぐ</rt></ruby>、<ruby>馬具<rt>ばぐ</rt></ruby>、<ruby>三<rt>み</rt></ruby>ぶぐばぐ、<ruby>合<rt>あ</rt></ruby>わせて<ruby>武具<rt>ぶぐ</rt></ruby>、<ruby>馬具<rt>ばぐ</rt></ruby>、<ruby>六<rt>む</rt></ruby>ぶぐばぐ。<ruby>菊<rt>きく</rt></ruby>、<ruby>栗<rt>くり</rt></ruby>、<ruby>菊<rt>きく</rt></ruby>、<ruby>栗<rt>くり</rt></ruby>、<ruby>三<rt>み</rt></ruby>きくくり、<ruby>合<rt>あ</rt></ruby>わせて<ruby>菊<rt>きく</rt></ruby>、<ruby>栗<rt>くり</rt></ruby>、<ruby>六<rt>む</rt></ruby>きくくり。<ruby>麦<rt>むぎ</rt></ruby>、ごみ、<ruby>麦<rt>むぎ</rt></ruby>、ごみ、<ruby>三<rt>み</rt></ruby>むぎごみ、<ruby>合<rt>あ</rt></ruby>わせて<ruby>麦<rt>むぎ</rt></ruby>、ごみ、<ruby>六<rt>む</rt></ruby>むぎごみ。<br><br>あの<ruby>長押<rt>なげし</rt></ruby>の<ruby>長<rt>なが</rt></ruby>なぎなたは、<ruby>誰<rt>た</rt></ruby>が<ruby>長<rt>なが</rt></ruby>なぎなたぞ。<ruby>向<rt>むこ</rt></ruby>うの<ruby>胡麻殻<rt>ごまがら</rt></ruby>は<ruby>荏<rt>え</rt></ruby>の<ruby>胡麻殻<rt>ごまがら</rt></ruby>か、<ruby>真胡麻殻<rt>まごまがら</rt></ruby>か、あれこそ<ruby>本<rt>ほん</rt></ruby>の<ruby>真胡麻殻<rt>まごまがら</rt></ruby>。<br>がらぴい、がらぴい<ruby>風車<rt>かざぐるま</rt></ruby>。おきゃがれこぼし、おきゃがれこ<ruby>法師<rt>ぼし</rt></ruby>、ゆんべもこぼして、<ruby>又<rt>また</rt></ruby>こぼした。<br><br>たあぷぽぽ、たあぷぽぽ、ちりから、ちりから、つったっぽ。たっぽたっぽ、<ruby>一丁だこ<rt>いっちょうだこ</rt></ruby>、<ruby>落<rt>おち</rt></ruby>たら<ruby>煮<rt>に</rt></ruby>てくお。<br><ruby>煮<rt>に</rt></ruby>ても<ruby>焼<rt>や</rt></ruby>いても<ruby>食<rt>く</rt></ruby>われぬものは、<ruby>五徳<rt>ごとく</rt></ruby>、<ruby>鉄きゅう<rt>てっきゅう</rt></ruby>、かな<ruby>熊どうじ<rt>くまどうじ</rt></ruby>に、<ruby>石熊<rt>いしくま</rt></ruby>、<ruby>石持<rt>いしもち</rt></ruby>、<ruby>虎熊<rt>とらくま</rt></ruby>、<ruby>虎きす<rt>とらきす</rt></ruby>。<ruby>中<rt>なか</rt></ruby>にも<ruby>東寺<rt>とうじ</rt></ruby>の<ruby>羅生門<rt>らしょうもん</rt></ruby>には、<ruby>茨木童子<rt>いばらきどうじ</rt></ruby>が、うで<ruby>御ん崎<rt>ごんざき</rt></ruby>をむんずと<ruby>掴<rt>つか</rt></ruby>んでおむしゃる、かの<ruby>頼光<rt>らいこう</rt></ruby>の<ruby>膝元去<rt>ひざもとさ</rt></ruby>らず。'},
+  {id:'s5',title:'段落五（締め）',emotion:'躍動・笑い・締め',hint:'最後まで崩れないこと。締めの「いらっしゃりませぬか」に全てを込める',
+   text:'<ruby>太刀<rt>たち</rt></ruby>もがな、<ruby>手鉾<rt>てぼこ</rt></ruby>もがなと、<ruby>心神<rt>しんしん</rt></ruby>を<ruby>異<rt>こと</rt></ruby>にせし<ruby>物<rt>もの</rt></ruby>じゃ。<ruby>婆<rt>ばあ</rt></ruby>には、<ruby>呼<rt>よ</rt></ruby>んでお<ruby>煎<rt>せん</rt></ruby>じなされ、<ruby>薬<rt>くすり</rt></ruby>くさくば<ruby>姑<rt>うば</rt></ruby>の<ruby>罰<rt>ふん</rt></ruby>。<br><br><ruby>逃<rt>に</rt></ruby>げんがため、<ruby>武士<rt>ぶし</rt></ruby>の、<ruby>馬上<rt>やあじょう</rt></ruby>にゆり、<ruby>太鼓<rt>たいこ</rt></ruby>、<ruby>腹合<rt>はらあわ</rt></ruby>せ、<ruby>拍子<rt>ひょうし</rt></ruby>の、<ruby>面<rt>めん</rt></ruby>に<ruby>取<rt>と</rt></ruby>って<ruby>引<rt>ひ</rt></ruby>き<ruby>結<rt>むす</rt></ruby>び、<ruby>長<rt>なが</rt></ruby>の<ruby>筒<rt>つつ</rt></ruby>、<ruby>振<rt>ふ</rt></ruby>り<ruby>当<rt>あ</rt></ruby>て、<ruby>矢<rt>や</rt></ruby>を<ruby>放<rt>はな</rt></ruby>す。ひよどりの、<ruby>尾<rt>お</rt></ruby>に<ruby>当<rt>あ</rt></ruby>たって、ちりちりちりちりと、<ruby>鳴<rt>な</rt></ruby>りて、<ruby>落<rt>お</rt></ruby>つ。<br><br>さて、<ruby>早口<rt>はやくち</rt></ruby>の<ruby>種<rt>たね</rt></ruby>の<ruby>切<rt>き</rt></ruby>れたるは、ご<ruby>用<rt>よう</rt></ruby>の<ruby>事<rt>こと</rt></ruby>もなく、<ruby>引<rt>ひ</rt></ruby>き<ruby>上<rt>あ</rt></ruby>ぐ。これを、お<ruby>立<rt>た</rt></ruby>ち<ruby>会<rt>あ</rt></ruby>いの、<ruby>皆<rt>みな</rt></ruby>の、お<ruby>耳<rt>みみ</rt></ruby>に、<ruby>達<rt>たっ</rt></ruby>しがたし、これのみにて、<ruby>本<rt>ほん</rt></ruby>の、<ruby>末々<rt>すえずえ</rt></ruby>の、<ruby>終<rt>おわ</rt></ruby>りと<ruby>致<rt>いた</rt></ruby>す。'},
+];
+
+const WU_TASKS=[
+  {id:'breath',name:'腹式呼吸',icon:'🌬️',type:'timer',secs:90,desc:'鼻4秒吸う→口8秒吐く×10回。声の土台を作る',hint:'お腹が膨らむことを確認する'},
+  {id:'lip',name:'リップロール',icon:'👄',type:'timer',secs:60,desc:'唇を振動させながら「ブーブー」と息を吐く。喉を温める',hint:'力を抜いて。舌を少し下げると楽になる'},
+  {id:'hum',name:'ハミング',icon:'🎵',type:'timer',secs:60,desc:'「ンーーー」と鼻から声を出す。頭に振動を感じる',hint:'頭声の感覚を掴む'},
+  {id:'tongue',name:'舌・口のストレッチ',icon:'👅',type:'check',secs:0,desc:'舌を上下左右に各5回→「アエイウエオアオ」を5回大きく',hint:'舌の筋肉を解放する。必ず鏡で確認'},
+];
+
+const AFFIRMATIONS=[
+  {t:'「私は声優になる」',s:'今日も一歩だけ前へ。それで十分。'},
+  {t:'「声は私の武器だ」',s:'毎日磨けば、必ず切れ味が増す。'},
+  {t:'「100万人が私の声を待っている」',s:'まず1人を本気で動かす声を作れ。'},
+  {t:'「今日練習した声優の卵が、明日の主役になる」',s:'プロも昨日は初心者だった。'},
+  {t:'「私は諦めない」',s:'やめたら0%。続ければ可能性は0じゃない。'},
+];
+
+const VPC_POOL=[
+  {cat:'pro',catL:'発声',icon:'🎵',src:'声優養成所標準',title:'外郎売スプリント',emotion:'明瞭・速度',body:'「武具馬具武具馬具、三武具馬具」を3セット。1回目ゆっくり→2回目普通→3回目倍速。録音して聴き直す',hint:'最初は正確さ優先。速さは後からついてくる'},
+  {cat:'pro',catL:'発声',icon:'🌬️',src:'プロ声優メソッド',title:'腹式+発声コントロール',emotion:'音量コントロール',body:'①立ち腹式呼吸で「アー」を30秒安定して出す\n②同じことをイ・ウ・エ・オでも各3回\n③音量を小→大→小と変化させる',hint:'声量の差で感情の幅が生まれる'},
+  {cat:'pro',catL:'発声',icon:'🔊',src:'プロ声優メソッド',title:'共鳴トレーニング',emotion:'共鳴・倍音',body:'①「ンーー」と鼻に手を当て振動確認\n②頭のてっぺんにも振動を感じる\n③「ンア」「ンイ」「ンウ」「ンエ」「ンオ」と変化させる',hint:'日本語の豊かな響きは共鳴が鍵'},
+  {cat:'pro',catL:'発声',icon:'👄',src:'青二塾カリキュラム参考',title:'母音明瞭度強化',emotion:'明瞭・滑舌',body:'五十音を一音一音、鏡で口の形を確認しながら発音する\n→「ア・ウ・ア・ウ」「イ・エ・イ・エ」と交互に\n→「あいうえお」を10段階の音量で',hint:'口の形が不正確だとマイク越しに子音が潰れる'},
+  {cat:'pro',catL:'発声',icon:'💨',src:'プロ声優メソッド',title:'ブレスと感情の連動',emotion:'ブレスコントロール',body:'①「はあ〜」と深いため息→「疲れた…」\n②「ふっ」短く息を吐く→「くだらない」（蔑み）\n③「すうっ」と吸い込む→「…嘘でしょ」（衝撃）\n各3セット',hint:'声より先に息が出る'},
+  {cat:'emotion',catL:'感情',icon:'😭',src:'感情演技研究',title:'遅れてくる悲しみ',emotion:'静かな悲しみ・遅延',body:'「…そうか。あいつ、もう帰ってこないんだな」\n「どうして今になって気づいたんだろう。もっとそばにいればよかった…」',hint:'泣かない。感情が遅れてくる重さを声だけで表現する'},
+  {cat:'emotion',catL:'感情',icon:'🔥',src:'プロ感情演技',title:'静かな怒り（最高難度）',emotion:'制御された怒り',body:'「…お前に言われたくない」\n「なぜ、今さらそんなことを言うんだ」\n「…もういい」\n声を荒げず、低く、間を取って演じる',hint:'静かな怒りは爆発より怖い'},
+  {cat:'emotion',catL:'感情',icon:'💪',src:'感情演技研究',title:'絶望からの立ち上がり',emotion:'決意・再起',body:'「…もう、終わりだ」（間を置く）\n「…いや、まだだ」\n「まだ諦めていない。絶対に、絶対に諦めない」',hint:'変化の「間」が命。1秒の沈黙が反転の重さを作る'},
+  {cat:'emotion',catL:'感情',icon:'😊',src:'声優養成演技論',title:'本音と建前の乖離',emotion:'複雑・演じる感情',body:'「大丈夫ですよ、全然気にしてませんから」（笑って）\n→ひとりになって「…全然大丈夫じゃない」',hint:'声優の真骨頂は「演じているキャラが演じている感情」'},
+  {cat:'anime',catL:'アニメ',icon:'🌸',src:'葬送のフリーレン スタイル参考',title:'エルフの時間感覚',emotion:'静かな哀愁・超越',body:'「私は長く生きすぎた。喜びも悲しみも、時間が薄めてしまう」\n「あの旅が終わったのは、もうずっと昔のことのはずなのに。なぜ今頃になって、胸が痛むのだろう」',hint:'感情を「遅らせる」演技。急がない。呼吸を使う'},
+  {cat:'anime',catL:'アニメ',icon:'⚽',src:'ブルーロック スタイル参考',title:'自我の覚醒',emotion:'冷静な覚醒・野心',body:'「俺には才能がある。それに気づいていなかっただけだ」\n「誰かのためじゃない。俺が世界一になりたいから、なる」\n「感情じゃない。これは確信だ」',hint:'クール覚醒の演技。声に熱を帯びさせない'},
+  {cat:'anime',catL:'アニメ',icon:'💔',src:'感情演技研究',title:'別れ際の言葉',emotion:'あきらめ・愛情・静かな痛み',body:'「元気でね」\n（間を3秒置いて）\n「…ありがとう、一緒にいてくれて」',hint:'短いセリフほど難しい。間と息の質が全てを語る'},
+  {cat:'chara',catL:'キャラ',icon:'👦',src:'キャラクター演技応用',title:'熱血少年主人公',emotion:'熱血・純粋・前向き',body:'「俺の夢を笑うな！」\n「こんなところで負けられない、仲間が待っているから！」\n「何度でも立ち上がる！」\n各セリフを①高揚感②確信③瀕死で絞り出す で演じる',hint:'同じセリフでも状況で全く変わる'},
+  {cat:'chara',catL:'キャラ',icon:'😈',src:'ヴィラン演技論',title:'本格的ヴィラン',emotion:'余裕・哲学・確信',body:'「正義？悪？そんな区別に意味があるのか」\n「私がしていることは、世界を正しい方向へ導くことだ」\n「誰もわかってくれなくていい。100年後に、私が正しかったとわかる」',hint:'良いヴィランは自分が悪だと思っていない'},
+  {cat:'chara',catL:'キャラ',icon:'🧓',src:'キャラクター演技応用',title:'老師・語り手',emotion:'重厚・知恵・時間',body:'「若者よ、聞くがよい。強さとは、傷つかないことではない」\n「傷ついても、それでも立ち続けることを、人は強さと呼ぶ」',hint:'間（ま）が命。1秒の沈黙が重みを作る'},
+];
+
+const DC_POOL=[
+  {cat:'V',catL:'発声',t:'五十音+共鳴60秒',b:'「あいうえお」を口最大に開けて10回→「ンーアー」「ンーイー」と共鳴させながら母音を各5回',h:'口の開きが小さいと全てが曖昧になる',r:'💠+10'},
+  {cat:'V',catL:'発声',t:'外郎売スプリント',b:'「武具馬具〜」「東京特許許可局〜」を3セット。1回目ゆっくり→2回目普通→3回目倍速',h:'速さより正確さ。録音して確認必須',r:'💠+12'},
+  {cat:'V',catL:'発声',t:'腹式+30秒ホールド',b:'腹式呼吸で「アー」と30秒間安定して出し続ける。途中でブレてもOK',h:'この練習だけで声量と安定感が変わる',r:'💠+12'},
+  {cat:'E',catL:'感情',t:'6感情チャレンジ',b:'「もう終わりだ」を①喜び②怒り③悲しみ④驚き⑤恐怖⑥嫌悪 の6種で演じる',h:'感情は声帯の使い方。まず自分が感じてから声にする',r:'💠+15'},
+  {cat:'E',catL:'感情',t:'泣き演技（涙なし）',b:'「ごめん、俺のせいだ。全部俺が悪かった」を実際に泣かずに「泣きそうな声」で演じる',h:'声優は泣かない。泣きたいのを抑えている声が求められる',r:'💠+14'},
+  {cat:'C',catL:'キャラ',t:'年齢演じ分け',b:'「おはよう」を①5歳②20代③50代④80代 各3回。音域・テンポ・語感を変える',h:'同じ言葉でも年齢で全て変わる',r:'💠+12'},
+  {cat:'S',catL:'台本',t:'2分間ノンストップ朗読',b:'スマホのブラウザでニュース記事を開き、2分間声を止めずに読み続ける。詰まっても止まらない',h:'止まらない練習。ナレーター志望者も必須',r:'💠+15'},
+  {cat:'S',catL:'台本',t:'アドリブ即興30秒',b:'「バス停で雨宿り中の見知らぬ人と傘に入ることになった」を即興で30秒演じる',h:'完璧じゃなくていい。止まらない勇気が大事',r:'💠+16'},
+  {cat:'U',catL:'外郎売',t:'外郎売①：喜びで',b:'「拙者親方と申すは…」冒頭を喜びを持って3回。商人が誇り高く客に語りかけるイメージ',h:'感情を乗せると滑舌が崩れやすい。崩れても感情を優先',r:'💠+15'},
+  {cat:'U',catL:'外郎売',t:'外郎売③：武具馬具スプリント',b:'「武具馬具武具馬具三武具馬具」各5回。1セット目ゆっくり→2セット目普通→3セット目全速',h:'録音して詰まりを確認。同じ場所で詰まるはず',r:'💠+15'},
+  {cat:'U',catL:'外郎売',t:'外郎売⑤：松岡禎丞レベルで',b:'外郎売の冒頭3文を「松岡禎丞さんが演じるとしたら」というイメージで。炎のような熱量で、でも滑舌は完璧に',h:'理想のゴールを毎日イメージする',r:'💠+20'},
+];
+
+const GACHA_TBL=[
+  {r:'SSR',icon:'🌟',name:'100万人の声',ef:'称号「100万人の声」を獲得',isTitle:true,title:'100万人の声'},
+  {r:'SSR',icon:'💫',name:'天命の宝石',ef:'クリスタル+1000',cry:1000},
+  {r:'SSR',icon:'✨',name:'伝説の才能',ef:'+500XP & 称号「伝説の才能」獲得',xp:500,isTitle:true,title:'伝説の才能'},
+  {r:'SR',icon:'🔮',name:'魔晶石',ef:'クリスタル+400',cry:400},
+  {r:'SR',icon:'🛡️',name:'月光の加護',ef:'ストリーク保護×1',shield:1},
+  {r:'SR',icon:'⚡',name:'雷の加護',ef:'次のクエスト完了XPが2倍',xpb:2},
+  {r:'SR',icon:'🎤',name:'声の探求者',ef:'SR称号「声の探求者」を獲得',isTitle:true,title:'声の探求者'},
+  {r:'R',icon:'💠',name:'魔鉱石',ef:'クリスタル+150',cry:150},
+  {r:'R',icon:'📖',name:'鍛錬の書',ef:'クリスタル+80 & 原石+20',cry:80,res:20},
+  {r:'R',icon:'💪',name:'根性石',ef:'+80XP',xp:80},
+  {r:'N',icon:'🪨',name:'結晶のカケラ',ef:'クリスタル+50',cry:50},
+  {r:'N',icon:'🌿',name:'回復草',ef:'+25XP',xp:25},
+  {r:'N',icon:'🪄',name:'練習の証',ef:'クリスタル+30',cry:30},
+];
+
+const BOSS_LIST=[
+  {name:'現実逃避の魔王',emoji:'👿',hp:1000},
+  {name:'スマホ依存の悪霊',emoji:'👹',hp:1200},
+  {name:'怠惰の大公爵',emoji:'🧟',hp:1500},
+  {name:'先延ばしの邪神',emoji:'💀',hp:2000},
+  {name:'誘惑の幻魔王',emoji:'🐉',hp:2500},
+];
+
+const LOGIN_REWARDS=[
+  {day:1,icon:'💎',name:'クリスタル×50',cry:50},
+  {day:2,icon:'💠',name:'原石×20',res:20},
+  {day:3,icon:'✨',name:'ガチャ1回',gacha:1},
+  {day:4,icon:'💎',name:'クリスタル×100',cry:100},
+  {day:5,icon:'💠',name:'原石×40',res:40},
+  {day:6,icon:'🎰',name:'SR確定ガチャ',gacha_sr:1},
+  {day:7,icon:'👑',name:'SSR確定ガチャ',gacha_ssr:1},
+];
+
+const LV_TITLES=[[1,'演技未経験'],[3,'発声練習生'],[5,'養成所入所レベル'],[8,'養成所中級'],[10,'養成所上級'],[15,'事務所プレ研修生'],[20,'事務所研修生'],[25,'事務所預かり'],[30,'準所属候補'],[40,'準所属声優'],[50,'正所属新人'],[60,'活躍中声優'],[75,'人気声優'],[90,'トップ声優'],[100,'松岡禎丞レベル👑']];
+function lvTitle(l){let t='迷える冒険者';for(const[k,v] of LV_TITLES){if(l>=k)t=v;}return t;}
+function xpNeeded(l){return l*150;}
+
+const ACHS=[
+  {id:'wu1',icon:'🔥',name:'最初の炎',desc:'WU初回完了',c:s=>s.st.wuDays>=1},
+  {id:'va1',icon:'🎙️',name:'初めての声',desc:'声優練習初回完了',c:s=>s.st.vaSess>=1},
+  {id:'rec1',icon:'🎤',name:'初録音',desc:'初めて録音した',c:s=>s.st.recCount>=1},
+  {id:'rec10',icon:'📼',name:'録音魔',desc:'録音10回',c:s=>s.st.recCount>=10},
+  {id:'str3',icon:'🔥',name:'三日坊主超え',desc:'3日連続クリア',c:s=>s.p.streak>=3},
+  {id:'str7',icon:'⚡',name:'一週間の戦士',desc:'7日連続クリア',c:s=>s.p.streak>=7},
+  {id:'str14',icon:'🌙',name:'二週間の戦士',desc:'14日連続クリア',c:s=>s.p.streak>=14},
+  {id:'str30',icon:'👑',name:'一ヶ月の求道者',desc:'30日連続クリア',c:s=>s.p.streak>=30},
+  {id:'lv5',icon:'⬆️',name:'Lv.5達成',desc:'レベル5に到達',c:s=>s.p.level>=5},
+  {id:'lv10',icon:'💫',name:'Lv.10達成',desc:'レベル10に到達',c:s=>s.p.level>=10},
+  {id:'lv20',icon:'🌟',name:'Lv.20達成',desc:'レベル20に到達',c:s=>s.p.level>=20},
+  {id:'boss1',icon:'⚔️',name:'初討伐',desc:'ボスを初めて倒した',c:s=>s.st.bossKills>=1},
+  {id:'g1',icon:'💎',name:'運命の出会い',desc:'ガチャを初めて引いた',c:s=>s.st.gachaPulls>=1},
+  {id:'ssr1',icon:'✨',name:'伝説の声',desc:'SSRを獲得',c:s=>s.st.ssrCount>=1},
+  {id:'dec5',icon:'🛡️',name:'意思の強者',desc:'誘いを5回断った',c:s=>s.p.declines>=5},
+  {id:'dc4',icon:'⚔️',name:'全依頼完了',desc:'デイリー4つ全完了',c:s=>s.st.dcDays>=1},
+  {id:'gate10',icon:'🎯',name:'ゲート10回',desc:'録音前ゲート10回完了',c:s=>(s.st.gateCount||0)>=10},
+  {id:'gate100',icon:'🎭',name:'メソッド俳優',desc:'録音前ゲート100回完了',c:s=>(s.st.gateCount||0)>=100},
+  {id:'eval10',icon:'📊',name:'客観の目',desc:'自己評価10回完了',c:s=>(s.st.evalCount||0)>=10},
+  {id:'active30',icon:'📅',name:'30日間活動',desc:'30日間アプリを起動',c:s=>(s.p.totalActiveDays||0)>=30},
+];
+
+// ── STATE ──
+let S={
+  p:{level:1,xp:0,totalXP:0,cry:0,resin:0,streak:0,lastDate:null,subs:680,title:'演技未経験',shield:0,declines:0,xpBuff:1,loginDay:0,lastLogin:null,totalActiveDays:0,activityDates:[]},
+  st:{ytSess:0,vaSess:0,totalMin:0,fullDays:0,gachaPulls:0,ssrCount:0,bossKills:0,dcDays:0,wuDays:0,recCount:0,gateCount:0,evalCount:0},
+  ach:{},gacha:[],evalHistory:[],boss:{idx:0,hp:1000,maxHp:1000,weekStart:null,killed:false},
+  pity:0,days:{},notifs:{morning:false,after:false,night:true,resin:true},bgm:false,_ts:0,
+  voiceSamples:[],obsData:[],ngHistory:[],uiroReviewHistory:[],uiroSelfChecks:[],aiFeedbackLog:[],extFeedback:{},voiceLog:[],entameLog:[],
+};
+
+function load(){try{const r=localStorage.getItem(SK);if(r)S=Object.assign(S,JSON.parse(r));}catch(e){}}
+function saveLocal(){try{localStorage.setItem(SK,JSON.stringify(S));}catch(e){}}
+function save(){S._ts=Date.now();saveLocal();cloudSave();}
+function todayKey(){return new Date().toISOString().split('T')[0];}
+function getTD(){
+  const k=todayKey();
+  if(!S.days[k])S.days[k]={va:{secs:0,done:false},dc:[false,false,false,false],dcClaimed:false,wu:[false,false,false,false],wuBonus:false};
+  return S.days[k];
+}
+
+// ── INDEXEDDB (14日自動パージ + 保護フラグ) ──
+let idb=null;
+async function openIDB(){
+  return new Promise((res)=>{
+    const req=indexedDB.open('nyano_recs_v2',2);
+    req.onupgradeneeded=e=>{
+      const db=e.target.result;
+      if(!db.objectStoreNames.contains('recs')){
+        const store=db.createObjectStore('recs',{keyPath:'id',autoIncrement:true});
+        store.createIndex('date','date',{unique:false});
+      }else if(e.oldVersion<2){
+        // add protected field if upgrading
+      }
+    };
+    req.onsuccess=e=>{idb=e.target.result;res();};
+    req.onerror=()=>res();
+  });
+}
+async function idbSaveRec(blob,label,dur){
+  if(!idb)return;
+  return new Promise(res=>{
+    const tx=idb.transaction(['recs'],'readwrite');
+    tx.objectStore('recs').add({blob,label,date:new Date().toISOString(),dur,mime:blob.type,protected:false});
+    tx.oncomplete=()=>res();tx.onerror=()=>res();
+  });
+}
+async function idbGetAll(){
+  if(!idb)return[];
+  return new Promise(res=>{
+    const tx=idb.transaction(['recs'],'readonly');
+    const req=tx.objectStore('recs').getAll();
+    req.onsuccess=()=>res(req.result.reverse());
+    req.onerror=()=>res([]);
+  });
+}
+async function idbDelete(id){
+  if(!idb)return;
+  return new Promise(res=>{
+    const tx=idb.transaction(['recs'],'readwrite');
+    tx.objectStore('recs').delete(id);
+    tx.oncomplete=()=>res();tx.onerror=()=>res();
+  });
+}
+async function idbSetProtected(id,prot){
+  if(!idb)return;
+  return new Promise(res=>{
+    const tx=idb.transaction(['recs'],'readwrite');
+    const store=tx.objectStore('recs');
+    const req=store.get(id);
+    req.onsuccess=()=>{const r=req.result;r.protected=prot;store.put(r);};
+    tx.oncomplete=()=>res();tx.onerror=()=>res();
+  });
+}
+async function idbRename(id,label){
+  if(!idb)return;
+  return new Promise(res=>{
+    const tx=idb.transaction(['recs'],'readwrite');
+    const store=tx.objectStore('recs');
+    const req=store.get(id);
+    req.onsuccess=()=>{const r=req.result;r.label=label;store.put(r);};
+    tx.oncomplete=()=>res();tx.onerror=()=>res();
+  });
+}
+// 14日自動パージ
+async function autoPurge14Days(){
+  const recs=await idbGetAll();
+  const cutoff=Date.now()-14*24*3600*1000;
+  let purged=0;
+  for(const r of recs){
+    if(!r.protected&&new Date(r.date).getTime()<cutoff){
+      await idbDelete(r.id);purged++;
+    }
+  }
+  if(purged>0)showToast('🗑','自動パージ完了',`14日経過した${purged}件の録音を自動削除しました`);
+}
+// 一括削除（保護なし）
+async function purgeUnprotectedRecs(){
+  if(!confirm('保護されていない全録音を削除しますか？この操作は取り消せません。'))return;
+  const recs=await idbGetAll();
+  let cnt=0;
+  for(const r of recs){if(!r.protected){await idbDelete(r.id);cnt++;}}
+  renderRecLib();
+  showToast('🗑','一括削除完了',`${cnt}件を削除しました`);
+}
+// ストレージ計算
+async function calcStorageStats(){
+  const recs=await idbGetAll();
+  const el=document.getElementById('storage-stats');if(!el)return;
+  if(!recs.length){el.innerHTML='録音なし';return;}
+  let totalBytes=0,protectedCount=0,unprotectedCount=0;
+  for(const r of recs){
+    const sz=r.blob?r.blob.size:0;totalBytes+=sz;
+    if(r.protected)protectedCount++;else unprotectedCount++;
+  }
+  const mb=(totalBytes/1024/1024).toFixed(2);
+  el.innerHTML=`📦 合計: <span style="color:var(--gold)">${mb} MB</span> (${recs.length}件)<br>🔒 保護: <span style="color:var(--teal)">${protectedCount}件</span> | ⚠️ 自動削除対象: <span style="color:var(--red)">${unprotectedCount}件</span>`;
+}
+
+// ── AUDIO ENGINE ──
+let actx=null,bgmNodes={},bgmOn=false,audioUnlocked=false;
+function unlockAudio(){if(audioUnlocked)return;audioUnlocked=true;try{actx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}document.removeEventListener('touchstart',unlockAudio);document.removeEventListener('click',unlockAudio);}
+document.addEventListener('touchstart',unlockAudio,{passive:true});
+document.addEventListener('click',unlockAudio,{passive:true});
+function getCtx(){if(!actx)try{actx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}if(actx&&actx.state==='suspended')actx.resume().catch(()=>{});return actx;}
+function playTone(freq,type,dur,delay,gain){const c=getCtx();if(!c)return;try{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type=type||'sine';o.frequency.value=freq;const t=c.currentTime+(delay||0);g.gain.setValueAtTime(gain||0.1,t);g.gain.exponentialRampToValueAtTime(0.001,t+dur);o.start(t);o.stop(t+dur);}catch(e){}}
+let _sfxLast=0;
+function _sfxOk(){const n=Date.now();if(n-_sfxLast<280)return false;_sfxLast=n;return true;}
+function sfxComplete(){if(!_sfxOk())return;[523,659,784,1047].forEach((f,i)=>playTone(f,'sine',.14,i*.09,.09));}
+function sfxLvUp(){_sfxLast=Date.now();[262,330,392,523,659,784].forEach((f,i)=>playTone(f,'square',.18,i*.07,.08));}
+function sfxToast(){if(!_sfxOk())return;[880,1047].forEach((f,i)=>playTone(f,'sine',.15,i*.09,.08));}
+function sfxWU(){if(!_sfxOk())return;playTone(659,'sine',.12,0,.08);playTone(784,'sine',.1,.12,.08);}
+function sfxGacha(r){if(r==='SSR')[330,415,523,659,830,1047].forEach((f,i)=>playTone(f,'square',.22,i*.09,.12));else if(r==='SR')[440,554,659,880].forEach((f,i)=>playTone(f,'sine',.18,i*.1,.1));else if(r==='R')[330,440,554].forEach((f,i)=>playTone(f,'sine',.13,i*.09,.09));else playTone(220,'sine',.18,0,.06);}
+function startBGM(){const c=getCtx();if(!c||bgmOn)return;bgmOn=true;try{const master=c.createGain();master.gain.value=0.04;master.connect(c.destination);const filter=c.createBiquadFilter();filter.type='lowpass';filter.frequency.value=600;filter.connect(master);const lfo=c.createOscillator();const lfoGain=c.createGain();lfo.frequency.value=0.08;lfoGain.gain.value=3;lfo.connect(lfoGain);[110,164.81,220,261.63].forEach((f,i)=>{const o=c.createOscillator();o.type='sine';o.frequency.value=f;const g=c.createGain();g.gain.value=1/(i+1)*0.7;lfoGain.connect(o.frequency);o.connect(g);g.connect(filter);o.start();});bgmNodes={master,filter,lfo};lfo.start();master.gain.setValueAtTime(0,c.currentTime);master.gain.linearRampToValueAtTime(0.04,c.currentTime+3);}catch(e){bgmOn=false;}}
+function stopBGM(){if(!bgmOn||!actx)return;try{bgmNodes.master&&bgmNodes.master.gain.linearRampToValueAtTime(0,actx.currentTime+2);setTimeout(()=>{try{bgmNodes.lfo&&bgmNodes.lfo.stop();}catch(e){}bgmNodes={};bgmOn=false;},2100);}catch(e){bgmNodes={};bgmOn=false;}}
+function togBGM(){S.bgm=!S.bgm;document.getElementById('tog-bgm').classList.toggle('on',S.bgm);save();if(S.bgm)startBGM();else stopBGM();}
+
+// ── TIMERS ──
+let tSecs={va:0},tRun={va:false},tInt={va:null};
+function toggleTimer(id){
+  if(id==='va'&&!isWUDone()){showToast('🔒','ウォームアップ未完了','プロはウォームアップ無しに声帯を使わない。');goScreen('practice',document.querySelectorAll('.nb')[1]);switchTab('prac','wu',null);return;}
+  tRun[id]?stopTimer(id):startTimer(id);
+}
+function startTimer(id){
+  tRun[id]=true;
+  const b=document.getElementById('qb-'+id);if(b){b.textContent='⏸ 一時停止';b.className='btn bg';b.style.flex='1';}
+  document.getElementById('qt-'+id).classList.add('run');
+  tInt[id]=setInterval(()=>{
+    tSecs[id]++;updTimerUI(id);
+    if(tSecs[id]%60===0){applyBossDmg(1);S.p.cry+=1;S.p.resin=Math.min(160,S.p.resin+1);renderResin();renderHdr();}
+    save();
+  },1000);
+}
+function stopTimer(id){
+  tRun[id]=false;clearInterval(tInt[id]);
+  const b=document.getElementById('qb-'+id);if(b){b.textContent='▶ スタート';b.className='btn bt';b.style.flex='1';}
+  document.getElementById('qt-'+id).classList.remove('run');
+  getTD()[id].secs=tSecs[id];save();
+}
+function updTimerUI(id){
+  const s=tSecs[id],m=Math.floor(s/60),sec=s%60;
+  const el=document.getElementById('qt-'+id);if(el)el.textContent=`${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  const p=document.getElementById('qp-'+id);if(p)p.style.width=Math.min(100,(s/(30*60))*100)+'%';
+}
+
+// ── WARMUP ──
+let wuSecs={breath:0,lip:0,hum:0},wuRun={},wuInt={};
+function isWUDone(){return getTD().wu.every(Boolean);}
+function renderWarmup(){
+  const td=getTD();const done=td.wu.filter(Boolean).length;
+  const el=document.getElementById('wu-count');if(el)el.textContent=`${done}/4`;
+  const list=document.getElementById('wu-list');if(!list)return;
+  list.innerHTML=WU_TASKS.map((t,i)=>{
+    const isDone=td.wu[i];let rightHTML='';
+    if(!isDone){
+      if(t.type==='timer'){
+        const remain=Math.max(0,t.secs-(wuSecs[t.id]||0));
+        const running=!!wuRun[t.id];
+        rightHTML=`<div class="wu-right"><div class="wu-tmr" id="wu-tmr-${i}">${String(Math.floor(remain/60)).padStart(2,'0')}:${String(remain%60).padStart(2,'0')}</div><button class="btn ${running?'bg':'bt'} wu-btn" data-wu="${i}" onclick="toggleWUTimer(this)">${running?'⏸':'▶'}</button></div>`;
+      }else{
+        rightHTML=`<button class="btn bt" style="padding:6px 11px;font-size:11px" data-wu="${i}" onclick="doneWUCheck(this)">完了</button>`;
+      }
+    }
+    const pct=t.type==='timer'?Math.min(100,((wuSecs[t.id]||0)/t.secs)*100):0;
+    return `<div class="wu-item ${isDone?'done':''}" id="wu-item-${i}"><div class="wu-check">${isDone?'✓':i+1}</div><div class="wu-info"><div class="wu-name">${t.icon} ${t.name}</div><div class="wu-desc">${t.desc}</div>${t.type==='timer'&&!isDone?`<div class="wu-prog"><div class="wu-prog-fill" id="wu-pf-${i}" style="width:${pct}%"></div></div>`:''}<div class="wu-hint">💡 ${t.hint}</div></div>${rightHTML}</div>`;
+  }).join('');
+  const msg=document.getElementById('wu-done-msg');if(msg)msg.style.display=done===4?'block':'none';
+  const vaLock=document.getElementById('va-lock-lbl');if(vaLock)vaLock.style.display=done===4?'none':'';
+  if(done===4){const q=document.getElementById('qc-va');if(q)q.classList.remove('locked');}
+  document.getElementById('nd-wu').classList.toggle('on',done<4);
+}
+function toggleWUTimer(btnEl){
+  const i=parseInt(btnEl.dataset.wu);const t=WU_TASKS[i];const id=t.id;
+  if(wuRun[id]){clearInterval(wuInt[id]);wuRun[id]=false;}
+  else{
+    if(!wuSecs[id])wuSecs[id]=0;wuRun[id]=true;
+    wuInt[id]=setInterval(()=>{
+      wuSecs[id]++;
+      const remain=Math.max(0,t.secs-wuSecs[id]);
+      const el=document.getElementById('wu-tmr-'+i);const pf=document.getElementById('wu-pf-'+i);
+      if(el)el.textContent=`${String(Math.floor(remain/60)).padStart(2,'0')}:${String(remain%60).padStart(2,'0')}`;
+      if(pf)pf.style.width=Math.min(100,(wuSecs[id]/t.secs)*100)+'%';
+      if(wuSecs[id]>=t.secs){clearInterval(wuInt[id]);wuRun[id]=false;finishWUItem(i);}
+    },1000);
+  }
+  renderWarmup();
+}
+function doneWUCheck(btnEl){finishWUItem(parseInt(btnEl.dataset.wu));}
+function finishWUItem(i){const td=getTD();if(td.wu[i])return;td.wu[i]=true;save();sfxWU();checkWUComplete();renderWarmup();}
+function checkWUComplete(){if(isWUDone()&&!getTD().wuBonus){getTD().wuBonus=true;S.st.wuDays++;gainXP(30);gainCry(20);showToast('🔥','ウォームアップ完了！','声優練習が解放されました！ +30XP');checkAchs();save();}}
+
+// ── VOICE PRACTICE ──
+let vpcAll=[...VPC_POOL],vpcIdx=0;
+function filterVPC(){const cat=document.getElementById('vpc-sel').value;vpcAll=cat==='all'?[...VPC_POOL]:VPC_POOL.filter(v=>v.cat===cat);vpcIdx=0;renderVPC();}
+function shuffleVPC(){for(let i=vpcAll.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[vpcAll[i],vpcAll[j]]=[vpcAll[j],vpcAll[i]];}vpcIdx=0;renderVPC();showToast('🔀','シャッフル！','練習順をランダムにしました');}
+function nextVPC(){vpcIdx=(vpcIdx+1)%vpcAll.length;renderVPC();}
+function prevVPC(){vpcIdx=(vpcIdx-1+vpcAll.length)%vpcAll.length;renderVPC();}
+function renderVPC(){
+  const locked=!isWUDone();const vn=document.getElementById('va-locked-notice');if(vn)vn.style.display=locked?'block':'none';
+  if(!vpcAll.length)return;
+  const v=vpcAll[vpcIdx];
+  const catColors={pro:'cP',emotion:'cE',anime:'cA',chara:'cC'};
+  document.getElementById('vpc-display').innerHTML=`<div class="vpc">${v.src?`<div class="vpc-source">📺 ${v.src}</div>`:''}<div class="vpc-title">${v.icon||'🎙️'} ${v.title}<span class="cat-pill ${catColors[v.cat]||'cP'}" style="margin-left:8px;font-size:9px">${v.catL}</span></div><div class="vpc-body">${v.body}</div><div class="vpc-hint">💡 ${v.hint}</div><div class="vpc-foot"><span style="font-size:11px;color:var(--text2)">${v.emotion}</span><button class="btn bt" style="font-size:11px;padding:6px 12px" onclick="switchTab('prac','rec',null)">🎤 録音する</button></div></div>`;
+  const ctr=document.getElementById('vpc-counter');if(ctr)ctr.textContent=`${vpcIdx+1}/${vpcAll.length}`;
+}
+
+// ── GATE ──
+let gate={purpose:'',distance:'',sp:false,td:false,ns:false,adlib:''},gateOK=false;
+function setGatePurpose(txt){const el=document.getElementById('gate-purpose');if(el)el.value=txt;updateGateStatus();}
+function selectDist(btnEl){document.querySelectorAll('.gdist').forEach(b=>b.classList.remove('sel'));btnEl.classList.add('sel');gate.distance=btnEl.dataset.d;updateGateStatus();}
+function toggleGateBody(key){gate[key]=!gate[key];const el=document.getElementById('gchk-'+key);if(el){el.classList.toggle('on',gate[key]);el.textContent=gate[key]?'✓':'';}updateGateStatus();}
+function updateGateStatus(){
+  const p=document.getElementById('gate-purpose');const a=document.getElementById('gate-adlib');
+  if(p)gate.purpose=p.value.trim();if(a)gate.adlib=a.value.trim();
+  gateOK=gate.purpose.length>=2&&gate.distance&&gate.sp&&gate.td&&gate.ns&&gate.adlib.length>=3;
+  const btn=document.getElementById('gate-rec-btn');if(btn){btn.disabled=!gateOK;btn.style.opacity=gateOK?'1':'0.4';}
+  const st=document.getElementById('gate-status-text');
+  if(st){const done=[gate.purpose.length>=2,gate.distance,gate.sp,gate.td,gate.ns,gate.adlib.length>=3].filter(Boolean).length;st.textContent=`${done}/6完了`;st.style.color=gateOK?'var(--teal)':'var(--gold)';}
+}
+function resetGate(){gate={purpose:'',distance:'',sp:false,td:false,ns:false,adlib:''};gateOK=false;const p=document.getElementById('gate-purpose');if(p)p.value='';const a=document.getElementById('gate-adlib');if(a)a.value='';document.querySelectorAll('.gdist').forEach(b=>b.classList.remove('sel'));['sp','td','ns'].forEach(k=>{const el=document.getElementById('gchk-'+k);if(el){el.classList.remove('on');el.textContent='';}});updateGateStatus();}
+
+function startGatedRecording(){
+  if(!gateOK){showToast('⚠️','ゲート未完了','全6項目を入力してください');return;}
+  const ov=document.getElementById('cd-ov');const numEl=document.getElementById('cd-num');const adEl=document.getElementById('cd-adlib');
+  adEl.textContent='「'+gate.adlib+'」';ov.classList.add('show');
+  let count=3;numEl.classList.remove('pop');void numEl.offsetWidth;numEl.classList.add('pop');numEl.textContent=count;
+  playTone(523,'sine',.15,0,.1);
+  const iv=setInterval(()=>{
+    count--;
+    if(count>0){numEl.classList.remove('pop');void numEl.offsetWidth;numEl.classList.add('pop');numEl.textContent=count;playTone(523+count*80,'sine',.12,0,.1);}
+    else{clearInterval(iv);ov.classList.remove('show');
+      document.getElementById('gate-section').style.display='none';
+      document.getElementById('rec-active-panel').style.display='block';
+      const ad=document.getElementById('rec-adlib-disp');if(ad)ad.textContent='「'+gate.adlib+'」';
+      // sticky bar
+      const sb=document.getElementById('rec-sticky');if(sb){sb.classList.add('show');document.getElementById('rec-sticky-adlib').textContent='「'+gate.adlib+'」';}
+      // target display
+      const tgt=parseInt((document.getElementById('rec-target-secs')||{}).value||0);
+      const td2=document.getElementById('rec-target-disp');if(td2)td2.textContent=tgt>0?`目標: ${tgt}秒`:'';
+      playTone(880,'sine',.2,0,.15);
+      startRec();
+      S.st.gateCount=(S.st.gateCount||0)+1;save();checkAchs();
+    }
+  },1000);
+}
+
+// ── RECORDING CORE ──
+let mediaRec=null,recChunks=[],isRecording=false,recMs=0,recInt=null,_recMime='';
+function getBestMime(){const types=['audio/mp4;codecs=aac','audio/mp4','audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus'];for(const t of types){if(MediaRecorder.isTypeSupported(t))return t;}return'';}
+
+async function startRec(){
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:{sampleRate:44100,channelCount:1,echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+    recChunks=[];recMs=0;_recMime=getBestMime();
+    mediaRec=_recMime?new MediaRecorder(stream,{mimeType:_recMime}):new MediaRecorder(stream);
+    mediaRec.ondataavailable=e=>{if(e.data.size>0)recChunks.push(e.data);};
+    mediaRec.onstop=async()=>{
+      const mime=_recMime||'audio/webm';const blob=new Blob(recChunks,{type:mime});
+      const label=document.getElementById('rec-label').value.trim()||('録音 '+new Date().toLocaleString('ja-JP'));
+      const durSecs=Math.round(recMs/1000);
+      await idbSaveRec(blob,label,durSecs);
+      stream.getTracks().forEach(t=>t.stop());
+      S.st.recCount++;save();checkAchs();renderRecLib();
+      showToast('🎤','録音保存完了！',`「${label}」を保存しました`);
+    };
+    mediaRec.start(250);isRecording=true;
+    document.getElementById('rec-status').textContent='録音中... タップで停止';
+    recInt=setInterval(()=>{
+      recMs+=100;
+      const totalMs=recMs;const m=Math.floor(totalMs/60000),s=Math.floor((totalMs%60000)/1000),cs=Math.floor((totalMs%1000)/10);
+      const timerEl=document.getElementById('rec-timer');if(timerEl)timerEl.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(cs).padStart(2,'0')}`;
+      const stickyEl=document.getElementById('rec-sticky-timer');if(stickyEl)stickyEl.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(cs).padStart(2,'0')}`;
+      // target warning
+      const tgt=parseInt((document.getElementById('rec-target-secs')||{}).value||0);
+      if(tgt>0){const elapsed=totalMs/1000;const td2=document.getElementById('rec-target-disp');if(td2){const rem=tgt-elapsed;if(rem<=3&&rem>0)td2.style.color='var(--red)';else td2.style.color='var(--gold)';td2.textContent=rem>0?`残り ${rem.toFixed(1)}秒`:'⚡ 目標時間超過！';}}
+    },100);
+  }catch(e){
+    const ap=document.getElementById('rec-active-panel');const gs=document.getElementById('gate-section');
+    if(ap)ap.style.display='none';if(gs)gs.style.display='block';
+    const sb=document.getElementById('rec-sticky');if(sb)sb.classList.remove('show');
+    showMicGuide(e.name||'');
+  }
+}
+
+function stopRecording(){
+  if(mediaRec&&isRecording){
+    const durSecs=Math.round(recMs/1000);
+    mediaRec.stop();isRecording=false;clearInterval(recInt);
+    document.getElementById('rec-timer').textContent='00:00.00';
+    const sb=document.getElementById('rec-sticky');if(sb)sb.classList.remove('show');
+    // 時間偏差評価
+    const tgt=parseInt((document.getElementById('rec-target-secs')||{}).value||0);
+    showTimeDeviation(durSecs,tgt);
+  }
+  document.getElementById('rec-active-panel').style.display='none';
+  document.getElementById('gate-section').style.display='block';
+  evalScores=new Array(EVAL_ITEMS.length).fill(null);
+  renderEvalPanel();
+  document.getElementById('post-eval-panel').style.display='block';
+}
+
+// ── 時間偏差評価 (ミリ秒尺合わせ) ──
+function showTimeDeviation(actual,target){
+  const box=document.getElementById('time-dev-box');if(!box)return;
+  if(!target||target===0){box.style.display='none';return;}
+  const dev=actual-target;const absD=Math.abs(dev);
+  let cls,label,grade;
+  if(absD<=0.3){cls='dev-perfect';grade='🎯 完璧！';label=`目標${target}秒に対し、誤差${absD.toFixed(2)}秒。プロレベルの尺合わせ。`;}
+  else if(absD<=1.0){cls='dev-good';grade='✅ 良好';label=`目標${target}秒に対し、${dev>0?'+':''}${dev.toFixed(2)}秒。あと一歩。`;}
+  else{cls='dev-bad';grade='❌ 要改善';label=`目標${target}秒に対し、${dev>0?'+':''}${dev.toFixed(2)}秒ズレ。${dev>0?'長すぎる':'短すぎる'}。次回は意識して調整せよ。`;}
+  box.className='dev-box '+cls;box.style.display='block';
+  box.innerHTML=`<div class="dev-val" style="color:${absD<=0.3?'var(--teal)':absD<=1?'var(--gold)':'var(--red)'}">${dev>0?'+':''}${dev.toFixed(2)}秒</div><div style="font-size:18px;font-weight:900;margin:6px 0">${grade}</div><div class="dev-lbl">${label}</div>`;
+}
+
+// ── EVAL ──
+const EVAL_ITEMS=[
+  {cat:'身体',cls:'evc-body',q:'丹田の支えはあったか？'},
+  {cat:'身体',cls:'evc-body',q:'軟口蓋は上がっていたか？'},
+  {cat:'共鳴',cls:'evc-res',q:'鼻腔共鳴は途切れなかったか？'},
+  {cat:'共鳴',cls:'evc-res',q:'喉に落ちていなかったか？'},
+  {cat:'技術',cls:'evc-tech',q:'母音の無声化は適切だったか？'},
+  {cat:'技術',cls:'evc-tech',q:'鼻濁音（文中ガ行）は完璧だったか？'},
+  {cat:'演技',cls:'evc-act',q:'目的（相手をどうしたいか）は達成されたか？'},
+  {cat:'演技',cls:'evc-act',q:'距離感は選んだ距離に合っていたか？'},
+  {cat:'演技',cls:'evc-act',q:'心アドリブが1音目に乗っていたか？'},
+];
+let evalScores=new Array(EVAL_ITEMS.length).fill(null);
+function renderEvalPanel(){
+  const list=document.getElementById('eval-list');if(!list)return;
+  list.innerHTML=EVAL_ITEMS.map((item,i)=>{const sc=evalScores[i];return`<div class="ev-item"><span class="ev-cat ${item.cls}">${item.cat}</span><span class="ev-q">${item.q}</span><div style="display:flex;gap:4px"><button class="btn ${sc===true?'ev-ok':'bgr'}" style="padding:5px 9px;font-size:11px" data-ei="${i}" data-sc="1" onclick="setEvalScore(this)">OK</button><button class="btn ${sc===false?'ev-ng':'bgr'}" style="padding:5px 9px;font-size:11px" data-ei="${i}" data-sc="0" onclick="setEvalScore(this)">NG</button></div></div>`;}).join('');
+  const ok=evalScores.filter(s=>s===true).length;const r=evalScores.filter(s=>s!==null).length;
+  const el=document.getElementById('eval-score-disp');if(el)el.textContent=`${ok}/${r}点`;
+}
+function setEvalScore(btnEl){evalScores[parseInt(btnEl.dataset.ei)]=btnEl.dataset.sc==='1';renderEvalPanel();}
+function saveEval(){
+  const notes=document.getElementById('eval-notes').value.trim();
+  const ok=evalScores.filter(s=>s===true).length;const rated=evalScores.filter(s=>s!==null).length;
+  if(!S.evalHistory)S.evalHistory=[];
+  S.evalHistory.unshift({ts:Date.now(),purpose:gate.purpose,distance:gate.distance,adlib:gate.adlib,scores:[...evalScores],ok,rated,notes});
+  if(S.evalHistory.length>50)S.evalHistory=S.evalHistory.slice(0,50);
+  S.st.evalCount=(S.st.evalCount||0)+1;gainXP(30);gainCry(15);save();checkAchs();
+  document.getElementById('post-eval-panel').style.display='none';document.getElementById('eval-notes').value='';
+  resetGate();showToast('📊','自己評価保存！',`${ok}/${rated}点 +30XP +15クリスタル`);
+}
+function skipEval(){document.getElementById('post-eval-panel').style.display='none';if(document.getElementById('eval-notes'))document.getElementById('eval-notes').value='';resetGate();}
+
+// ── REC LIBRARY ──
+async function renderRecLib(){
+  const list=document.getElementById('rec-list');if(!list)return;
+  const recs=await idbGetAll();
+  if(!recs.length){list.innerHTML='<div style="text-align:center;padding:18px;color:var(--text3);font-size:13px">まだ録音がありません</div>';return;}
+  const now=Date.now();
+  list.innerHTML=recs.map(r=>{
+    const d=new Date(r.date);const ds=`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    const dur=r.dur?`${Math.floor(r.dur/60)}:${String(r.dur%60).padStart(2,'0')}`:'--:--';
+    const daysLeft=Math.ceil((14*24*3600*1000-(now-new Date(r.date).getTime()))/86400000);
+    const prot=r.protected;
+    const expLabel=prot?'🔒 保護中':`⏳ あと${Math.max(0,daysLeft)}日`;
+    const expColor=prot?'var(--gold)':daysLeft<=3?'var(--red)':'var(--text3)';
+    const safeLabel=(r.label||'録音').replace(/</g,'&lt;');
+    return `<div class="ri ${prot?'protected':''}" id="ri-${r.id}"><div class="ri-top"><div class="ri-name">📼 ${safeLabel}</div><div class="ri-date">${ds} ${dur}</div></div><div style="font-size:10px;margin-bottom:5px;font-family:'Share Tech Mono',monospace;color:${expColor}">${expLabel}</div><div class="ri-ctrl"><button class="btn bt" style="padding:5px 9px;font-size:11px" data-rid="${r.id}" onclick="playRec(this)">▶ 再生</button><button class="btn ${prot?'bg':'bgr'}" style="padding:5px 9px;font-size:11px" data-rid="${r.id}" onclick="toggleProtect(this)">${prot?'🔓':'🔒'}</button><button class="btn bgr" style="padding:5px 9px;font-size:11px" data-rid="${r.id}" onclick="editRecName(this)">✏️</button><button class="btn br" style="padding:5px 9px;font-size:11px" data-rid="${r.id}" onclick="deleteRec(this)">🗑️</button></div><audio id="aud-${r.id}" controls preload="none"></audio></div>`;
+  }).join('');
+}
+async function playRec(btnEl){const id=parseInt(btnEl.dataset.rid);const recs=await idbGetAll();const r=recs.find(x=>x.id===id);if(!r)return;const el=document.getElementById('aud-'+id);if(!el)return;if(el._objUrl)URL.revokeObjectURL(el._objUrl);const url=URL.createObjectURL(r.blob);el._objUrl=url;el.src=url;el.classList.add('show');el.load();el.play().catch(()=>{});}
+async function toggleProtect(btnEl){const id=parseInt(btnEl.dataset.rid);const recs=await idbGetAll();const r=recs.find(x=>x.id===id);if(!r)return;await idbSetProtected(id,!r.protected);renderRecLib();showToast(r.protected?'🔓':'🔒',r.protected?'保護を解除しました':'保護しました（自動削除対象外）','');}
+async function editRecName(el){const id=parseInt(el.dataset.rid);const recs=await idbGetAll();const r=recs.find(x=>x.id===id);if(!r)return;const n=prompt('新しい名前:',r.label);if(n&&n.trim()){await idbRename(id,n.trim());renderRecLib();}}
+async function deleteRec(btnEl){const id=parseInt(btnEl.dataset.rid);if(!confirm('この録音を削除しますか？'))return;await idbDelete(id);renderRecLib();}
+async function refreshSelfAudioList(){const sel=document.getElementById('self-audio-sel');if(!sel)return;const recs=await idbGetAll();sel.innerHTML='<option value="">録音を選択...</option>'+recs.slice(0,20).map(r=>`<option value="${r.id}">${(r.label||'録音').replace(/</g,'&lt;')}</option>`).join('');sel.onchange=async()=>{const id=parseInt(sel.value);if(!id)return;const all=await idbGetAll();const rec=all.find(r=>r.id===id);if(!rec)return;const p=document.getElementById('self-audio-player');if(p){p.src=URL.createObjectURL(rec.blob);p.style.display='block';}};}
+
+// ── QUEST COMPLETE ──
+function completeQuest(id){
+  if(id==='va'&&!isWUDone()){showToast('🔒','WU未完了','ウォームアップを先に完了してください！');return;}
+  if(tRun[id])stopTimer(id);
+  const td=getTD();if(td[id].done)return;
+  td[id].done=true;tSecs[id]=Math.max(tSecs[id],30*60);td[id].secs=tSecs[id];
+  const mins=Math.max(30,Math.floor(tSecs[id]/60));
+  gainXP(Math.round(120*S.p.xpBuff));gainCry(70);S.p.xpBuff=1;S.st.vaSess++;S.st.totalMin+=mins;applyBossDmg(mins);
+  updTimerUI(id);
+  const qc=document.getElementById('qc-'+id);if(qc)qc.classList.add('done');
+  const qn=document.getElementById('qn-'+id);if(qn)qn.textContent='🎙️ 声優練習 ✓';
+  updateStreak();save();checkAchs();renderHdr();sfxComplete();
+  showToast('🎙️','声優練習完了！','+120XP +70クリスタル！');
+}
+function updateStreak(){
+  const today=todayKey();const yd=new Date();yd.setDate(yd.getDate()-1);const yk=yd.toISOString().split('T')[0];
+  if(S.p.lastDate===today)return;
+  if(S.p.lastDate===yk)S.p.streak++;
+  else if(S.p.shield>0){S.p.shield--;showToast('🛡️','ストリーク保護！','月光の加護が発動！');}
+  else S.p.streak=1;
+  S.p.lastDate=today;
+}
+
+// ── DAILY COMMISSIONS ──
+function getDCs(){const d=new Date();const seed=(d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate());const dayNum=d.getDate();const catE_or_C=dayNum%2===0?'E':'C';const cats=[['V',DC_POOL.filter(x=>x.cat==='V')],[catE_or_C,DC_POOL.filter(x=>x.cat===catE_or_C)],['S',DC_POOL.filter(x=>x.cat==='S')],['U',DC_POOL.filter(x=>x.cat==='U')]];return cats.map(([,pool],i)=>pool[Math.floor((seed*(i+3)*17))%pool.length]);}
+function renderDCs(){
+  const dcs=getDCs(),td=getTD();const done=td.dc.filter(Boolean).length;
+  const dp=document.getElementById('dc-prog');if(dp)dp.textContent=`${done}/4`;
+  const dpf=document.getElementById('dc-prog-fill');if(dpf)dpf.style.width=(done/4*100)+'%';
+  const catCls={V:'cP',E:'cE',C:'cC',S:'cA',U:'cP'};const catLbl={V:'発声',E:'感情',C:'キャラ',S:'台本',U:'外郎売'};
+  const list=document.getElementById('dc-list');if(!list)return;
+  list.innerHTML=dcs.map((dc,i)=>{const isDone=td.dc[i];return`<div class="dc ${isDone?'done':''}"><div class="dc-head"><span class="dc-num ${isDone?'dc-done-num':''}">依頼${i+1}</span><span class="cat-pill ${catCls[dc.cat]}">${catLbl[dc.cat]}</span></div><div class="dc-title">${isDone?'✓ ':''}<strong>${dc.t}</strong></div><div class="dc-body">${dc.b}</div><div class="dc-hint">💡 ${dc.h}</div><div class="dc-foot"><span style="font-size:11px;color:var(--purple);font-family:'Share Tech Mono',monospace">報酬: ${dc.r}</span>${isDone?'<span style="font-size:11px;color:var(--teal)">完了✓</span>':`<button class="btn bt" style="padding:6px 11px;font-size:11px" data-dci="${i}" onclick="completeDC(this)">完了</button>`}</div></div>`;}).join('');
+  const bb=document.getElementById('dc-bonus-btn');if(bb)bb.style.display=(!td.dcClaimed&&done===4)?'block':'none';
+  const bc=document.getElementById('dc-claimed');if(bc)bc.style.display=td.dcClaimed?'block':'none';
+  document.getElementById('nd-daily').classList.toggle('on',done<4);
+}
+function completeDC(btnEl){const i=parseInt(btnEl.dataset.dci);const td=getTD();if(td.dc[i])return;td.dc[i]=true;const m=(getDCs()[i].r.match(/\+(\d+)/)||[])[1];if(m)S.p.resin=Math.min(160,S.p.resin+parseInt(m));gainXP(50);gainCry(30);save();renderDCs();renderHdr();renderResin();showToast('⚔️',`依頼${i+1}完了！`,'+50XP +30クリスタル');if(td.dc.filter(Boolean).length===4){S.st.dcDays++;updateStreak();checkAchs();}sfxWU();}
+function claimDailyBonus(){const td=getTD();if(td.dcClaimed)return;td.dcClaimed=true;gainXP(300);gainCry(150);S.p.resin=Math.min(160,S.p.resin+30);save();renderDCs();renderHdr();renderResin();showToast('👑','デイリーボーナス！','+300XP +150クリスタル +30原石！');sfxLvUp();}
+
+// ── LOGIN ──
+function checkLogin(){const today=todayKey();if(S.p.lastLogin===today)return;S.p.lastLogin=today;S.p.loginDay=((S.p.loginDay||0)%7)+1;const r=LOGIN_REWARDS[S.p.loginDay-1];if(r.cry)gainCry(r.cry);if(r.res)S.p.resin=Math.min(160,S.p.resin+r.res);save();setTimeout(()=>showToast('📅',`ログインボーナス Day${S.p.loginDay}`,`${r.icon} ${r.name}獲得！`),800);}
+function renderLoginCal(){const g=document.getElementById('login-grid');if(!g)return;const d=S.p.loginDay||0;g.innerHTML=LOGIN_REWARDS.map((r,i)=>{const n=i+1,ok=d>=n,t=d===n;return`<div class="ld ${ok?'ok':''} ${t?'today':''}"><div style="font-size:8px;color:var(--text3);font-family:'Share Tech Mono',monospace">Day${n}</div><div class="ld-ic">${r.icon}</div><div style="font-size:8px;color:var(--text2);line-height:1.3">${r.name}</div></div>`;}).join('');const msg=document.getElementById('login-msg');if(msg)msg.textContent=d===7?'👑 7日コンプ！次サイクルへ':`Day${d}/7 — 7日連続でSSR確定！`;}
+
+// ── RESIN ──
+let resinInt=null;
+function startResinTimer(){if(resinInt)clearInterval(resinInt);resinInt=setInterval(()=>{if(S.p.resin<160){S.p.resin=Math.min(160,S.p.resin+1);save();renderResin();}if(S.p.resin>=100&&S.notifs.resin)showToast('💎','練習の結晶が満タン！','ガチャを引いて消費しよう！');},8*60*1000);}
+function renderResin(){const v=Math.floor(S.p.resin);const rv=document.getElementById('resin-val');if(rv)rv.textContent=v;const rf=document.getElementById('resin-fill');if(rf)rf.style.width=(v/160*100)+'%';const rw=document.getElementById('resin-warn');if(rw)rw.textContent=v>=150?'⚠️ もうすぐカンスト！':'';const gr=document.getElementById('g-res');if(gr)gr.textContent=v;}
+
+// ── XP / LEVEL ──
+function gainXP(n){S.p.xp+=n;S.p.totalXP+=n;const need=xpNeeded(S.p.level);if(S.p.xp>=need){S.p.xp-=need;S.p.level++;S.p.title=lvTitle(S.p.level);showLvUp();}renderHdr();}
+function gainCry(n){S.p.cry+=n;renderHdr();}
+
+// ── BOSS ──
+function initBoss(){const d=new Date(),day=d.getDay();const mon=new Date(d);mon.setDate(d.getDate()-(day===0?6:day-1));mon.setHours(0,0,0,0);const wk=mon.toISOString().split('T')[0];if(S.boss.weekStart!==wk){if(S.boss.weekStart){S.boss.idx=(S.boss.idx+1)%BOSS_LIST.length;const b=BOSS_LIST[S.boss.idx];S.boss.maxHp=b.hp;S.boss.hp=b.hp;S.boss.killed=false;}S.boss.weekStart=wk;}}
+function getWeekMins(){const d=new Date(),day=d.getDay();const mon=new Date(d);mon.setDate(d.getDate()-(day===0?6:day-1));mon.setHours(0,0,0,0);let tot=0;for(let i=0;i<7;i++){const dd=new Date(mon);dd.setDate(mon.getDate()+i);const k=dd.toISOString().split('T')[0];if(S.days[k])tot+=Math.floor((S.days[k].va?.secs||0)/60);}return tot+Math.floor(tSecs.va/60);}
+function applyBossDmg(dmg){if(S.boss.killed)return;S.boss.hp=Math.max(0,S.boss.hp-dmg);showDmgNum(dmg);if(S.boss.hp<=0&&!S.boss.killed){S.boss.killed=true;S.st.bossKills++;setTimeout(bossKilled,600);checkAchs();}renderBoss();}
+function bossKilled(){const e=document.getElementById('boss-emo');if(e)e.textContent='💥';showToast('💥','ボス討伐！','SSR確定ガチャ＋1000クリスタル獲得！');gainCry(1000);save();setTimeout(()=>{const item=rollItem('SSR');applyItem(item);S.gacha.unshift({r:item.r,icon:item.icon,name:item.name});save();showGM(item);},1200);}
+function showDmgNum(n){const c=document.getElementById('dmgn');if(!c)return;const e=document.createElement('div');e.className='dn';e.textContent=`-${n}`;e.style.left=(15+Math.random()*70)+'%';c.appendChild(e);setTimeout(()=>{if(e.parentNode)e.parentNode.removeChild(e);},1200);const be=document.getElementById('boss-emo');if(be){be.classList.add('hit');setTimeout(()=>be.classList.remove('hit'),400);}}
+function renderBoss(){const wm=getWeekMins();S.boss.hp=Math.max(0,S.boss.maxHp-wm);const b=BOSS_LIST[S.boss.idx];const ee=document.getElementById('boss-emo');if(ee)ee.textContent=S.boss.killed?'💀':b.emoji;const nm=document.getElementById('boss-nm');if(nm)nm.textContent=S.boss.killed?'討伐済み 👑':b.name;const hf=document.getElementById('hp-fill');if(hf)hf.style.width=(S.boss.hp/S.boss.maxHp*100)+'%';const ht=document.getElementById('hp-txt');if(ht)ht.textContent=`${S.boss.hp}/${S.boss.maxHp}`;const wd=document.getElementById('week-dmg');if(wd)wd.textContent=wm+'分';const gc=document.getElementById('g-cry');if(gc)gc.textContent=S.p.cry;const gp=document.getElementById('g-pulls');if(gp)gp.textContent=S.st.gachaPulls;const pl=document.getElementById('pity-left');if(pl)pl.textContent=(90-S.pity);const pf=document.getElementById('pity-fill');if(pf)pf.style.width=(S.pity/90*100)+'%';}
+
+// ── GACHA ──
+function rollItem(forced){let r=forced;if(!r){let ssrRate=0.05;if(S.pity>=75)ssrRate=0.05+(S.pity-75)*0.06;if(S.pity>=90)ssrRate=1;const rand=Math.random();if(rand<ssrRate)r='SSR';else if(rand<0.20)r='SR';else if(rand<0.50)r='R';else r='N';}const pool=GACHA_TBL.filter(x=>x.r===r);return pool[Math.floor(Math.random()*pool.length)];}
+function applyItem(item){if(item.cry)gainCry(item.cry);if(item.xp)gainXP(item.xp);if(item.xpb)S.p.xpBuff=item.xpb;if(item.shield)S.p.shield+=item.shield;if(item.res)S.p.resin=Math.min(160,S.p.resin+(item.res||0));if(item.isTitle)S.p.title=item.title;if(item.r==='SSR'){S.st.ssrCount++;S.pity=0;}else S.pity++;S.st.gachaPulls++;}
+function pull1(cur){const cost=cur==='crystal'?200:60;const have=cur==='crystal'?S.p.cry:S.p.resin;if(have<cost){showToast('💎','残高不足',`${cost}必要`);return;}if(cur==='crystal')S.p.cry-=cost;else S.p.resin-=cost;const item=rollItem();applyItem(item);S.gacha.unshift({r:item.r,icon:item.icon,name:item.name});if(S.gacha.length>40)S.gacha=S.gacha.slice(0,40);save();checkAchs();showGM(item);}
+function pull10(cur){const cost=cur==='crystal'?2000:600;const have=cur==='crystal'?S.p.cry:S.p.resin;if(have<cost){showToast('💎','残高不足',`10連は${cost}必要`);return;}if(cur==='crystal')S.p.cry-=cost;else S.p.resin-=cost;const results=[];let hasSR=false;for(let i=0;i<10;i++){let item;if(i===9&&!hasSR)item=rollItem(Math.random()<0.333?'SSR':'SR');else item=rollItem();if(item.r==='SR'||item.r==='SSR')hasSR=true;applyItem(item);results.push(item);S.gacha.unshift({r:item.r,icon:item.icon,name:item.name});}if(S.gacha.length>40)S.gacha=S.gacha.slice(0,40);save();checkAchs();showM10(results);}
+function showGM(item){const orb=document.getElementById('gm-orb');orb.className='o'+item.r;orb.textContent=item.icon;orb.style.animation='none';void orb.offsetWidth;orb.style.animation='';document.getElementById('gm-rar').textContent=item.r;document.getElementById('gm-rar').className='t'+item.r;document.getElementById('gm-nm').textContent=item.name;document.getElementById('gm-ef').textContent=item.ef||'';document.getElementById('gm').classList.add('show');sfxGacha(item.r);}
+function closeGM(){document.getElementById('gm').classList.remove('show');renderGHist();renderHdr();renderBoss();}
+function showM10(results){document.getElementById('m10').classList.add('show');const grid=document.getElementById('m10-grid');grid.innerHTML='';const cards=[];results.forEach(item=>{const el=document.createElement('div');el.className=`pc pc${item.r}`;el.innerHTML=`<span class="pc-ic">${item.icon}</span><div class="pc-nm">${item.name}</div><div class="pc-r">${item.r}</div>`;grid.appendChild(el);cards.push({el,r:item.r});});cards.forEach((c,i)=>setTimeout(()=>{c.el.classList.add('rev');if(c.r==='SSR')sfxGacha('SSR');else if(c.r==='SR'&&i===9)sfxGacha('SR');},i*180+250));const ssr=results.filter(x=>x.r==='SSR').length,sr=results.filter(x=>x.r==='SR').length;const s=document.getElementById('m10-sum');if(s)s.textContent=`SSR×${ssr} SR×${sr} | 天井まで: ${90-S.pity}連`;renderHdr();renderBoss();renderGHist();}
+function closeM10(){document.getElementById('m10').classList.remove('show');}
+function renderGHist(){const c=document.getElementById('g-hist');if(!c)return;c.innerHTML=S.gacha.slice(0,15).map(x=>`<div class="gi r${x.r}"><span class="gi-ic">${x.icon}</span><div class="gi-nm">${x.name}</div></div>`).join('')||'<div style="font-size:10px;color:var(--text3);padding:4px">まだ引いていない</div>';}
+
+// ── ACHIEVEMENTS ──
+function checkAchs(){let news=[];for(const a of ACHS){if(!S.ach[a.id]&&a.c(S)){S.ach[a.id]=true;news.push(a);}}save();if(news.length){let i=0;const nx=()=>{if(i>=news.length)return;const a=news[i++];showToast(a.icon,'実績解除！ '+a.name,a.desc,nx);};nx();}renderAchs();}
+function renderAchs(){const g=document.getElementById('ag');if(!g)return;let ul=0;g.innerHTML=ACHS.map(a=>{const d=!!S.ach[a.id];if(d)ul++;return`<div class="ai ${d?'ul':'lk'}" title="${a.desc}"><span class="ai-ic">${a.icon}</span><div class="ai-nm">${a.name}</div></div>`;}).join('');const ct=document.getElementById('ach-ct');if(ct)ct.textContent=`${ul}/${ACHS.length}`;const tb=document.getElementById('stats-tbl');if(!tb)return;const rows=[['声優練習',S.st.vaSess+'回'],['総練習時間',S.st.totalMin+'分'],['WU完了日数',S.st.wuDays+'日'],['デイリー全完了',S.st.dcDays+'日'],['連続練習日数',S.p.streak+'日'],['総活動日数',(S.p.totalActiveDays||0)+'日'],['ボス討伐',S.st.bossKills+'体'],['ガチャ総数',S.st.gachaPulls+'回'],['録音回数',S.st.recCount+'回'],['自己評価回数',(S.st.evalCount||0)+'回'],['ゲート回数',(S.st.gateCount||0)+'回'],['誘いを断った',S.p.declines+'回']];tb.innerHTML=rows.map(([l,v])=>`<div class="sr"><span>${l}</span><span class="sv">${v}</span></div>`).join('');}
+
+// ── NOTIFICATIONS ──
+async function registerSW(){if(!('serviceWorker' in navigator))return;try{await navigator.serviceWorker.register('./sw.js');navigator.serviceWorker.ready.then(()=>sendNotifSchedule()).catch(()=>{});}catch(e){}}
+function sendNotifSchedule(){if(!navigator.serviceWorker.controller)return;try{navigator.serviceWorker.controller.postMessage({type:'SCHEDULE_NOTIFS',notifs:S.notifs});}catch(e){}}
+async function reqNotif(){if(!('Notification' in window)){showToast('❌','非対応','このブラウザは通知非対応');return;}const r=await Notification.requestPermission();if(r==='granted'){showToast('🔔','通知許可！','リマインダーが届きます！');initNotifUI();navigator.serviceWorker.ready.then(()=>sendNotifSchedule()).catch(()=>{});}else showToast('⚠️','通知拒否','設定→Safari→通知 で許可してください');}
+function togNotif(k){S.notifs[k]=!S.notifs[k];const el=document.getElementById('tog-'+k);if(el)el.classList.toggle('on',S.notifs[k]);save();if(k!=='resin')navigator.serviceWorker.ready.then(()=>sendNotifSchedule()).catch(()=>{});}
+function initNotifUI(){const isGranted='Notification' in window&&Notification.permission==='granted';const no=document.getElementById('notif-ok-msg');if(no)no.style.display=isGranted?'block':'none';Object.keys(S.notifs).forEach(k=>{const el=document.getElementById('tog-'+k);if(el)el.classList.toggle('on',S.notifs[k]);});const bgmEl=document.getElementById('tog-bgm');if(bgmEl)bgmEl.classList.toggle('on',S.bgm||false);}
+function copyAlarm(t){navigator.clipboard.writeText(t).then(()=>showToast('📋','コピー完了！','アラームアプリに貼り付けてください')).catch(()=>{});}
+
+// ── AFFIRMATIONS ──
+let affIdx=0;
+function renderAffirm(){const a=AFFIRMATIONS[affIdx%AFFIRMATIONS.length];const t=document.getElementById('affirm-text');if(t)t.textContent=a.t;const s=document.getElementById('affirm-sub');if(s)s.textContent=a.s;}
+function nextAffirm(){affIdx++;renderAffirm();}
+
+// ── MENTAL MSG ──
+const MENTAL_POOL={new:['おかえり！今日も声帯を動かそう。ウォームアップ5分から始めよう。','夢への一歩、今日も踏み出せる。まずハミングを1分やってみよう。','声優の道は続けた者が勝つ。今日もここに来たことが証明だ。'],good:['練習を続けている。確実に昨日より声が変わっている。','この積み重ねが、いつか本物のオーディションで実を結ぶ。','声帯は筋肉。毎日少しずつ、確実に強くなっている。'],slump:['練習できない日があっても、声優への夢は消えない。今日、また始めれば0日目だ。','辛い時は1分だけ。ハミングするだけでいい。それだけで今日は合格だ。'],streak_high:['{N}日連続練習中！この調子で行こう。積み重ねは裏切らない。','連続記録が伸びている。このリズムを体が覚えている。']};
+function getMentalMsg(){const days=S.p.totalActiveDays||0;const streak=S.p.streak||0;const td=getTD();let pool;if(streak>=7)pool=MENTAL_POOL.streak_high;else if(streak===0&&days>5)pool=MENTAL_POOL.slump;else if(days>=3&&td.va.done)pool=MENTAL_POOL.good;else pool=MENTAL_POOL.new;let msg=pool[new Date().getDate()%pool.length];if(streak>=7)msg=msg.replace('{N}',String(streak));return msg;}
+function renderMentalMsg(){const el=document.getElementById('mental-msg');if(el)el.textContent=getMentalMsg();const hs=document.getElementById('home-streak');if(hs)hs.textContent=S.p.streak||0;const ha=document.getElementById('home-active');if(ha)ha.textContent=S.p.totalActiveDays||0;const sw=document.getElementById('streak-warn');if(sw){const td=getTD();sw.style.display=((S.p.streak||0)>0&&!td.va.done)?'block':'none';}}
+
+// ── 2MIN / THROAT / DECLINE ──
+function startTwoMin(){showToast('⏱','2分練習スタート！','まずウォームアップから！');goScreen('practice',document.querySelectorAll('.nb')[1]);switchTab('prac','wu',null);}
+function addDecline(){S.p.declines++;gainXP(20);gainCry(5);save();checkAchs();const d=document.getElementById('dcnt');if(d){d.textContent=S.p.declines;d.style.transform='scale(1.5)';setTimeout(()=>{d.style.transform='scale(1)';d.style.transition='transform .2s'},200);}document.getElementById('dhrs').textContent=(S.p.declines*2)+'時間';}
+
+const THROAT_TASKS=[{id:'obs',ic:'📝',title:'人間観察メモを1件追加',desc:'日常で見た感情・距離感をアプリに記録'},{id:'read',ic:'📖',title:'台本・歌詞を目で読んで感情分析',desc:'声に出さず、頭の中でどう演じるかだけを考える'},{id:'pro',ic:'🎧',title:'プロの音声を3回通し聴き',desc:'目標とする声優の演技を耳で徹底分析'}];
+function startThroatRestDay(){const modal=document.getElementById('throat-modal');const list=document.getElementById('throat-tasks-list');if(!list||!modal)return;const shuffled=[...THROAT_TASKS].sort(()=>Math.random()-0.5).slice(0,3);list.innerHTML=shuffled.map(t=>`<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--bdr)"><div style="font-size:22px;flex-shrink:0">${t.ic}</div><div><div style="font-size:12px;font-weight:700">${t.title}</div><div style="font-size:11px;color:var(--text2)">${t.desc}</div></div></div>`).join('');modal.style.display='flex';}
+function closeThroatModal(){const m=document.getElementById('throat-modal');if(m)m.style.display='none';}
+function completeThroatDay(){closeThroatModal();gainXP(50);gainCry(20);trackActivity();updateStreak();save();checkAchs();showToast('🤫','喉休め日完了！','+50XP +20クリスタル　プロの選択だ。');}
+
+// ── ACTIVITY TRACKING ──
+function trackActivity(){const today=todayKey();if(!S.p.activityDates)S.p.activityDates=[];if(!S.p.activityDates.includes(today)){S.p.activityDates.push(today);if(S.p.activityDates.length>400)S.p.activityDates=S.p.activityDates.slice(-400);S.p.totalActiveDays=S.p.activityDates.length;save();}}
+
+// ── NIGHT WARNING ──
+function checkNight(){const h=new Date().getHours();const lb=document.getElementById('late-bar');if(lb)lb.style.display=(h>=22||h<4)?'block':'none';if((h>=23||h<3)&&S.notifs.night){const td=getTD();if(!td.va.done&&!sessionStorage.getItem('nw_done')){sessionStorage.setItem('nw_done','1');const now=new Date();document.getElementById('nw-time').textContent=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;document.getElementById('nw-msg').innerHTML=`今、深夜です。<br><br>TikTok・Xの代わりに<strong>NYANOを開いた。</strong><br>それは声優になりたい本能。<br><br><strong>5分だけウォームアップしよう。</strong>`;document.getElementById('nw').classList.add('show');}}}
+function closeNW(a){document.getElementById('nw').classList.remove('show');if(a==='practice'){goScreen('practice',document.querySelectorAll('.nb')[1]);switchTab('prac','wu',null);}}
+
+// ── HEADER ──
+function renderHdr(){const lv=document.getElementById('h-lv');if(lv)lv.textContent=`Lv.${S.p.level}`;const str=document.getElementById('h-str');if(str)str.textContent=S.p.streak;const cry=document.getElementById('h-cry');if(cry)cry.textContent=S.p.cry;const ti=document.getElementById('h-title');if(ti)ti.textContent=`称号: ${S.p.title}`;const need=xpNeeded(S.p.level);const xf=document.getElementById('xp-fill');if(xf)xf.style.width=Math.min(100,S.p.xp/need*100)+'%';const xl=document.getElementById('xp-lbl');if(xl)xl.textContent=`XP ${S.p.xp}/${need}`;}
+
+// ── TOAST / LEVEL UP ──
+let toastQ=[],toastActive=false;
+function showToast(icon,title,body,cb){toastQ.push({icon,title,body,cb});if(!toastActive)runToast();}
+function runToast(){if(!toastQ.length){toastActive=false;return;}toastActive=true;const{icon,title,body,cb}=toastQ.shift();document.getElementById('ti').textContent=icon;document.getElementById('tt').textContent=title;document.getElementById('tb').textContent=body;document.getElementById('toast').classList.add('show');sfxToast();setTimeout(()=>{document.getElementById('toast').classList.remove('show');if(cb)setTimeout(cb,200);setTimeout(runToast,400);},3000);}
+function showLvUp(){document.getElementById('lun').textContent=S.p.level;document.getElementById('lu-tx').textContent=`レベル ${S.p.level} に到達！`;document.getElementById('lu-ti').textContent=`称号: ${S.p.title}`;document.getElementById('luo').classList.add('show');sfxLvUp();}
+function closeLU(){document.getElementById('luo').classList.remove('show');}
+
+// ── RESET COUNTDOWN ──
+function updateResetTimer(){const now=new Date(),next=new Date(now);next.setDate(next.getDate()+1);next.setHours(0,0,0,0);const diff=next-now;const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),sec=Math.floor((diff%60000)/1000);const el=document.getElementById('reset-timer');if(el)el.textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;}
+
+// ── CLOUD SYNC ──
+function getFBUrl(){return localStorage.getItem('nyano_fb_v6')||'';}
+function setFBUrl(u){localStorage.setItem('nyano_fb_v6',u.trim());}
+let cloudSaving=false,cloudPollInt=null;
+function updateSyncBar(status,detail){const el=document.getElementById('sync-status-bar');if(!el)return;const icons={ok:'☁️ 同期済み',saving:'⏳ 同期中...',error:'⚠️ 同期失敗',none:'☁️ クラウド未設定'};const cols={ok:'var(--teal)',saving:'var(--gold)',error:'var(--red)',none:'var(--text3)'};el.textContent=status==='error'&&detail?`${icons[status]} (${detail})`:icons[status]||icons.none;el.style.color=cols[status]||cols.none;if(status==='ok'){const ts=document.getElementById('last-sync-time');if(ts)ts.textContent='最終同期: '+new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});}}
+async function cloudSave(){const rawUrl=getFBUrl();if(!rawUrl||cloudSaving||location.protocol==='file:')return;cloudSaving=true;updateSyncBar('saving');const url=rawUrl.replace(/\/+$/,'');try{const res=await fetch(url+'/nyano.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(S)});if(res.ok)updateSyncBar('ok');else{const t=await res.text().catch(()=>res.status);updateSyncBar('error',`HTTP ${res.status}`);};}catch(e){updateSyncBar('error',e.message);}cloudSaving=false;}
+async function cloudLoad(){const rawUrl=getFBUrl();if(!rawUrl||location.protocol==='file:')return;updateSyncBar('saving');const url=rawUrl.replace(/\/+$/,'');try{const res=await fetch(url+'/nyano.json');if(!res.ok){updateSyncBar('error',`HTTP ${res.status}`);return;}const data=await res.json();if(!data){updateSyncBar('ok');return;}if(data._ts&&data._ts>(S._ts||0)){S=Object.assign({},S,data);saveLocal();renderAll();showToast('☁️','クラウドから同期完了','最新データを読み込みました');}updateSyncBar('ok');}catch(e){updateSyncBar('error',e.message);}}
+function startCloudPoll(){if(cloudPollInt)clearInterval(cloudPollInt);cloudPollInt=setInterval(async()=>{const rawUrl=getFBUrl();if(!rawUrl||location.protocol==='file:')return;const url=rawUrl.replace(/\/+$/,'');try{const res=await fetch(url+'/nyano.json');if(!res.ok)return;const data=await res.json();if(data&&data._ts&&data._ts>(S._ts||0)){S=Object.assign({},S,data);saveLocal();renderAll();showToast('☁️','他のデバイスから更新','最新データを自動反映しました');}updateSyncBar('ok');}catch(e){}},30000);}
+function saveFBUrl(){const inp=document.getElementById('fb-url-in');if(!inp)return;const url=inp.value.trim().replace(/\/+$/,'');if(!url){setFBUrl('');updateSyncBar('none');showToast('❌','URL削除','クラウド同期をOFFにしました');renderSyncTab();return;}if(!url.startsWith('https://')||(!(url.includes('firebaseio.com')||url.includes('firebasedatabase.app')))){showToast('❌','URL形式エラー','Firebase URLを入力してください');return;}if(location.protocol==='file:'){showToast('⚠️','file://では動きません','GitHub PagesのURLで開いてください');return;}setFBUrl(url);showToast('☁️','URL設定完了！','接続テストを開始します...');cloudLoad();startCloudPoll();renderSyncTab();}
+async function testFBConnection(){const rawUrl=getFBUrl();if(!rawUrl){showToast('❌','URLが未設定','先にURLを保存してください');return;}if(location.protocol==='file:'){showToast('⚠️','file://非対応','GitHub Pagesで開いてください');return;}const url=rawUrl.replace(/\/+$/,'');updateSyncBar('saving');try{const res=await fetch(url+'/ping.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:'"ok"'});if(res.ok){updateSyncBar('ok');showToast('✅','接続成功！','Firebase同期が正常に動作しています');const fb=document.getElementById('fb-423-fix');if(fb)fb.style.display='none';}else{updateSyncBar('error',`HTTP ${res.status}`);if(res.status===423||res.status===401||res.status===403){showToast('❌',`HTTP ${res.status} — 権限エラー`,'下の手順でRulesを修正してください');const fb=document.getElementById('fb-423-fix');if(fb)fb.style.display='block';}}}catch(e){updateSyncBar('error',e.message);showToast('❌','接続失敗',e.message.slice(0,80));}}
+function copyRules(){navigator.clipboard.writeText('{"rules":{".read":true,".write":true}}').then(()=>showToast('📋','コピーしました！','FirebaseのルールタブへペーストしてPublishを押す')).catch(()=>{});}
+function renderSyncTab(){const url=getFBUrl();const inp=document.getElementById('fb-url-in');if(inp)inp.value=url;const sb=document.getElementById('fb-connected-box');if(sb)sb.style.display=url?'block':'none';const fw=document.getElementById('file-proto-warn');if(fw)fw.style.display=location.protocol==='file:'?'block':'none';updateSyncBar(url?'ok':'none');}
+
+// ── MANUAL SYNC ──
+let expCode='';
+function exportData(){const d={p:S.p,st:S.st,ach:S.ach,boss:S.boss,gacha:S.gacha.slice(0,20),notifs:S.notifs,pity:S.pity,bgm:S.bgm,_ts:S._ts};expCode=btoa(encodeURIComponent(JSON.stringify(d)));const sc=document.getElementById('sync-code-box');if(sc){sc.textContent=expCode;sc.style.display='block';}const cb=document.getElementById('copy-code-btn');if(cb)cb.style.display='block';}
+function copyCode(){navigator.clipboard.writeText(expCode).then(()=>{const b=document.getElementById('copy-code-btn');if(b){b.textContent='✓ コピーしました！';setTimeout(()=>{b.textContent='📋 コードをコピー';},2000);}}).catch(()=>{});}
+function importData(){const code=document.getElementById('sync-in').value.trim();if(!code)return;try{const d=JSON.parse(decodeURIComponent(atob(code)));if(d.p)S.p={...S.p,...d.p};if(d.st)S.st={...S.st,...d.st};if(d.ach)S.ach={...S.ach,...d.ach};if(d.boss)S.boss={...S.boss,...d.boss};if(d.gacha)S.gacha=d.gacha;if(d.notifs)S.notifs={...S.notifs,...d.notifs};if(d.pity!==undefined)S.pity=d.pity;if(d.bgm!==undefined)S.bgm=d.bgm;if(d._ts)S._ts=d._ts;save();renderAll();alert('✅ インポート完了！');document.getElementById('sync-in').value='';}catch(e){alert('❌ コードが正しくありません。');}}
+function resetAll(){if(!confirm('全データを削除しますか？取り消せません。'))return;localStorage.removeItem(SK);location.reload();}
+
+// ── NAVIGATION ──
+function goScreen(name,btnEl){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));const s=document.getElementById('s-'+name);if(s)s.classList.add('active');if(btnEl)btnEl.classList.add('active');if(name==='practice'){renderWarmup();renderVPC();renderRecLib();renderUiroTab();renderArticulationWarning();}if(name==='daily'){renderDCs();renderLoginCal();}if(name==='gacha'){renderBoss();renderGHist();}if(name==='set'){renderAchs();initNotifUI();renderSyncTab();}}
+function switchTab(group,tab,btnEl){const screenIdMap={prac:'s-practice',set:'s-set'};const screenId=screenIdMap[group]||('s-'+group);const screen=document.getElementById(screenId);if(!screen)return;screen.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));screen.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));if(btnEl){btnEl.classList.add('active');}else{const tabsEl=document.getElementById(group+'-tabs');if(tabsEl){const tabOrder={wu:0,voice:1,rec:2,uiro:3,ach:0,notif:1,voice_set:2,sync:3};const idx=tabOrder[tab];const btns=tabsEl.querySelectorAll('.tab-btn');if(idx!==undefined&&btns[idx])btns[idx].classList.add('active');}}const pane=document.getElementById('tp-'+group+'-'+tab);if(pane){pane.classList.add('active');if(tab==='wu'){renderWarmup();renderArticulationWarning();}if(tab==='voice'&&group==='prac')renderVPC();if(tab==='rec'){renderRecLib();updateGateStatus();}if(tab==='uiro')renderUiroTab();if(tab==='ach')renderAchs();if(tab==='notif')initNotifUI();if(tab==='voice'&&group==='set'){renderVSList();refreshSelfAudioList();}if(tab==='sync')renderSyncTab();}}
+
+// ── RENDER ALL ──
+function renderAll(){renderHdr();renderResin();const d=document.getElementById('dcnt');if(d)d.textContent=S.p.declines;const dh=document.getElementById('dhrs');if(dh)dh.textContent=(S.p.declines*2)+'時間';renderBoss();renderGHist();renderDCs();renderLoginCal();renderAchs();renderWarmup();renderVPC();renderAffirm();renderMentalMsg();}
+
+// ── RESTORE TODAY STATE ──
+function restoreToday(){const td=getTD();if(td.va?.done){const c=document.getElementById('qc-va');if(c)c.classList.add('done');const n=document.getElementById('qn-va');if(n)n.textContent='🎙️ 声優練習 ✓';}if(td.va?.secs>tSecs.va){tSecs.va=td.va.secs;updTimerUI('va');}if(isWUDone()){const q=document.getElementById('qc-va');if(q)q.classList.remove('locked');const vl=document.getElementById('va-lock-lbl');if(vl)vl.style.display='none';}else{const q=document.getElementById('qc-va');if(q)q.classList.add('locked');}}
+
+// ── 外郎売 TAB ──
+let _uiroSectionFilter='all',_uiroScrollInt=null,_uiroScrollSpeed=2,_uiroScrollPaused=false;
+const UIRO_SCROLL_SPEEDS=[1,2,4,6,8];
+const UIRO_SCROLL_LABELS=['とても遅い','遅い','普通','速い','とても速い'];
+
+function renderUiroSections(){
+  const wrap=document.getElementById('uiro-sections');if(!wrap)return;
+  wrap.innerHTML=UIRO_DATA.map(sec=>`<div class="uiro-section" id="uiro-${sec.id}"><div class="uiro-sec-header"><div><div style="font-size:13px;font-weight:900;color:var(--gold)">${sec.title}</div><div style="font-size:10px;color:var(--purple);margin-top:2px">演技指定: ${sec.emotion}</div></div><button class="btn bt" style="font-size:10px;padding:5px 9px;white-space:nowrap" data-sid="${sec.id}" onclick="startUiroRec(this)">🎤 録音</button></div><div class="uiro-text uiro-main-text" id="uiro-text-${sec.id}">${sec.text}</div><div style="font-size:11px;color:var(--text2);background:rgba(6,214,160,.06);border-radius:5px;padding:7px 9px;margin-top:7px">💡 ${sec.hint}</div></div>`).join('');
+}
+function renderUiroTab(){renderUiroSections();showUiroSection(_uiroSectionFilter);renderNGTagPanel();renderNGDashboard();renderBreathTrainer();renderCharaSwitch();renderEntameMission();renderUiroReviewPanel();renderUiroNextPlan();renderUiroSelfCheckPanel();}
+function showUiroSection(sid){_uiroSectionFilter=sid;document.querySelectorAll('.uiro-section').forEach(s=>{s.style.display=(sid==='all'||s.id==='uiro-'+sid)?'block':'none';});}
+function uiroShowAll(){showUiroSection('all');}
+function startUiroRec(btnEl){const sid=btnEl.dataset.sid;const sec=UIRO_DATA.find(s=>s.id===sid);if(!sec)return;const pu=document.getElementById('gate-purpose');const al=document.getElementById('gate-adlib');if(pu){pu.value='外郎売 '+sec.title+'を完璧に読む';updateGateStatus();}if(al){al.value='この台本で聴衆を魅了したい';updateGateStatus();}goScreen('practice',document.querySelectorAll('.nb')[1]);switchTab('prac','rec',null);const rl=document.getElementById('rec-label');if(rl)rl.value='外郎売 '+sec.title;showToast('📜','外郎売録音モード','ゲートを入力して録音してください');}
+function uiroAutoScroll(){const ov=document.getElementById('uiro-scroll-ov');const content=document.getElementById('uiro-scroll-content');if(!ov||!content)return;const secs=_uiroSectionFilter==='all'?UIRO_DATA:UIRO_DATA.filter(s=>s.id===_uiroSectionFilter);content.innerHTML=secs.map(sec=>`<div style="color:var(--gold);font-weight:900;margin:20px 0 10px;font-size:16px">━━ ${sec.title} ━━</div><div style="margin-bottom:28px;font-size:20px;line-height:3.0">${sec.text}</div>`).join('');content.scrollTop=0;ov.style.display='flex';_uiroScrollPaused=false;const pb=document.getElementById('uiro-pause-btn');if(pb)pb.textContent='⏸ 一時停止';updateUiroScrollSpeedLabel();startUiroScrollInterval();}
+function updateUiroScrollSpeedLabel(){const el=document.getElementById('scroll-speed-lbl');if(el)el.textContent=UIRO_SCROLL_LABELS[_uiroScrollSpeed];}
+function startUiroScrollInterval(){if(_uiroScrollInt)clearInterval(_uiroScrollInt);const spd=UIRO_SCROLL_SPEEDS[_uiroScrollSpeed];_uiroScrollInt=setInterval(()=>{if(_uiroScrollPaused)return;const c=document.getElementById('uiro-scroll-content');if(!c)return;if(c.scrollTop+c.clientHeight>=c.scrollHeight-10){stopUiroScroll();return;}c.scrollTop+=spd;},50);}
+function changeScrollSpeed(delta){_uiroScrollSpeed=Math.min(4,Math.max(0,_uiroScrollSpeed+delta));updateUiroScrollSpeedLabel();startUiroScrollInterval();}
+function toggleUiroScrollPause(){_uiroScrollPaused=!_uiroScrollPaused;const btn=document.getElementById('uiro-pause-btn');if(btn)btn.textContent=_uiroScrollPaused?'▶ 再開':'⏸ 一時停止';}
+function stopUiroScroll(){if(_uiroScrollInt){clearInterval(_uiroScrollInt);_uiroScrollInt=null;}const ov=document.getElementById('uiro-scroll-ov');if(ov)ov.style.display='none';}
+
+// ── BPM ──
+let _bpmInt=null,_bpmRunning=false;
+function toggleMetronome(){_bpmRunning?stopMetronome():startMetronome();}
+function startMetronome(){const bpm=parseInt(document.getElementById('bpm-slider').value)||100;const interval=Math.round(60000/bpm);_bpmRunning=true;const btn=document.getElementById('bpm-start-btn');if(btn)btn.textContent='⏹ 停止';_bpmInt=setInterval(()=>metronomeBeat(bpm),interval);metronomeBeat(bpm);}
+function stopMetronome(){_bpmRunning=false;if(_bpmInt){clearInterval(_bpmInt);_bpmInt=null;}const btn=document.getElementById('bpm-start-btn');if(btn)btn.textContent='▶ 開始';const dot=document.getElementById('bpm-dot');if(dot){dot.style.background='rgba(6,214,160,.15)';dot.style.boxShadow='none';dot.style.transform='scale(1)';}}
+function metronomeBeat(bpm){const dot=document.getElementById('bpm-dot');if(dot){dot.style.background='rgba(6,214,160,.9)';dot.style.boxShadow='0 0 18px rgba(6,214,160,.7)';dot.style.transform='scale(1.18)';setTimeout(()=>{dot.style.background='rgba(6,214,160,.15)';dot.style.boxShadow='none';dot.style.transform='scale(1)';},Math.min(120,Math.round(60000/bpm*0.3)));}const se=document.getElementById('bpm-sound');if(se&&se.checked){const c=getCtx();if(!c)return;try{const o=c.createOscillator();const g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=1200;const t=c.currentTime;g.gain.setValueAtTime(0.18,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.06);o.start(t);o.stop(t+0.06);}catch(e){}}}
+
+// ── NGタグ ──
+const NG_TAGS=['#語尾のピッチ落ち','#説明芝居','#マ行の鼻腔共鳴不足','#心アドリブの不発','#1音目が作られた声','#感情より先に声が出た','#息の支えが切れた','#母音の無声化ミス','#鼻濁音の処理ミス','#テンポが走った','#テンポが遅れた','#軟口蓋が落ちた','#丹田の支えなし','#共鳴が喉に落ちた','#距離感が合わない','#目的が曖昧','#感情が単調','#ブレスのタイミングミス','#高音で喉が締まった'];
+let selectedNGTags=[];
+function renderNGTagPanel(){const wrap=document.getElementById('ng-tag-wrap');if(!wrap)return;wrap.innerHTML='<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px">'+NG_TAGS.map(t=>`<button class="ng-chip${selectedNGTags.includes(t)?' ng-selected':''}" data-tag="${t}" onclick="toggleNGTag(this)">${t}</button>`).join('')+'</div><button class="btn br" style="font-size:11px;padding:6px 12px" onclick="saveNGTags()">NGタグを保存</button>';}
+function toggleNGTag(btnEl){const tag=btnEl.dataset.tag;if(selectedNGTags.includes(tag)){selectedNGTags=selectedNGTags.filter(t=>t!==tag);btnEl.classList.remove('ng-selected');}else{selectedNGTags.push(tag);btnEl.classList.add('ng-selected');}}
+function saveNGTags(){if(!selectedNGTags.length){showToast('⚠️','タグを選択してください','');return;}if(!S.ngHistory)S.ngHistory=[];S.ngHistory.unshift({date:new Date().toISOString(),tags:[...selectedNGTags]});if(S.ngHistory.length>200)S.ngHistory=S.ngHistory.slice(0,200);selectedNGTags=[];gainXP(15);save();showToast('📊','NGタグ保存！','+15XP');renderNGTagPanel();renderNGDashboard();}
+function renderNGDashboard(){const wrap=document.getElementById('ng-dashboard');if(!wrap)return;if(!S.ngHistory||!S.ngHistory.length){wrap.innerHTML='<div style="color:var(--text3);font-size:12px;padding:10px">まだデータがありません</div>';return;}const cutoff=new Date();cutoff.setDate(cutoff.getDate()-7);const counts={};S.ngHistory.filter(h=>new Date(h.date)>=cutoff).forEach(r=>r.tags.forEach(t=>{counts[t]=(counts[t]||0)+1;}));const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,5);if(!sorted.length){wrap.innerHTML='<div style="color:var(--text3);font-size:12px;padding:10px">今週のNGタグはありません</div>';return;}wrap.innerHTML='<div style="font-size:11px;color:var(--red);font-weight:700;margin-bottom:8px">Nyano冷酷指摘 (過去7日):</div>'+sorted.map(([tag,count])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--bdr)"><span style="font-size:12px">${tag}</span><span style="font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:900;color:${count>=5?'var(--red)':count>=3?'var(--orange)':'var(--gold)'}">x${count}</span></div>`).join('')+`<div style="font-size:11px;color:var(--text3);margin-top:8px;line-height:1.6">最頻NG: <strong style="color:var(--red)">${sorted[0][0]}</strong> が今週${sorted[0][1]}回。これを集中的に潰せ。</div>`;}
+
+// ── 息芝居 ──
+const BREATH_SCENES=[{scene:'斬りかかる息',desc:'刀を振りかぶった瞬間の鋭い吸気',example:'スッ...（静止）...ハァッ！'},{scene:'腹を殴られた息',desc:'予期せぬ一撃に空気が飛ぶ',example:'フッ...（少し間）...ハァ、ハァ'},{scene:'瀕死の呼吸',desc:'肺が半分しか動かない。浅く震えながら',example:'ハッ...ハッ...（長い沈黙）...ふぅ'},{scene:'全力疾走から立ち止まった息',desc:'突然止まった体。乱れた呼吸が徐々に整う',example:'ハァ、ハァ、ハァ...（落ち着いていく）'},{scene:'恐怖で息が止まった瞬間',desc:'心臓が跳ね上がった瞬間。呼吸が止まる',example:'（長い無音）...ふぅぅ（やっと再開）'},{scene:'怒りを押し殺す息',desc:'爆発寸前の感情を制御。鼻から長く出す',example:'ふぅぅぅ...（3秒かけて）'},{scene:'勝利直前の深呼吸',desc:'最終決戦前、自分に言い聞かせるように',example:'スゥゥゥ...（5秒吸う）...（ゆっくり吐く）'},{scene:'泣きじゃくった後の息',desc:'激しく泣いた後のしゃっくり様の呼吸',example:'ひっく...ふぅ...ひっく...'},{scene:'抱擁を受けた安心の息',desc:'緊張がほどける瞬間。体から力が抜ける',example:'はぁぁ...（体から力が抜ける）'}];
+let breathSelected=[];
+function generateBreath(){breathSelected=[...BREATH_SCENES].sort(()=>Math.random()-0.5).slice(0,3);renderBreathTrainer();showToast('🌬️','息芝居3シーン生成！','録音して3つ連続で演じてください');}
+function renderBreathTrainer(){const wrap=document.getElementById('breath-trainer-wrap');if(!wrap)return;if(!breathSelected.length){wrap.innerHTML='<div style="text-align:center;padding:20px;color:var(--text3)">「ランダム生成」を押して開始</div>';return;}wrap.innerHTML=breathSelected.map((b,i)=>`<div style="background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;padding:12px;margin-bottom:8px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><span style="background:rgba(76,201,240,.15);color:var(--blue);font-family:'Share Tech Mono',monospace;font-size:11px;padding:2px 8px;border-radius:10px">${i+1}/3</span><span style="font-size:13px;font-weight:700;color:var(--gold)">${b.scene}</span></div><div style="font-size:12px;color:var(--text2);margin-bottom:5px">${b.desc}</div><div style="font-size:11px;color:var(--purple);font-family:'Share Tech Mono',monospace">${b.example}</div></div>`).join('');}
+
+// ── キャラチェンジ ──
+const CHARA_SETS=[{chars:['熱血少年主人公','冷酷な悪役（低音）','気のいいおっちゃん'],lines:['「お前に負けるつもりはない！」','「くだらない。消えろ。」','「まあまあ、ええやないか！」']},{chars:['お嬢様（高音・優雅）','武人（重厚な低音）','子供（高く明るく）'],lines:['「まあ、なんてこと！」','「覚悟はできているか。」','「ねえねえ、聞いて聞いて！」']},{chars:['AI（無機質・無感情）','狂気のキャラ（不安定）','温かい老師（重厚）'],lines:['「処理を実行します。」','「はははっ、全部壊してやる！」','「そうじゃな。それが正解じゃ。」']}];
+let charaSetCur=null;
+function generateCharaSwitch(){charaSetCur=CHARA_SETS[Math.floor(Math.random()*CHARA_SETS.length)];renderCharaSwitch();showToast('🎭','キャラチェンジセット生成！','ノンストップで3キャラを演じきれ');}
+function renderCharaSwitch(){const wrap=document.getElementById('chara-switch-wrap');if(!wrap)return;if(!charaSetCur){wrap.innerHTML='<div style="text-align:center;padding:16px;color:var(--text3)">「生成」を押してください</div>';return;}const colors=['var(--gold)','var(--red)','var(--teal)'];wrap.innerHTML=charaSetCur.chars.map((c,i)=>`<div style="background:var(--bg3);border:1px solid ${colors[i]};border-radius:8px;padding:11px;margin-bottom:7px"><div style="font-size:10px;color:var(--text3);margin-bottom:3px">セリフ ${i+1}</div><div style="font-size:12px;font-weight:700;margin-bottom:5px;color:${colors[i]}">キャラ: ${c}</div><div style="font-size:13px">${charaSetCur.lines[i]}</div></div>`).join('');}
+
+// ── エンタメ出力ミッション ──
+const ENTAME_MISSIONS=[{title:'冷酷悪役トーン発信',desc:'SNSショート動画やコンテンツ最初の30秒を「冷酷な悪役のトーン」で語る。視聴者反応を記録。'},{title:'感情爆発クライマックス挿入',desc:'コンテンツの中で1シーン、120%感情爆発シーンを意図的に作る。コメントの反応を記録。'},{title:'ナレーション語りシーン',desc:'世界観説明をNHKドキュメンタリー調ナレーションで10秒作る。'},{title:'ウィスパー技法テスト',desc:'通常トーンの途中、15秒間だけ囁き声で語る。反応を記録する。'},{title:'老師キャラ挿入',desc:'配信・動画中にランダムで老師キャラに憑依し、格言を2〜3行言う。'}];
+function getWeeklyEntameMission(){const w=Math.floor(Date.now()/(7*24*3600*1000));return ENTAME_MISSIONS[w%ENTAME_MISSIONS.length];}
+function renderEntameMission(){const wrap=document.getElementById('entame-mission-wrap');if(!wrap)return;const mission=getWeeklyEntameMission();wrap.innerHTML=`<div style="background:rgba(240,180,41,.08);border:1px solid rgba(240,180,41,.3);border-radius:8px;padding:12px;margin-bottom:10px"><div style="font-size:14px;font-weight:700;margin-bottom:6px">${mission.title}</div><div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:8px">${mission.desc}</div><textarea id="entame-result" placeholder="結果メモ：ウケたか、スベったか、反応は？" rows="3" style="font-size:12px;font-family:'Zen Kaku Gothic New',sans-serif;margin-bottom:7px"></textarea><button class="btn bg bfw" onclick="saveEntameResult()">📊 結果を記録 (+60XP)</button></div>`;}
+function saveEntameResult(){const el=document.getElementById('entame-result');const memo=el?el.value.trim():'';if(!memo){showToast('⚠️','結果をメモしてください','');return;}if(!S.entameLog)S.entameLog=[];S.entameLog.unshift({date:new Date().toISOString(),mission:getWeeklyEntameMission().title,memo});if(S.entameLog.length>52)S.entameLog=S.entameLog.slice(0,52);gainXP(60);gainCry(30);save();if(el)el.value='';showToast('📺','エンタメ出力記録！','+60XP');renderEntameMission();}
+
+// ── 外郎売 レビュー ──
+function renderUiroReviewPanel(){const wrap=document.getElementById('uiro-review-wrap');if(!wrap)return;const latest=(S.uiroReviewHistory&&S.uiroReviewHistory[0])||null;const latNote=latest&&latest.note?`<div style="font-size:11px;color:var(--text2);margin-top:8px;line-height:1.6">直近メモ: ${latest.note.replace(/</g,'&lt;')}</div>`:'';wrap.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px"><div><label style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px">段落</label><select id="uiro-review-section" style="background:var(--bg3);border:1px solid var(--bdr);color:var(--text);padding:7px 9px;border-radius:6px;font-size:12px;width:100%">${UIRO_DATA.map(s=>`<option value="${s.id}">${s.title}</option>`).join('')}</select></div><div><label style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px">難易度体感</label><select id="uiro-review-diff" style="background:var(--bg3);border:1px solid var(--bdr);color:var(--text);padding:7px 9px;border-radius:6px;font-size:12px;width:100%"><option value="easy">余裕あり</option><option value="normal" selected>適正</option><option value="hard">ギリギリ</option><option value="very-hard">破綻した</option></select></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px"><div><label style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px">明瞭性(1-5)</label><input type="number" id="uiro-score-clarity" min="1" max="5" value="3"></div><div><label style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px">感情幅(1-5)</label><input type="number" id="uiro-score-emotion" min="1" max="5" value="3"></div><div><label style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px">再現率(1-5)</label><input type="number" id="uiro-score-consistency" min="1" max="5" value="3"></div></div><textarea id="uiro-review-note" rows="3" placeholder="崩れた地点・次回の意識"></textarea><button class="btn bt bfw" style="margin-top:8px" onclick="saveUiroReview()">🧷 レビュー保存 (+25XP)</button>${latNote}`;}
+function saveUiroReview(){const se=document.getElementById('uiro-review-section');const de=document.getElementById('uiro-review-diff');const ce=document.getElementById('uiro-score-clarity');const ee=document.getElementById('uiro-score-emotion');const ke=document.getElementById('uiro-score-consistency');const ne=document.getElementById('uiro-review-note');if(!se||!de||!ce||!ee||!ke||!ne)return;const clamp=v=>Math.max(1,Math.min(5,parseInt(v)||3));if(!S.uiroReviewHistory)S.uiroReviewHistory=[];S.uiroReviewHistory.unshift({date:new Date().toISOString(),sectionId:se.value,difficulty:de.value,clarity:clamp(ce.value),emotion:clamp(ee.value),consistency:clamp(ke.value),note:ne.value.trim()});if(S.uiroReviewHistory.length>300)S.uiroReviewHistory=S.uiroReviewHistory.slice(0,300);gainXP(25);S.st.evalCount=(S.st.evalCount||0)+1;save();checkAchs();ne.value='';showToast('🧭','外郎売レビュー保存','次回提案を更新しました。+25XP');renderUiroReviewPanel();renderUiroNextPlan();}
+function renderUiroNextPlan(){const box=document.getElementById('uiro-next-plan');if(!box)return;if(!S.uiroReviewHistory||!S.uiroReviewHistory.length){box.innerHTML='<div style="color:var(--text3);font-size:12px">レビューを1件以上保存すると提案が表示されます</div>';return;}const recent=S.uiroReviewHistory.slice(0,10);const secScore={};let hardCount=0;recent.forEach(r=>{const avg=(r.clarity+r.emotion+r.consistency)/3;secScore[r.sectionId]=(secScore[r.sectionId]||{sum:0,n:0});secScore[r.sectionId].sum+=avg;secScore[r.sectionId].n++;if(r.difficulty==='hard'||r.difficulty==='very-hard')hardCount++;});const weakestSec=Object.entries(secScore).map(([id,v])=>({id,avg:v.sum/v.n})).sort((a,b)=>a.avg-b.avg)[0];const section=weakestSec?UIRO_DATA.find(s=>s.id===weakestSec.id):null;box.innerHTML=`<div style="font-size:12px;line-height:1.7;color:var(--text2)"><div><strong style="color:var(--gold)">重点段落:</strong> ${section?section.title:'全段落を均等ローテーション'}</div><div><strong style="color:var(--teal)">推奨難易度:</strong> ${hardCount>=Math.ceil(recent.length*0.5)?'負荷を下げる':'現状維持〜微増'}</div><div style="margin-top:6px;font-size:11px;color:var(--text3)">方針: 重点段落を半速2回→通常2回→録音1回。最後にNGタグを必ず記録。</div></div>`;}
+
+// ── 外郎売 セルフチェック ──
+const UIRO_SELF_CHECK_ITEMS=['1音目で目的が伝わる声だった','語尾が落ちず最後まで芯を維持した','テンポが走らずリズムを保てた','噛み/詰まりを自己修正できた','感情の山が1箇所以上作れた','収録後に再現できる課題が言語化できた'];
+let _uiroSCScores=new Array(6).fill(null);
+async function renderUiroSelfCheckPanel(){const wrap=document.getElementById('uiro-selfcheck-wrap');if(!wrap)return;const recs=(await idbGetAll()).filter(r=>String(r.label||'').includes('外郎売')).slice(0,20);if(!recs.length){wrap.innerHTML='<div style="color:var(--text3);font-size:12px">外郎売録音がまだありません。外郎売の「🎤 録音」から録ってください。</div>';return;}wrap.innerHTML=`<div style="margin-bottom:8px"><select id="uiro-sc-rec" style="width:100%;background:var(--bg3);border:1px solid var(--bdr);color:var(--text);padding:8px;border-radius:6px;font-size:12px">${recs.map(r=>`<option value="${r.id}">${(r.label||'外郎売録音').replace(/</g,'&lt;')}</option>`).join('')}</select></div>${UIRO_SELF_CHECK_ITEMS.map((q,idx)=>`<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid var(--bdr)"><div style="font-size:12px">${q}</div><div style="display:flex;gap:5px;flex-shrink:0"><button class="btn ${_uiroSCScores[idx]===1?'bg':'bgr'}" style="font-size:10px;padding:4px 8px" onclick="setUiroSC(${idx},1)">OK</button><button class="btn ${_uiroSCScores[idx]===0?'br':'bgr'}" style="font-size:10px;padding:4px 8px" onclick="setUiroSC(${idx},0)">NG</button></div></div>`).join('')}<button class="btn bt bfw" style="margin-top:10px" onclick="saveUiroSC()">📌 セルフチェック保存 (+20XP)</button>`;}
+function setUiroSC(idx,val){_uiroSCScores[idx]=val;renderUiroSelfCheckPanel();}
+function saveUiroSC(){if(_uiroSCScores.filter(v=>v!==null).length<UIRO_SELF_CHECK_ITEMS.length){showToast('⚠️','未入力','6項目すべてをOK/NGで入力してください');return;}const passed=_uiroSCScores.filter(v=>v===1).length;if(!S.uiroSelfChecks)S.uiroSelfChecks=[];S.uiroSelfChecks.unshift({date:new Date().toISOString(),passed,scores:[..._uiroSCScores]});if(S.uiroSelfChecks.length>300)S.uiroSelfChecks=S.uiroSelfChecks.slice(0,300);gainXP(20);save();showToast('🎧','セルフチェック保存',`${passed}/${UIRO_SELF_CHECK_ITEMS.length} を記録しました。+20XP`);_uiroSCScores=new Array(6).fill(null);renderUiroSelfCheckPanel();}
+
+// ── 外部AIフィードバック ──
+function generateUiroAIPrompt(){const el=document.getElementById('uiro-ai-prompt');if(!el)return;const latest=(S.uiroReviewHistory&&S.uiroReviewHistory[0])||null;const ngRecent=(S.ngHistory||[]).slice(0,8);const ngCount={};ngRecent.forEach(r=>(r.tags||[]).forEach(t=>{ngCount[t]=(ngCount[t]||0)+1;}));const topNg=Object.entries(ngCount).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([t,c])=>`${t} x${c}`).join(', ')||'データ不足';const rb=latest?[`- 段落: ${latest.sectionId}`,`- 難易度体感: ${latest.difficulty}`,`- 明瞭性: ${latest.clarity}/5`,`- 感情幅: ${latest.emotion}/5`,`- 再現率: ${latest.consistency}/5`,`- メモ: ${latest.note||'なし'}`].join('\n'):'- レビュー未保存';el.value=`あなたはトップレベル声優コーチです。以下の練習ログを分析し、厳しめかつ具体的に改善指示をください。\n\n[最新レビュー]\n${rb}\n\n[直近NGタグ]\n- ${topNg}\n\n[依頼]\n1) 最優先で直すべき欠点を3つ（理由つき）\n2) 明日の30分練習メニュー（5分刻み）\n3) 録音時のチェックポイントを5個（YES/NO判定可能な形）\n4) 現在のレベルを100点満点で採点し、根拠を簡潔に示す`;showToast('⚙️','プロンプト生成完了','外部AIへ貼り付けてください');}
+function copyUiroAIPrompt(){const el=document.getElementById('uiro-ai-prompt');if(!el||!el.value.trim()){generateUiroAIPrompt();}const text=(document.getElementById('uiro-ai-prompt')||{}).value||'';if(!text.trim()){showToast('⚠️','未生成','先にプロンプトを生成してください');return;}navigator.clipboard.writeText(text).then(()=>showToast('📋','コピー完了','無料AIへ貼り付けてください')).catch(()=>{});}
+function saveAIFeedback(){const fe=document.getElementById('uiro-ai-feedback');const pe=document.getElementById('uiro-ai-prompt');if(!fe||!pe)return;const feedback=fe.value.trim();if(!feedback){showToast('⚠️','空です','AIの回答を貼り付けてから保存してください');return;}if(!S.aiFeedbackLog)S.aiFeedbackLog=[];S.aiFeedbackLog.unshift({date:new Date().toISOString(),prompt:pe.value.trim(),feedback});if(S.aiFeedbackLog.length>120)S.aiFeedbackLog=S.aiFeedbackLog.slice(0,120);save();fe.value='';showToast('🧠','外部フィードバック保存','第三者評価を記録しました');}
+
+// ── 弱点検出 ──
+const ROW_MAP={'マ行':['#マ行の鼻腔共鳴不足'],'語尾':['#語尾のピッチ落ち'],'高音':['#高音で喉が締まった'],'鼻濁音':['#鼻濁音の処理ミス'],'テンポ':['#テンポが走った','#テンポが遅れた']};
+function renderArticulationWarning(){const el=document.getElementById('articulation-warning');if(!el)return;if(!S.ngHistory||!S.ngHistory.length){el.style.display='none';return;}const cutoff=new Date();cutoff.setDate(cutoff.getDate()-14);const recent=S.ngHistory.filter(r=>new Date(r.date)>=cutoff);const rowCounts={};recent.forEach(rec=>{rec.tags.forEach(tag=>{for(const[row,tags] of Object.entries(ROW_MAP)){if(tags.includes(tag)){rowCounts[row]=(rowCounts[row]||0)+1;}}});});const sorted=Object.entries(rowCounts).sort((a,b)=>b[1]-a[1]);if(!sorted.length||sorted[0][1]<2){el.style.display='none';return;}el.style.display='block';el.innerHTML=`<strong style="color:var(--red)">⚠️ Nyano警告：</strong>過去2週間で<strong style="color:white">【${sorted[0][0]}】</strong>の弱点が${sorted[0][1]}回検出されました。本日のWUで集中ドリルを行ってください。`;}
+
+// ── 観察メモ ──
+function openObsModal(){document.getElementById('obs-modal').style.display='flex';renderObsList();}
+function closeObsModal(){document.getElementById('obs-modal').style.display='none';}
+function saveObsMemo(){const scene=document.getElementById('obs-scene').value.trim();const text=document.getElementById('obs-text').value.trim();const emotion=document.getElementById('obs-emotion').value;if(!text){showToast('❌','メモを入力してください','');return;}if(!S.obsData)S.obsData=[];S.obsData.unshift({id:Date.now(),scene,text,emotion,date:new Date().toISOString()});if(S.obsData.length>200)S.obsData=S.obsData.slice(0,200);document.getElementById('obs-scene').value='';document.getElementById('obs-text').value='';save();renderObsList();showToast('📝','観察メモ保存！','このデータが演技の素材になる');}
+function renderObsList(){if(!S.obsData)S.obsData=[];const list=document.getElementById('obs-list');if(!list)return;const ct=document.getElementById('obs-count');if(ct)ct.textContent=S.obsData.length;if(!S.obsData.length){list.innerHTML='<div style="text-align:center;padding:16px;color:var(--text3);font-size:12px">まだ観察データがありません</div>';return;}const emoColors={怒り:'var(--red)',悲しみ:'var(--blue)',喜び:'var(--gold)',恐怖:'var(--purple)',焦り:'var(--orange)',羞恥:'var(--pink)',懇願:'var(--teal)',葛藤:'var(--text2)',その他:'var(--text3)'};list.innerHTML=S.obsData.slice(0,50).map(o=>{const d=new Date(o.date);const ds=`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;return`<div style="background:var(--bg2);border:1px solid var(--bdr);border-left:3px solid ${emoColors[o.emotion]||'var(--bdr)'};border-radius:6px;padding:10px;margin-bottom:7px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"><span style="font-size:10px;padding:2px 7px;border-radius:8px;background:rgba(0,0,0,.3);color:${emoColors[o.emotion]||'var(--text2)'}">${o.emotion}</span><div style="display:flex;align-items:center;gap:6px"><span style="font-size:10px;color:var(--text3)">${ds}</span><button class="btn br" style="padding:2px 7px;font-size:10px" data-obsid="${o.id}" onclick="deleteObs(this)">🗑️</button></div></div>${o.scene?`<div style="font-size:11px;color:var(--gold);margin-bottom:4px">📍 ${o.scene.replace(/</g,'&lt;')}</div>`:''}<div style="font-size:12px;line-height:1.6;color:var(--text2)">${o.text.replace(/</g,'&lt;').replace(/\n/g,'<br>')}</div></div>`;}).join('');}
+function deleteObs(btnEl){const id=parseInt(btnEl.dataset.obsid);if(!confirm('このメモを削除しますか？'))return;S.obsData=S.obsData.filter(o=>o.id!==id);save();renderObsList();}
+
+// ── ボイスサンプル管理 ──
+function ensureVS(){if(!S.voiceSamples)S.voiceSamples=[];}
+function addVSCategory(){ensureVS();const name=document.getElementById('vs-cat-name').value.trim();if(!name){showToast('❌','名前を入力してください','');return;}S.voiceSamples.push({catId:'vs_'+Date.now(),catName:name,recs:[]});document.getElementById('vs-cat-name').value='';save();renderVSList();showToast('🎤','カテゴリを追加しました',name);}
+function renderVSList(){ensureVS();const list=document.getElementById('vs-list');if(!list)return;if(!S.voiceSamples.length){list.innerHTML='<div style="text-align:center;padding:18px;color:var(--text3);font-size:13px">まだカテゴリがありません。</div>';return;}list.innerHTML=S.voiceSamples.map(cat=>{const hasRec=cat.recs&&cat.recs.length>0;const d=hasRec?new Date(cat.recs[0].date):null;const ds=d?`${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`:'未録音';return`<div style="background:var(--bg3);border:1px solid ${hasRec?'var(--teal)':'var(--bdr)'};border-radius:8px;padding:12px;margin-bottom:9px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div><div style="font-size:14px;font-weight:700">${cat.catName}</div><div style="font-size:10px;color:var(--text2)">最新: ${ds}</div></div><div style="display:flex;gap:5px"><button class="btn br" style="font-size:11px;padding:5px 9px" data-vscat="${cat.catId}" onclick="deleteVSCat(this)">🗑️</button></div></div>${hasRec?`<button class="btn bt" style="font-size:11px;padding:5px 9px;width:100%" data-vscat="${cat.catId}" onclick="playVSSample(this)">▶ 最新テイクを再生</button><div id="vs-audio-${cat.catId}"></div>`:'<div style="font-size:11px;color:var(--text3)">録音なし</div>'}</div>`}).join('');}
+function playVSSample(btnEl){const catId=btnEl.dataset.vscat;const cat=S.voiceSamples.find(c=>c.catId===catId);if(!cat||!cat.recs||!cat.recs.length)return;const rec=cat.recs[0];const c=document.getElementById('vs-audio-'+catId);if(!c)return;const url=URL.createObjectURL(rec.blob);c.innerHTML=`<audio src="${url}" controls autoplay style="width:100%;margin-top:4px"></audio>`;}
+function deleteVSCat(btnEl){const catId=btnEl.dataset.vscat;const cat=S.voiceSamples.find(c=>c.catId===catId);if(!cat||!confirm(`「${cat.catName}」を削除しますか？`))return;S.voiceSamples=S.voiceSamples.filter(c=>c.catId!==catId);save();renderVSList();}
+
+// ── 外部フィードバック ──
+function markExternalFeedback(){const now=new Date();const key=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');if(!S.extFeedback)S.extFeedback={};S.extFeedback[key]=now.toISOString();gainXP(100);gainCry(50);save();const el=document.getElementById('ext-fb-status');if(el){el.textContent=now.getMonth()+1+'月の外部フィードバック完了！ +100XP';el.style.display='block';}showToast('📤','外部フィードバック記録！','+100XP +50クリスタル');}
+
+// ── 音域コンディション ──
+function saveVoiceCondition(){const lo=document.getElementById('vc-low');if(!lo)return;const condition={date:todayKey(),lowPitch:parseInt(lo.value||3),highPitch:parseInt((document.getElementById('vc-high')||{}).value||3),hydration:parseInt((document.getElementById('vc-hydration')||{}).value||3),sleep:parseInt((document.getElementById('vc-sleep')||{}).value||7)};if(!S.voiceLog)S.voiceLog=[];S.voiceLog=S.voiceLog.filter(v=>v.date!==condition.date);S.voiceLog.unshift(condition);if(S.voiceLog.length>60)S.voiceLog=S.voiceLog.slice(0,60);save();let msg='';if(condition.sleep<6)msg='睡眠不足は声帯の柔軟性を低下させます。高音の無理な発声は今日は控えてください。';else if(condition.hydration<=2)msg='水分不足で声帯が乾燥しています。温かい飲み物を。';else if(condition.lowPitch<=2||condition.highPitch<=2)msg='声帯の調子が低下しています。軽めのWUのみ推奨。';else if(condition.lowPitch>=5&&condition.highPitch>=5)msg='コンディション最高！今日は限界に挑戦する絶好のチャンス。';else msg='コンディション良好。通常通りの練習で大丈夫です。';const el=document.getElementById('vc-analysis');if(el){el.textContent='Nyano: '+msg;el.style.display='block';}showToast('📊','コンディション記録！',msg.slice(0,40));}
+
+// ── パニックシミュレーター ──
+const PANIC_DIRECTIONS=['相手との距離を10m離して、笑いながら怒ってみて','泣いているのに強がっているキャラクターで演じてみて','今のセリフを、相手が最愛の人を失ったばかりだと思って','これは遺言状の朗読です。ゆっくり、重く演じてください','相手はあなたのことを全く信じていません。それでも伝えて','1000人の観客に向けて叫ぶつもりで、でも囁き声で','自分がロボットで初めて感情を知った瞬間として演じて','相手があなたを深く傷つけた人物です。でも謝罪しなければならない','このセリフは嘘です。でも相手に本当だと思わせなければなりません'];
+let panicTimerInt=null;
+function startPanicSim(){const dir=PANIC_DIRECTIONS[Math.floor(Math.random()*PANIC_DIRECTIONS.length)];const ov=document.getElementById('panic-ov');document.getElementById('panic-dir').textContent=dir;const countEl=document.getElementById('panic-count');ov.style.display='flex';let c=Math.min(15,Math.max(5,Math.ceil(dir.length/15)));countEl.textContent=c;if(panicTimerInt)clearInterval(panicTimerInt);panicTimerInt=setInterval(()=>{c--;if(c>0){countEl.textContent=c;if(c<=3)playTone(523+c*100,'sine',.15,0,.12);}else{clearInterval(panicTimerInt);ov.style.display='none';goScreen('practice',document.querySelectorAll('.nb')[1]);switchTab('prac','rec',null);const al=document.getElementById('gate-adlib');if(al){al.value=dir;updateGateStatus();}showToast('⚡','パニック録音モード',dir.slice(0,35)+'...');playTone(880,'sine',.25,0,.15);}},1000);}
+
+// ── マイクガイド ──
+function showMicGuide(errName){const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);const isPWA=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;let html='';if(isIOS){if(isPWA){html=`<div style="font-size:13px;color:var(--text2);line-height:2.0"><strong style="color:white">iPhoneでマイクを許可する手順：</strong><br><br><strong style="color:var(--gold)">① iPhoneの「設定」アプリを開く</strong><br><strong style="color:var(--gold)">② 下にスクロールして「Safari」をタップ</strong><br><strong style="color:var(--gold)">③「マイク」をタップ → 「許可」を選択</strong><br><br><span style="font-size:11px;color:var(--text3)">設定変更後、アプリを一度閉じて再度開いてください</span></div>`;}else{html=`<div style="font-size:13px;color:var(--text2);line-height:2.0"><strong style="color:white">Safariでマイクを許可：</strong><br><br><strong style="color:var(--gold)">アドレスバー左の「ぁあ」→「Webサイトの設定」→「マイク」→許可</strong><br><br>または：設定 → Safari → マイク → 許可<br><br><span style="font-size:11px;color:var(--text3)">設定後はページを再読み込みしてください</span></div>`;}}else{html=`<div style="font-size:13px;color:var(--text2);line-height:2.0"><strong style="color:white">ブラウザのマイク許可：</strong><br><br>Chrome: アドレスバー左の🔒 → サイトの設定 → マイク → 許可<br><br>※ HTTPS（GitHub Pages等）でのみ動作します</div>`;}const modal=document.getElementById('mic-guide-modal');const content=document.getElementById('mic-guide-content');if(content)content.innerHTML=html;if(modal)modal.style.display='flex';}
+function closeMicGuide(){const m=document.getElementById('mic-guide-modal');if(m)m.style.display='none';}
+
+// ── デュアル再生 ──
+function loadProAudio(input){const file=input.files[0];if(!file)return;const url=URL.createObjectURL(file);const p=document.getElementById('pro-audio-player');if(p){p.src=url;p.style.display='block';}const lbl=document.getElementById('pro-audio-label');if(lbl)lbl.textContent='✓ 「'+file.name+'」を読み込みました';showToast('🎯','お手本音声を読み込みました',file.name.slice(0,30));}
+
+// ── INIT ──
+async function init(){
+  load();
+  await openIDB();
+  registerSW();
+  initBoss();
+  restoreToday();
+  checkLogin();
+  renderAll();
+  initNotifUI();
+  startResinTimer();
+  checkNight();
+  setInterval(updateResetTimer,1000);
+  setInterval(()=>{renderBoss();checkNight();},60000);
+  updateResetTimer();
+  if(S.bgm)setTimeout(startBGM,1500);
+  trackActivity();
+  renderMentalMsg();
+  renderSyncTab();
+  if(getFBUrl()){cloudLoad();startCloudPoll();}else updateSyncBar('none');
+  // 14日自動パージ（初回起動時）
+  setTimeout(autoPurge14Days,3000);
+}
+
+init();
+</script>
+</body>
+</html>-bar" id="prac-tabs">
+    <button class="tab-btn active" onclick="switchTab('prac','wu',this)" style="font-size:11px">🔥 WU</button>
+    <button class="tab-btn" onclick="switchTab('prac','voice',this)" style="font-size:11px">🎙️ 練習</button>
+    <button class="tab-btn" onclick="switchTab('prac','rec',this)" style="font-size:11px">🎤 録音</button>
+    <button class="tab-btn" onclick="switchTab('prac','uiro',this)" style="font-size:10px">📜 外郎売</button>
+  </div>
+
+  <!-- WARMUP TAB -->
+  <div class="tab-pane active" id="tp-prac-wu">
+    <div class="affirm-box">
+      <div class="affirm-text" id="affirm-text">「私は声優になる」</div>
+      <div class="affirm-sub" id="affirm-sub">今日も一歩だけ前へ。それで十分。</div>
+      <button class="btn bp" style="margin-top:9px;font-size:11px;padding:6px 14px" onclick="nextAffirm()">次の言葉 →</button>
+    </div>
+    <div class="card ca-teal">
+      <div class="sec">ウォームアップ — 4種完了で声優練習解放 <span id="wu-count" style="color:var(--gold)">0/4</span></div>
+      <div id="wu-list"></div>
+      <div id="wu-done-msg" style="display:none;text-align:center;padding:10px;font-size:14px;font-weight:700;color:var(--teal)">✓ ウォームアップ完了！声優練習が解放されました！</div>
+    </div>
+    <div class="card" style="border-color:rgba(168,85,247,.3);background:rgba(168,85,247,.04)">
+      <div class="sec" style="color:var(--purple)">📊 本日の音域＆コンディション記録</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div><div style="font-size:11px;color:var(--text2);margin-bottom:5px">🔊 低音の調子</div><input type="range" id="vc-low" min="1" max="5" value="3" style="width:100%;accent-color:var(--teal)"></div>
+        <div><div style="font-size:11px;color:var(--text2);margin-bottom:5px">🎵 高音の調子</div><input type="range" id="vc-high" min="1" max="5" value="3" style="width:100%;accent-color:var(--purple)"></div>
+        <div><div style="font-size:11px;color:var(--text2);margin-bottom:5px">💧 水分摂取量</div><input type="range" id="vc-hydration" min="1" max="5" value="3" style="width:100%;accent-color:var(--blue)"></div>
+        <div><div style="font-size:11px;color:var(--text2);margin-bottom:5px">😴 昨晩の睡眠</div><input type="range" id="vc-sleep" min="4" max="10" value="7" step="1" style="width:100%;accent-color:var(--gold)"></div>
+      </div>
+      <button class="btn bp bfw" onclick="saveVoiceCondition()">📊 記録してNyanoに分析させる</button>
+      <div id="vc-analysis" style="display:none;margin-top:10px;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2);border-radius:7px;padding:9px 11px;font-size:12px;color:var(--text2);line-height:1.7"></div>
+    </div>
+    <div id="articulation-warning" style="display:none;background:rgba(239,35,60,.07);border:1px solid rgba(239,35,60,.25);border-radius:8px;padding:11px 13px;margin-bottom:12px;font-size:12px;color:var(--text2);line-height:1.8"></div>
+    <div class="infobox">💡 <strong>プロが必ずやる理由:</strong> 声帯は筋肉。ウォームアップなしで高負荷練習をすると声帯ポリープのリスクがあります。青二塾・マウスプロモーション付属でも必ず最初に行う工程です。</div>
+  </div>
+
+  <!-- VOICE PRACTICE TAB -->
+  <div class="tab-pane" id="tp-prac-voice">
+    <div id="va-locked-notice" style="display:none;background:rgba(239,35,60,.07);border:1px solid rgba(239,35,60,.2);border-radius:8px;padding:12px;margin-bottom:12px;text-align:center;font-size:13px;color:#fca5a5">
+      🔒 先にウォームアップを完了してください<br>
+      <button class="btn br" style="margin-top:8px" onclick="switchTab('prac','wu',null)">ウォームアップへ</button>
+    </div>
+    <div id="vpc-wrap">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:7px">
+        <select id="vpc-sel" onchange="filterVPC()" style="flex:1;background:var(--bg3);border:1px solid var(--bdr);color:var(--text);padding:7px 10px;border-radius:6px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:12px">
+          <option value="all">全カテゴリ</option>
+          <option value="pro">発声練習</option>
+          <option value="emotion">感情表現</option>
+          <option value="anime">アニメ台詞</option>
+          <option value="chara">キャラクター</option>
+        </select>
+        <button class="btn bgr" style="font-size:11px;white-space:nowrap" onclick="shuffleVPC()">🔀 シャッフル</button>
+      </div>
+      <div id="vpc-display"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+        <button class="btn bgr" onclick="prevVPC()">← 前</button>
+        <span style="font-size:11px;color:var(--text2);font-family:'Share Tech Mono',monospace" id="vpc-counter">1/1</span>
+        <button class="btn bt" onclick="nextVPC()">次 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECORDING TAB -->
+  <div class="tab-pane" id="tp-prac-rec">
+    <!-- PRE-RECORDING GATE -->
+    <div class="card ca-purple" id="gate-section">
+      <div class="sec">🎯 録音前ゲート <span id="gate-status-text" style="color:var(--gold)">0/6完了</span></div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px">全項目を入力して初めて録音できます。これがプロの準備。</div>
+      <div class="gate-row">
+        <span class="gate-lbl">🎯 このセリフで相手をどうしたい？（目的）</span>
+        <input type="text" id="gate-purpose" placeholder="例: 信じさせたい / 傷つけたい / 許してほしい" oninput="updateGateStatus()" style="font-size:12px">
+        <div class="purpose-chips">
+          <button class="gate-chip" onclick="setGatePurpose('信じさせたい')">信じさせたい</button>
+          <button class="gate-chip" onclick="setGatePurpose('傷つけたい')">傷つけたい</button>
+          <button class="gate-chip" onclick="setGatePurpose('許してほしい')">許してほしい</button>
+          <button class="gate-chip" onclick="setGatePurpose('注目させたい')">注目させたい</button>
+          <button class="gate-chip" onclick="setGatePurpose('愛を伝えたい')">愛を伝えたい</button>
+          <button class="gate-chip" onclick="setGatePurpose('追い詰めたい')">追い詰めたい</button>
+        </div>
+      </div>
+      <div class="gate-row">
+        <span class="gate-lbl">📏 相手との距離感は？</span>
+        <div class="gate-dist-wrap">
+          <button class="gdist" data-d="0.5m" onclick="selectDist(this)">0.5m<br><span style="font-size:8px">囁き</span></button>
+          <button class="gdist" data-d="1m" onclick="selectDist(this)">1m<br><span style="font-size:8px">会話</span></button>
+          <button class="gdist" data-d="3m" onclick="selectDist(this)">3m<br><span style="font-size:8px">対峙</span></button>
+          <button class="gdist" data-d="5m" onclick="selectDist(this)">5m<br><span style="font-size:8px">叫び</span></button>
+          <button class="gdist" data-d="10m" onclick="selectDist(this)">10m<br><span style="font-size:8px">絶叫</span></button>
+        </div>
+      </div>
+      <div class="gate-row">
+        <span class="gate-lbl">🎙️ 身体のスイッチ（全部ONで録音可）</span>
+        <div onclick="toggleGateBody('sp')" class="gate-body-row">
+          <div class="gchkbox" id="gchk-sp"></div>
+          <div><div style="font-size:12px;font-weight:700">軟口蓋</div><div style="font-size:10px;color:var(--text2)">上口蓋を上げて鼻腔の通り道を作る</div></div>
+        </div>
+        <div onclick="toggleGateBody('td')" class="gate-body-row">
+          <div class="gchkbox" id="gchk-td"></div>
+          <div><div style="font-size:12px;font-weight:700">丹田</div><div style="font-size:10px;color:var(--text2)">おへその下に力を入れ息の支えを作る</div></div>
+        </div>
+        <div onclick="toggleGateBody('ns')" class="gate-body-row">
+          <div class="gchkbox" id="gchk-ns"></div>
+          <div><div style="font-size:12px;font-weight:700">鼻腔共鳴</div><div style="font-size:10px;color:var(--text2)">目頭あたりに響きを感じているか</div></div>
+        </div>
+      </div>
+      <div class="gate-row">
+        <span class="gate-lbl">💭 心アドリブ — 1音目の起爆剤となる心の声</span>
+        <input type="text" id="gate-adlib" placeholder="例:「お前だけは信じたかった」「頼む、行かないでくれ」" oninput="updateGateStatus()" style="font-size:12px">
+        <div style="font-size:10px;color:var(--text3);margin-top:4px">カウントダウン中に画面中央に表示されます</div>
+      </div>
+      <!-- ミリ秒尺合わせ訓練 (新機能) -->
+      <div class="gate-row">
+        <span class="gate-lbl">⏱ 目標秒数（ミリ秒尺合わせ訓練）</span>
+        <select id="rec-target-secs" style="width:100%;background:var(--bg3);border:1px solid var(--bdr);color:var(--text);padding:9px 10px;border-radius:6px;font-size:12px;font-family:'Share Tech Mono',monospace">
+          <option value="0">なし（自由録音）</option>
+          <option value="5">5秒</option>
+          <option value="10">10秒</option>
+          <option value="15" selected>15秒</option>
+          <option value="20">20秒</option>
+          <option value="30">30秒</option>
+          <option value="45">45秒</option>
+          <option value="60">60秒</option>
+          <option value="90">90秒</option>
+          <option value="120">120秒</option>
+        </select>
+        <div style="font-size:10px;color:var(--orange);margin-top:4px">録音後に目標との誤差を残酷に表示します</div>
+      </div>
+      <button class="btn bp bfw bbig" id="gate-rec-btn" disabled style="opacity:.4;margin-top:4px" onclick="startGatedRecording()">🔴 録音開始（3秒カウントダウン）</button>
+    </div>
+
+    <!-- RECORDING ACTIVE -->
+    <div id="rec-active-panel" style="display:none">
+      <div class="card ca-red">
+        <div class="sec">🔴 録音中</div>
+        <div style="text-align:center;padding:12px 0">
+          <div class="rec-big on" onclick="stopRecording()">⏹</div>
+          <div class="rec-timer" id="rec-timer">00:00.00</div>
+          <div id="rec-target-disp" style="font-size:13px;color:var(--gold);font-family:'Share Tech Mono',monospace;margin-bottom:4px"></div>
+          <div class="rec-status" id="rec-status">録音中... タップで停止</div>
+          <div style="font-size:13px;color:var(--purple);font-weight:700;margin-top:8px;line-height:1.5" id="rec-adlib-disp"></div>
+        </div>
+        <input type="text" id="rec-label" placeholder="練習内容のメモ (任意)" style="font-size:12px;margin-top:4px">
+      </div>
+    </div>
+
+    <!-- POST-RECORDING EVALUATION -->
+    <div id="post-eval-panel" style="display:none">
+      <div class="card ca-blue">
+        <!-- TIME DEVIATION BOX (新機能) -->
+        <div id="time-dev-box" style="display:none"></div>
+        <div class="sec">📊 プロ基準 自己評価 <span id="eval-score-disp" style="color:var(--gold)">0/9</span></div>
+        <div style="font-size:11px;color:var(--text2);margin-bottom:10px">正直に評価することが唯一の上達法。</div>
+        <div id="eval-list"></div>
+        <div style="margin-top:12px">
+          <input type="text" id="eval-notes" placeholder="気づいたこと・次回の改善点" style="font-size:12px;margin-bottom:8px">
+          <button class="btn bt bfw" onclick="saveEval()">✓ 評価を保存して完了 (+30XP)</button>
+          <button class="btn bgr bfw" style="margin-top:6px;font-size:11px" onclick="skipEval()">スキップ（評価なしで完了）</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIBRARY -->
+    <div class="card">
+      <div class="sec">📚 録音ライブラリ <span style="font-size:9px;color:var(--gold)">🔒=保護で自動削除除外</span></div>
+      <div id="rec-list"><div style="text-align:center;padding:18px;color:var(--text3);font-size:13px">まだ録音がありません</div></div>
+    </div>
+  </div>
+
+  <!-- 外郎売 TAB -->
+  <div class="tab-pane" id="tp-prac-uiro">
+    <div class="card" style="background:linear-gradient(135deg,rgba(240,180,41,.06),rgba(168,85,247,.04));border-color:rgba(240,180,41,.25)">
+      <div class="sec" style="color:var(--gold)">📜 外郎売 全文練習</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.7">
+        声優養成所の必修課題。<strong style="color:white">毎日1段落以上</strong>を録音して聴き返すこと。<br>
+        段落ごとに感情を変えて演じる。口の開きを鏡で確認しながら行う。
+      </div>
+      <div style="display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap">
+        <button class="btn bg" style="flex:1;font-size:11px" onclick="uiroAutoScroll()">⬇️ 自動スクロール</button>
+        <button class="btn bp" style="flex:1;font-size:11px" onclick="uiroShowAll()">📖 全文表示</button>
+        <select id="uiro-emotion-sel" style="flex:1;background:var(--bg3);border:1px solid var(--bdr);color:var(--text);padding:7px 8px;border-radius:6px;font-size:11px;font-family:'Zen Kaku Gothic New',sans-serif">
+          <option value="">感情を選ぶ</option>
+          <option value="喜び">😄 喜び</option>
+          <option value="威厳">👑 威厳</option>
+          <option value="絶望">😭 絶望</option>
+          <option value="怒り">😤 怒り</option>
+          <option value="松岡禎丞レベル">🔥 松岡禎丞レベル</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap">
+        <button class="btn bgr" style="font-size:10px;padding:5px 8px" onclick="showUiroSection('all')">全段落</button>
+        <button class="btn bgr" style="font-size:10px;padding:5px 8px" onclick="showUiroSection('s1')">段落一</button>
+        <button class="btn bgr" style="font-size:10px;padding:5px 8px" onclick="showUiroSection('s2')">段落二</button>
+        <button class="btn bgr" style="font-size:10px;padding:5px 8px" onclick="showUiroSection('s3')">段落三</button>
+        <button class="btn bgr" style="font-size:10px;padding:5px 8px" onclick="showUiroSection('s4')">段落四</button>
+        <button class="btn bgr" style="font-size:10px;padding:5px 8px" onclick="showUiroSection('s5')">段落五</button>
+      </div>
+      <!-- BPM Metronome -->
+      <div style="background:rgba(6,214,160,.06);border:1px solid rgba(6,214,160,.25);border-radius:9px;padding:13px 14px;margin-bottom:12px">
+        <div style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--teal);letter-spacing:2px;margin-bottom:9px">🎵 BPM メトロノーム</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <div style="flex:1">
+            <input type="range" id="bpm-slider" min="60" max="180" value="100" step="5" style="width:100%;accent-color:var(--teal)" oninput="document.getElementById('bpm-val').textContent=this.value">
+            <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3);margin-top:2px"><span>60</span><span>180 BPM</span></div>
+          </div>
+          <div style="text-align:center;min-width:52px">
+            <div id="bpm-val" style="font-family:'Share Tech Mono',monospace;font-size:22px;font-weight:900;color:var(--teal);line-height:1">100</div>
+            <div style="font-size:9px;color:var(--text3)">BPM</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;margin-bottom:10px">
+          <div id="bpm-dot" style="width:44px;height:44px;border-radius:50%;background:rgba(6,214,160,.15);border:2px solid rgba(6,214,160,.3);transition:all 0.04s;display:flex;align-items:center;justify-content:center;font-size:20px">🎵</div>
+        </div>
+        <div style="display:flex;gap:7px">
+          <button class="btn bt bfw" id="bpm-start-btn" onclick="toggleMetronome()">▶ 開始</button>
+          <div style="display:flex;align-items:center;gap:6px">
+            <input type="checkbox" id="bpm-sound" checked style="width:14px;height:14px;accent-color:var(--teal)">
+            <label for="bpm-sound" style="font-size:11px;color:var(--text2)">音あり</label>
+          </div>
+        </div>
+      </div>
+      <div id="uiro-sections"></div>
+    </div>
+    <!-- Auto-scroll overlay -->
+    <div id="uiro-scroll-ov">
+      <div style="background:var(--bg2);padding:12px 14px;display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:12px;font-weight:700;color:var(--gold)">📜 外郎売 初見読みモード</div>
+        <div style="display:flex;gap:7px">
+          <button class="btn bgr" style="font-size:11px;padding:5px 9px" onclick="changeScrollSpeed(-1)">遅く</button>
+          <button class="btn bgr" style="font-size:11px;padding:5px 9px" id="scroll-speed-lbl">普通</button>
+          <button class="btn bgr" style="font-size:11px;padding:5px 9px" onclick="changeScrollSpeed(1)">速く</button>
+          <button class="btn br" style="font-size:11px;padding:5px 9px" onclick="stopUiroScroll()">✕</button>
+        </div>
+      </div>
+      <div id="uiro-scroll-content" style="flex:1;overflow-y:auto;padding:24px 20px;font-size:20px;line-height:3.2;color:white;font-family:'Zen Kaku Gothic New',sans-serif"></div>
+      <div style="background:var(--bg2);padding:10px 14px;display:flex;gap:8px">
+        <button class="btn bt bfw" onclick="toggleUiroScrollPause()" id="uiro-pause-btn">⏸ 一時停止</button>
+        <button class="btn br" style="padding:10px 14px" onclick="stopUiroScroll()">停止</button>
+      </div>
+    </div>
+    <!-- 息芝居 -->
+    <div class="card ca-blue">
+      <div class="sec">🌬️ 息芝居（アクションブレス）ランダムジェネレーター</div>
+      <button class="btn bb bfw" style="margin-bottom:10px" onclick="generateBreath()">🎲 3シーンをランダム生成</button>
+      <div id="breath-trainer-wrap"><div style="text-align:center;padding:20px;color:var(--text3);font-size:13px">「ランダム生成」を押して開始</div></div>
+    </div>
+    <div class="card ca-purple">
+      <div class="sec">🎭 多重人格キャラチェンジ タイムアタック</div>
+      <button class="btn bp bfw" style="margin-bottom:10px" onclick="generateCharaSwitch()">🎲 キャラセットを生成</button>
+      <div id="chara-switch-wrap"><div style="text-align:center;padding:16px;color:var(--text3)">「生成」を押してください</div></div>
+    </div>
+    <!-- NGタグ -->
+    <div class="card" style="border-color:rgba(239,35,60,.25)">
+      <div class="sec">📊 NGタグ 弱点データベース</div>
+      <div id="ng-tag-wrap"></div>
+      <div style="margin-top:14px;border-top:1px solid var(--bdr);padding-top:12px">
+        <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:8px">Nyano冷酷ダッシュボード（過去7日）</div>
+        <div id="ng-dashboard"><div style="color:var(--text3);font-size:12px">まだデータがありません</div></div>
+      </div>
+    </div>
+    <!-- 外郎売 セルフチェック -->
+    <div class="card" style="border-color:rgba(76,201,240,.32)">
+      <div class="sec">🎧 外郎売 録音セルフチェック</div>
+      <div id="uiro-selfcheck-wrap"><div style="text-align:center;padding:14px;color:var(--text3);font-size:12px">録音ライブラリを読み込み中...</div></div>
+    </div>
+    <!-- 外郎売 レビュー -->
+    <div class="card ca-blue">
+      <div class="sec">🧭 外郎売 レビュー＆次回提案</div>
+      <div id="uiro-review-wrap"></div>
+      <div style="margin-top:12px;border-top:1px solid var(--bdr);padding-top:11px">
+        <div style="font-size:11px;font-weight:700;color:var(--teal);margin-bottom:8px">次回の重点提案</div>
+        <div id="uiro-next-plan"><div style="color:var(--text3);font-size:12px">レビューを1件以上保存すると提案が表示されます</div></div>
+      </div>
+    </div>
+    <!-- エンタメ出力ミッション -->
+    <div class="card ca-gold">
+      <div class="sec">📺 エンタメ出力ミッション（声優×発信）</div>
+      <div id="entame-mission-wrap"></div>
+    </div>
+    <!-- 外部AIフィードバック -->
+    <div class="card" style="border-color:rgba(34,197,94,.32)">
+      <div class="sec">🧠 外部AIフィードバック（手動連携）</div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px">
+        <button class="btn bg" style="font-size:11px;padding:6px 10px" onclick="generateUiroAIPrompt()">⚙️ プロンプト生成</button>
+        <button class="btn bt" style="font-size:11px;padding:6px 10px" onclick="copyUiroAIPrompt()">📋 コピー</button>
+      </div>
+      <textarea id="uiro-ai-prompt" rows="5" placeholder="ここに外部AIへ送るプロンプトを生成します"></textarea>
+      <div style="font-size:10px;color:var(--text3);margin:6px 0 8px">推奨: Gemini / ChatGPT / Claude 無料プランへ貼り付け</div>
+      <textarea id="uiro-ai-feedback" rows="4" placeholder="AIから返ってきたフィードバックをここへ貼り付け"></textarea>
+      <button class="btn bp bfw" style="margin-top:8px;font-size:11px" onclick="saveAIFeedback()">✅ 外部フィードバックを保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DAILY ===== -->
+<div class="screen" id="s-daily">
+  <div class="card ca-gold">
+    <div class="sec">📅 ログインボーナス — 7日サイクル</div>
+    <div class="login-grid" id="login-grid"></div>
+    <div id="login-msg" style="text-align:center;margin-top:8px;font-size:12px;color:var(--teal)"></div>
+  </div>
+  <div class="card ca-purple">
+    <div class="sec">⚔️ デイリー依頼 <span id="dc-prog" style="color:var(--gold)">0/4</span></div>
+    <div style="height:5px;background:var(--bdr);border-radius:3px;overflow:hidden;margin-bottom:12px">
+      <div id="dc-prog-fill" style="height:100%;background:linear-gradient(90deg,var(--purple),var(--gold));border-radius:3px;width:0%;transition:width .5s"></div>
+    </div>
+    <div id="dc-list"></div>
+    <div id="dc-bonus-btn" style="display:none;background:rgba(240,180,41,.08);border:1px solid rgba(240,180,41,.3);border-radius:8px;padding:12px;text-align:center;margin-top:8px">
+      <div style="font-size:14px;font-weight:700;color:var(--gold)">🏆 全依頼完了ボーナス！</div>
+      <div style="font-size:12px;color:var(--text2);margin-top:3px">+300 XP / +150クリスタル / +30原石</div>
+      <button class="btn bg bfw bbig" style="margin-top:9px" onclick="claimDailyBonus()">受け取る！</button>
+    </div>
+    <div id="dc-claimed" style="display:none;text-align:center;padding:8px;font-size:12px;color:var(--teal)">✓ 本日の報酬受取済み</div>
+  </div>
+  <div class="card" style="padding:12px 14px">
+    <div class="sec">🕛 デイリーリセットまで</div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:26px;font-weight:900;color:var(--gold)" id="reset-timer">--:--:--</div>
+  </div>
+</div>
+
+<!-- ===== GACHA ===== -->
+<div class="screen" id="s-gacha">
+  <div class="card ca-red">
+    <div class="sec">⚔️ 週間ボス</div>
+    <div id="boss-wrap">
+      <span id="boss-emo">👿</span>
+      <div id="boss-nm" style="font-size:13px;font-weight:700;color:var(--red);margin-top:4px"></div>
+      <div style="font-size:11px;color:var(--text2);margin-top:2px">練習1分=1ダメージ / 討伐でSSR確定+1000クリスタル</div>
+    </div>
+    <div class="hpw">
+      <div class="hpl"><span>HP</span><span id="hp-txt">1000/1000</span></div>
+      <div id="hp-bar"><div id="hp-fill" style="width:100%"></div></div>
+    </div>
+    <div id="dmgn"></div>
+    <div style="text-align:center;margin-top:5px;font-size:12px;color:var(--text2)">今週: <strong style="color:var(--orange)" id="week-dmg">0分</strong></div>
+  </div>
+  <div class="card ca-purple">
+    <div class="sec">💎 ガチャ</div>
+    <div class="g-stats">
+      <div class="g-box"><span class="g-val" style="color:var(--purple)" id="g-cry">0</span><div class="g-lbl">クリスタル</div></div>
+      <div class="g-box"><span class="g-val" style="color:var(--resin)" id="g-res">0</span><div class="g-lbl">練習の結晶</div></div>
+      <div class="g-box"><span class="g-val" style="color:var(--gold)" id="g-pulls">0</span><div class="g-lbl">総ガチャ数</div></div>
+    </div>
+    <div style="font-size:10px;color:var(--text2);margin-bottom:4px">天井まで: <span style="color:var(--purple);font-weight:700" id="pity-left">90</span>連 (90連でSSR確定)</div>
+    <div class="pity-bar"><div class="pity-fill" id="pity-fill" style="width:0%"></div></div>
+    <div style="font-size:9px;color:var(--text3);margin-bottom:12px">N:50% / R:30% / SR:15% / SSR:5%</div>
+    <button class="btn bp bfw bbig" onclick="pull10('crystal')" style="margin-bottom:7px">✨ 10連ガチャ (2000クリスタル)</button>
+    <button class="btn bp bfw" onclick="pull1('crystal')" style="margin-bottom:7px">✨ 1回ガチャ (200クリスタル)</button>
+    <button class="btn bry bfw" onclick="pull1('resin')" style="margin-bottom:10px">💎 練習の結晶ガチャ 1回 (60個)</button>
+    <div class="g-hist" id="g-hist"></div>
+  </div>
+</div>
+
+<!-- ===== SETTINGS ===== -->
+<div class="screen" id="s-set">
+  <div class="tab-bar" id="set-tabs" style="flex-wrap:wrap;gap:4px">
+    <button class="tab-btn active" onclick="switchTab('set','ach',this)" style="font-size:10px">🏆 実績</button>
+    <button class="tab-btn" onclick="switchTab('set','notif',this)" style="font-size:10px">🔔 通知</button>
+    <button class="tab-btn" onclick="switchTab('set','voice',this)" style="font-size:10px">🎤 ボイス</button>
+    <button class="tab-btn" onclick="switchTab('set','sync',this)" style="font-size:10px">🔄 同期</button>
+  </div>
+  <div class="tab-pane active" id="tp-set-ach">
+    <div class="card"><div class="sec">🏆 実績 — <span id="ach-ct" style="color:var(--gold)">0/20</span></div><div class="ag" id="ag"></div></div>
+    <div class="card"><div class="sec">📈 ステータス</div><div id="stats-tbl"></div></div>
+    <div class="card ca-purple">
+      <div class="sec">🧠 継続の科学</div>
+      <div class="psych-box"><div class="psych-title">⚡ 実装意図</div><div class="psych-body">具体的if-thenプランが実行率を91%上げる（Gollwitzer 1999）</div></div>
+      <div class="psych-box"><div class="psych-title">🎰 変動比率強化</div><div class="psych-body">ガチャは予測不可能な報酬で行動を持続させる最も強力なスケジュール。</div></div>
+      <div class="psych-box"><div class="psych-title">📉 損失回避</div><div class="psych-body">ストリーク記録は「失う恐怖」で継続させる。Duolingo研究で使用率2.4倍。</div></div>
+      <div class="psych-box"><div class="psych-title">⏱ 最小可能習慣</div><div class="psych-body">「2分だけ」ボタンで開始の摩擦を限界まで下げる。行動慣性で平均22分に。</div></div>
+    </div>
+  </div>
+  <div class="tab
