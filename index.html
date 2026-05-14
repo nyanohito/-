@@ -19,10 +19,10 @@
   --text:#e2e8f0;--text2:#94a3b8;--text3:#2d3748;--resin:#7dd3fc;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100vh;height:100dvh;overflow-x:hidden}
+html,body{min-height:100dvh;overflow-x:hidden}
 body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg);color:var(--text);overscroll-behavior:none}
-#app{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh;max-width:680px;margin:0 auto}
-#hd{background:var(--bg2);border-bottom:1px solid var(--bdr);padding:10px 14px;position:sticky;top:0;z-index:60}
+#app{display:flex;flex-direction:column;min-height:100dvh;max-width:680px;margin:0 auto}
+#hd{background:var(--bg2);border-bottom:1px solid var(--bdr);padding:calc(10px + env(safe-area-inset-top)) 14px 10px;position:sticky;top:0;z-index:60}
 #hd-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
 .logo{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--gold);letter-spacing:2px}
 .hd-r{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
@@ -506,6 +506,14 @@ ruby rt{font-size:0.55em;color:#f0b429;font-weight:700;font-family:'Zen Kaku Got
         <div onclick="toggleGateBody('ns')" class="gate-body-row">
           <div class="gchkbox" id="gchk-ns"></div>
           <div><div style="font-size:12px;font-weight:700">鼻腔共鳴</div><div style="font-size:10px;color:var(--text2)">目頭あたりに響きを感じているか</div></div>
+        </div>
+        <div onclick="toggleGateBody('lp')" class="gate-body-row">
+          <div class="gchkbox" id="gchk-lp"></div>
+          <div><div style="font-size:12px;font-weight:700">リップノイズ対策</div><div style="font-size:10px;color:var(--text2)">舌打ち音・口内の粘つきを消したか？（水を飲む・舌を回す）</div></div>
+        </div>
+        <div onclick="toggleGateBody('mv')" class="gate-body-row">
+          <div class="gchkbox" id="gchk-mv"></div>
+          <div><div style="font-size:12px;font-weight:700">マイクへのベクトル</div><div style="font-size:10px;color:var(--text2)">ただ叫ぶのではなく、マイクの「芯」に声を当てる意識を持っているか</div></div>
         </div>
       </div>
       <!-- 心アドリブ -->
@@ -1036,12 +1044,41 @@ const VPC_POOL=[
   {cat:'pro',catL:'発声',icon:'🎵',src:'声優養成所標準',title:'外郎売スプリント',emotion:'明瞭・速度',body:'「武具馬具武具馬具、三武具馬具」を3セット。1回目ゆっくり→2回目普通→3回目倍速。録音して聴き直す',hint:'最初は正確さ優先。速さは後からついてくる'},
   {cat:'pro',catL:'発声',icon:'🌬️',src:'プロ声優メソッド',title:'腹式+発声コントロール',emotion:'音量コントロール',body:'①「アー」を30秒安定して出す\n②同じことをイ・ウ・エ・オでも各3回\n③音量を小→大→小と変化させる',hint:'声量の差で感情の幅が生まれる'},
   {cat:'pro',catL:'発声',icon:'🔊',src:'プロ声優メソッド',title:'共鳴トレーニング',emotion:'共鳴・倍音',body:'①「ンーー」と鼻に手を当て振動確認\n②「ンア」「ンイ」「ンウ」「ンエ」「ンオ」と変化させる',hint:'日本語の豊かな響きは共鳴が鍵'},
-  {cat:'emotion',catL:'感情',icon:'😭',src:'感情演技研究',title:'遅れてくる悲しみ',emotion:'静かな悲しみ・遅延',body:'「…そうか。あいつ、もう帰ってこないんだな」\n「どうして今になって気づいたんだろう。もっとそばにいればよかった…」',hint:'泣かない。感情が遅れてくる重さを声だけで表現する'},
-  {cat:'emotion',catL:'感情',icon:'🔥',src:'プロ感情演技',title:'静かな怒り（最高難度）',emotion:'制御された怒り',body:'「…お前に言われたくない」\n「なぜ、今さらそんなことを言うんだ」\n「…もういい」\n声を荒げず、低く、間を取って演じる',hint:'静かな怒りは爆発より怖い'},
-  {cat:'emotion',catL:'感情',icon:'💪',src:'感情演技研究',title:'絶望からの立ち上がり',emotion:'決意・再起',body:'「…もう、終わりだ」（間を置く）\n「…いや、まだだ」\n「まだ諦めていない。絶対に、絶対に諦めない」',hint:'変化の「間」が命'},
-  {cat:'anime',catL:'アニメ',icon:'🌸',src:'葬送のフリーレン スタイル参考',title:'エルフの時間感覚',emotion:'静かな哀愁・超越',body:'「私は長く生きすぎた。喜びも悲しみも、時間が薄めてしまう」\n「あの旅が終わったのは、もうずっと昔のことのはずなのに。なぜ今頃になって、胸が痛むのだろう」',hint:'感情を「遅らせる」演技。急がない。呼吸を使う'},
-  {cat:'chara',catL:'キャラ',icon:'👦',src:'キャラクター演技応用',title:'熱血少年主人公',emotion:'熱血・純粋・前向き',body:'「俺の夢を笑うな！」\n「こんなところで負けられない、仲間が待っているから！」\n各セリフを①高揚感②確信③瀕死で絞り出す で演じる',hint:'同じセリフでも状況で全く変わる'},
-  {cat:'chara',catL:'キャラ',icon:'😈',src:'ヴィラン演技論',title:'本格的ヴィラン',emotion:'余裕・哲学・確信',body:'「正義？悪？そんな区別に意味があるのか」\n「私がしていることは、世界を正しい方向へ導くことだ」',hint:'良いヴィランは自分が悪だと思っていない'},
+  {cat:'pro',catL:'発声',icon:'💨',src:'プロ声優メソッド',title:'ブレスと感情の連動',emotion:'ブレスコントロール',body:'①「はあ〜」と深いため息→「疲れた…」\n②「ふっ」短く息を吐く→「くだらない」（蔑み）\n③「すうっ」と吸い込む→「…嘘でしょ」（衝撃）\n各3セット',hint:'声より先に息が出る'},
+  // ── 男性声優特化アニメ台本 ──
+  {cat:'anime',catL:'アニメ',icon:'🔥',src:'熱血少年主人公 / 15歳',title:'絶望→怒り→覚醒',emotion:'悲しみ7割→殺意10割',
+   body:'「やめろ…やめてくれ！\n…もう、許さない…\n絶対に、お前をぶっ潰す！！」\n\n①まず悲しみと絶望だけで前半を読む\n②「…もう、許さない」で1拍完全に間を置く\n③「絶対に」からギアを一段階ずつ上げ最後で爆発させる',
+   hint:'悲しみ7割から一気に殺意10割へのギアチェンジが核心。怒りより先に「泣きそうな声」を確立してから始める'},
+  {cat:'anime',catL:'アニメ',icon:'❄️',src:'冷酷なライバル / 17歳',title:'蔑み・絶対的自信',emotion:'冷たい息の混じった低音',
+   body:'「…遅いな。\nそれがお前の全てか？\n欠伸が出る。」\n\n①声を一切張らない。息を多めに混ぜる\n②「遅いな」の後に1〜2秒の完全な沈黙\n③「欠伸が出る」を本当に退屈そうに吐き捨てる',
+   hint:'声を張らない。吐き捨てるような冷たい息の混じった低音が命。大きな声で演じると即アウト'},
+  {cat:'anime',catL:'アニメ',icon:'😈',src:'狂気の敵幹部 / 年齢不詳',title:'狂喜・情緒不安定',emotion:'高低音の異常な乱高下',
+   body:'「あはははは！素晴らしい！\nもっと、もっと壊れろ！\n命が弾ける音がたまらない！」\n\n①「あはははは」を高音の笑い声から始める\n②「もっと、もっと」で音程を急に下げ狂気を出す\n③「たまらない！」で再び高音に戻しながら恍惚を乗せる',
+   hint:'高音と低音をワンフレーズの中で異常な幅で乱高下させる。計算してやるより「本当に壊れた人間」になりきる'},
+  {cat:'anime',catL:'アニメ',icon:'💀',src:'面倒見の良い兄貴分 / 24歳',title:'優しい諦め・死の間際',emotion:'痛みを隠す作り笑い',
+   body:'「…泣くなよ。\nお前は、前だけ見てろ。\n…あとは、頼んだ、ぜ…」\n\n①全体的に息の量を7割に落とす\n②「泣くなよ」に無理した笑いを混ぜる\n③「頼んだ、ぜ…」は語尾を消しながら息だけにする',
+   hint:'痛みを隠すための作り笑いが核心。徐々に息の量が減っていく表現。最後は声ではなく「息」で終わらせる'},
+  {cat:'anime',catL:'アニメ',icon:'⚔️',src:'歴戦の渋い傭兵 / 45歳',title:'冷静・威厳・重低音',emotion:'丹田で支えた圧倒的な重低音',
+   body:'「慌てるな。\n小僧ども、死にたくなけりゃ俺の背中から離れるな。\n…行くぞ。」\n\n①丹田に力を入れ、声を前に押し出す感覚で\n②早口にしない。1語1語に重みをかける\n③「行くぞ」だけは静かに、しかし圧倒的な確信で',
+   hint:'丹田で支えた圧倒的な重低音。言葉の端々に経験の重さを乗せる。声の高さより声の「密度」で勝負'},
+  {cat:'anime',catL:'アニメ',icon:'🌸',src:'葬送のフリーレン スタイル参考',title:'エルフの時間感覚',emotion:'静かな哀愁・超越',
+   body:'「私は長く生きすぎた。喜びも悲しみも、時間が薄めてしまう」\n「あの旅が終わったのは、もうずっと昔のことのはずなのに。なぜ今頃になって、胸が痛むのだろう」',
+   hint:'感情を「遅らせる」演技。急がない。呼吸を使う'},
+  {cat:'emotion',catL:'感情',icon:'😭',src:'感情演技研究',title:'遅れてくる悲しみ',emotion:'静かな悲しみ・遅延',
+   body:'「…そうか。あいつ、もう帰ってこないんだな」\n「どうして今になって気づいたんだろう。もっとそばにいればよかった…」',
+   hint:'泣かない。感情が遅れてくる重さを声だけで表現する'},
+  {cat:'emotion',catL:'感情',icon:'🔥',src:'プロ感情演技',title:'静かな怒り（最高難度）',emotion:'制御された怒り',
+   body:'「…お前に言われたくない」\n「なぜ、今さらそんなことを言うんだ」\n「…もういい」\n声を荒げず、低く、間を取って演じる',
+   hint:'静かな怒りは爆発より怖い'},
+  {cat:'emotion',catL:'感情',icon:'💪',src:'感情演技研究',title:'絶望からの立ち上がり',emotion:'決意・再起',
+   body:'「…もう、終わりだ」（間を置く）\n「…いや、まだだ」\n「まだ諦めていない。絶対に、絶対に諦めない」',
+   hint:'変化の「間」が命'},
+  {cat:'chara',catL:'キャラ',icon:'😈',src:'ヴィラン演技論',title:'本格的ヴィラン',emotion:'余裕・哲学・確信',
+   body:'「正義？悪？そんな区別に意味があるのか」\n「私がしていることは、世界を正しい方向へ導くことだ」',
+   hint:'良いヴィランは自分が悪だと思っていない'},
+  {cat:'chara',catL:'キャラ',icon:'🧓',src:'キャラクター演技応用',title:'老師・語り手',emotion:'重厚・知恵・時間',
+   body:'「若者よ、聞くがよい。強さとは、傷つかないことではない」\n「傷ついても、それでも立ち続けることを、人は強さと呼ぶ」',
+   hint:'間（ま）が命。1秒の沈黙が重みを作る'},
 ];
 
 const DC_POOL=[
@@ -1127,7 +1164,7 @@ let S={
 function load(){try{const r=localStorage.getItem(SK);if(r)S=Object.assign(S,JSON.parse(r));}catch(e){}}
 function saveLocal(){try{localStorage.setItem(SK,JSON.stringify(S));}catch(e){}}
 function save(){S._ts=Date.now();saveLocal();cloudSave();}
-function todayKey(){return new Date().toISOString().split('T')[0];}
+function todayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function getTD(){const k=todayKey();if(!S.days[k])S.days[k]={va:{secs:0,done:false},dc:[false,false,false,false],dcClaimed:false,wu:[false,false,false,false],wuBonus:false};return S.days[k];}
 
 // ── INDEXEDDB ──
@@ -1216,13 +1253,28 @@ function nextAudQuestion(){audIdx=(audIdx+1)%AUD_QUESTIONS.length;audHintShown=f
 function toggleAudAnswer(){audHintShown=!audHintShown;const q=AUD_QUESTIONS[audIdx>=0?audIdx:0];const hBox=document.getElementById('aud-hint-box');if(hBox){hBox.style.display=audHintShown?'block':'none';hBox.innerHTML=q?q.hint:'最初に「次の質問」を押してください。';}}
 
 // ── GATE（葛藤フィールド含む）──
-let gate={purpose:'',conflict:'',distance:'',sp:false,td:false,ns:false,adlib:''},gateOK=false;
+let gate={purpose:'',conflict:'',distance:'',sp:false,td:false,ns:false,lp:false,mv:false,adlib:''},gateOK=false;
 function setGatePurpose(txt){const el=document.getElementById('gate-purpose');if(el)el.value=txt;updateGateStatus();}
 function setGateConflict(txt){const el=document.getElementById('gate-conflict');if(el)el.value=txt;updateGateStatus();}
 function selectDist(btnEl){document.querySelectorAll('.gdist').forEach(b=>b.classList.remove('sel'));btnEl.classList.add('sel');gate.distance=btnEl.dataset.d;updateGateStatus();}
 function toggleGateBody(key){gate[key]=!gate[key];const el=document.getElementById('gchk-'+key);if(el){el.classList.toggle('on',gate[key]);el.textContent=gate[key]?'✓':'';}updateGateStatus();}
-function updateGateStatus(){const p=document.getElementById('gate-purpose');const cf=document.getElementById('gate-conflict');const a=document.getElementById('gate-adlib');if(p)gate.purpose=p.value.trim();if(cf)gate.conflict=cf.value.trim();if(a)gate.adlib=a.value.trim();gateOK=gate.purpose.length>=2&&gate.conflict.length>=2&&gate.distance&&gate.sp&&gate.td&&gate.ns&&gate.adlib.length>=3;const btn=document.getElementById('gate-rec-btn');if(btn){btn.disabled=!gateOK;btn.style.opacity=gateOK?'1':'0.4';}const st=document.getElementById('gate-status-text');if(st){const done=[gate.purpose.length>=2,gate.conflict.length>=2,gate.distance,gate.sp,gate.td,gate.ns,gate.adlib.length>=3].filter(Boolean).length;st.textContent=`${done}/7完了`;st.style.color=gateOK?'var(--teal)':'var(--gold)';}}
-function resetGate(){gate={purpose:'',conflict:'',distance:'',sp:false,td:false,ns:false,adlib:''};gateOK=false;const p=document.getElementById('gate-purpose');if(p)p.value='';const cf=document.getElementById('gate-conflict');if(cf)cf.value='';const a=document.getElementById('gate-adlib');if(a)a.value='';document.querySelectorAll('.gdist').forEach(b=>b.classList.remove('sel'));['sp','td','ns'].forEach(k=>{const el=document.getElementById('gchk-'+k);if(el){el.classList.remove('on');el.textContent='';}});updateGateStatus();}
+function updateGateStatus(){
+  const p=document.getElementById('gate-purpose');const cf=document.getElementById('gate-conflict');const a=document.getElementById('gate-adlib');
+  if(p)gate.purpose=p.value.trim();if(cf)gate.conflict=cf.value.trim();if(a)gate.adlib=a.value.trim();
+  gateOK=gate.purpose.length>=2&&gate.conflict.length>=2&&gate.distance&&gate.sp&&gate.td&&gate.ns&&gate.lp&&gate.mv&&gate.adlib.length>=3;
+  const btn=document.getElementById('gate-rec-btn');if(btn){btn.disabled=!gateOK;btn.style.opacity=gateOK?'1':'0.4';}
+  const st=document.getElementById('gate-status-text');
+  if(st){const done=[gate.purpose.length>=2,gate.conflict.length>=2,gate.distance,gate.sp,gate.td,gate.ns,gate.lp,gate.mv,gate.adlib.length>=3].filter(Boolean).length;st.textContent=`${done}/9完了`;st.style.color=gateOK?'var(--teal)':'var(--gold)';}
+}
+function resetGate(){
+  gate={purpose:'',conflict:'',distance:'',sp:false,td:false,ns:false,lp:false,mv:false,adlib:''};gateOK=false;
+  const p=document.getElementById('gate-purpose');if(p)p.value='';
+  const cf=document.getElementById('gate-conflict');if(cf)cf.value='';
+  const a=document.getElementById('gate-adlib');if(a)a.value='';
+  document.querySelectorAll('.gdist').forEach(b=>b.classList.remove('sel'));
+  ['sp','td','ns','lp','mv'].forEach(k=>{const el=document.getElementById('gchk-'+k);if(el){el.classList.remove('on');el.textContent='';}});
+  updateGateStatus();
+}
 
 function startGatedRecording(){if(!gateOK){showToast('⚠️','ゲート未完了','全7項目を入力してください');return;}const ov=document.getElementById('cd-ov');const numEl=document.getElementById('cd-num');const adEl=document.getElementById('cd-adlib');adEl.textContent='「'+gate.adlib+'」';ov.classList.add('show');let count=3;numEl.classList.remove('pop');void numEl.offsetWidth;numEl.classList.add('pop');numEl.textContent=count;playTone(523,'sine',.15,0,.1);const iv=setInterval(()=>{count--;if(count>0){numEl.classList.remove('pop');void numEl.offsetWidth;numEl.classList.add('pop');numEl.textContent=count;playTone(523+count*80,'sine',.12,0,.1);}else{clearInterval(iv);ov.classList.remove('show');document.getElementById('gate-section').style.display='none';document.getElementById('rec-active-panel').style.display='block';const ad=document.getElementById('rec-adlib-disp');if(ad)ad.textContent='「'+gate.adlib+'」';const sb=document.getElementById('rec-sticky');if(sb){sb.classList.add('show');document.getElementById('rec-sticky-adlib').textContent='「'+gate.adlib+'」';}const tgt=parseInt((document.getElementById('rec-target-secs')||{}).value||0);const td2=document.getElementById('rec-target-disp');if(td2)td2.textContent=tgt>0?`目標: ${tgt}秒`:'';playTone(880,'sine',.2,0,.15);startRec();S.st.gateCount=(S.st.gateCount||0)+1;save();checkAchs();}},1000);}
 
